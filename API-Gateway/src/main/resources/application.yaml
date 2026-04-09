@@ -1,0 +1,37 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: API-Gateway
+  cloud:
+    gateway:
+      routes:
+        - id: user-service
+          uri: lb://User-Service
+          predicates:
+            - Path=/api/users/**
+
+        - id: auth-service
+          uri: lb://Auth-Service
+          predicates:
+            - Path=/api/auth/**
+
+        - id: library-service
+          uri: lb://Library-Service
+          predicates:
+            - Path=/api/library/**
+
+        - id: course-service
+          uri: lb://Course-Service
+          predicates:
+            - Path=/api/courses/**
+
+        - id: student-service
+          uri: lb://Student-Service
+          predicates:
+            - Path=/api/students/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

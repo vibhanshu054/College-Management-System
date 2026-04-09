@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Your OTP</title>
+    <style>
+        body {
+            background-color: #f5f3ef;
+            font-family: Georgia, "Times New Roman", serif;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: #f5f3ef;
+            border: 1px solid #e0dcd5;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 20px;
+            color: #1c1c1c;
+            margin-bottom: 20px;
+        }
+
+        .otp {
+            font-size: 30px;
+            letter-spacing: 10px;
+            color: #d4af37;
+            margin: 25px 0;
+            font-weight: bold;
+        }
+
+        .note {
+            font-size: 13px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="title">Secure OTP Verification</div>
+
+    <p>Hello <span th:text="${username}">User</span>,</p>
+
+    <p>Your One-Time Password is:</p>
+
+    <div class="otp" th:text="${otp}">123456</div>
+
+    <p class="note">Valid for 2 minutes</p>
+    <p class="note">Do not share this code with anyone</p>
+</div>
+
+</body>
+</html>
