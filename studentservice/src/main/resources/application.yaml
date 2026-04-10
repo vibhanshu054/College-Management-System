@@ -1,5 +1,7 @@
 server:
   port: 8086
+  servlet:
+    context-path: /
 
 spring:
   application:
@@ -9,21 +11,76 @@ spring:
     url: jdbc:mysql://localhost:3306/studentservice
     username: root
     password: Vivan@123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      max-lifetime: 1800000
+      connection-timeout: 30000
 
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        jdbc:
+          batch_size: 15
+          fetch_size: 50
+        order_inserts: true
+        order_updates: true
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+      indent-output: true
+    deserialization:
+      fail-on-unknown-properties: false
 
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
   instance:
     prefer-ip-address: true
-    ip-address: 127.0.0.1
+    ip-address: 0.0.0.0
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
+
 springdoc:
   api-docs:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
+    enabled: true
+    operations-sorter: method
+    tags-sorter: alpha
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,info
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    root: INFO
+    com.student: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/student-service.log
+    max-size: 10MB
+    max-history: 30

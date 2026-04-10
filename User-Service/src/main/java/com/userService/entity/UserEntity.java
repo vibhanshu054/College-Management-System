@@ -1,18 +1,17 @@
 package com.userService.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.userService.enums.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+
 import java.time.LocalDateTime;
 
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -70,5 +69,20 @@ public class UserEntity {
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
+
     }
+
+    public Long studentServiceId;
+
+    public Long facultyServiceId;
+
+    public Long LibrarianServiceId;
+
+    public String semester;
+
+    public String batch;
+
+    public String courseCode;
+
+    public Object facultySubRole;
 }

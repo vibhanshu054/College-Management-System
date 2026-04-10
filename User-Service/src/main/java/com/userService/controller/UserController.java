@@ -1,89 +1,183 @@
 package com.userService.controller;
 
-import com.userService.dto.UpdatePasswordDto;
 import com.userService.dto.UserDto;
+import com.userService.enums.Role;
+import com.userService.exception.ForbiddenException;
 import com.userService.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
-@Slf4j
-@RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
+@RequiredArgsConstructor
+@Slf4j
+@Tag(name = "User Management", description = "APIs for User Profile Management (Admin & Self-Service)")
 public class UserController {
 
+    private final UserService userService;
 
-    private final UserService service;
+    // ============ ADMIN OPERATIONS ============
 
-    //Own Profile
-    @GetMapping("/profile")
-    public ResponseEntity<UserDto> getMyProfile(
-            @RequestHeader("X-User-Name") String username) {
-
-        log.info("Fetching profile {}", username);
-
-        return ResponseEntity.ok(service.findByUsername(username));
-    }
-
-    //Create user
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto dto) {
+    @Operation(summary = "Create new user", description = "Admin only - Create STUDENT, FACULTY, LIBRARIAN, or ADMIN")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDTO, Authentication auth) {
+        log.info("Create user request from: {}", auth.getName());
 
-        log.info("Creating User");
+        // Verify ADMIN role
+        if (!auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            throw new ForbiddenException("Only ADMIN can create users");
+        }
 
-        return ResponseEntity.ok(service.save(dto));
+        UserDto createdUser = userService.createUser(userDTO, auth.getName());
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
-    //Fetch All User
-    @GetMapping("/all")
-    public ResponseEntity<List<UserDto>> getAllUser() {
+    @GetMapping
+    @Operation(summary = "Get all users", description = "Admin only - Retrieve all users with optional role filter")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<List<UserDto>> getAllUsers(
+            @RequestParam(required = false) String role,
+            Authentication auth) {
+        log.info("Get all users request from: {}", auth.getName());
 
-        log.info("Fetching all User");
+        if (role != null) {
+            return ResponseEntity.ok(userService.getUsersByRole(Role.valueOf(role)));
+        }
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
 
-        return ResponseEntity.ok(
-                service.getAllUser()
-                        .stream()
-                        .map(e -> new UserDto(
-                                e.getId(),
-                                e.getUsername(),
-                                e.getEmail(),
-                                e.getPassword(),
-                                e.getRole(),
-                                e.getDepartment()))
-                        .toList()
+    @GetMapping("/{id}")
+    @Operation(summary = "Get user by ID", description = "Admin can get any user, others get their own profile")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<UserDto> getUserById(@PathVariable Long id, Authentication auth) {
+        log.info("Get user {} request from: {}", id, auth.getName());
+
+        UserDto user = userService.getUserById(id);
+
+        // Non-admin can only view their own profile
+        if (!auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            if (!user.getEmail().equals(auth.getName())) {
+                throw new ForbiddenException("You can only view your own profile");
+            }
+        }
+
+        return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/email/{email}")
+    @Operation(summary = "Get user by email", description = "Retrieve user by email address")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<UserDto> getUserByEmail(@PathVariable String email, Authentication auth) {
+        log.info("Get user by email: {} request from: {}", email, auth.getName());
+        return ResponseEntity.ok(userService.getUserByEmail(email));
+    }
+
+    @GetMapping("/university-id/{universityId}")
+    @Operation(summary = "Get user by university ID", description = "Retrieve user by 12-digit university ID")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<UserDto> getUserByUniversityId(@PathVariable String universityId, Authentication auth) {
+        log.info("Get user by universityId: {} request from: {}", universityId, auth.getName());
+        return ResponseEntity.ok(userService.getUserByUniversityId(universityId));
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Update user", description = "Admin can update any user, others update their own profile")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<UserDto> updateUser(
+            @PathVariable Long id,
+            @RequestBody UserDto userDTO,
+            Authentication auth) {
+        log.info("Update user {} request from: {}", id, auth.getName());
+
+        Role role = Role.valueOf(auth.getAuthorities().stream()
+                .findFirst()
+                .map(a -> a.getAuthority().replace("ROLE_", ""))
+                .orElse("STUDENT"));
+
+        UserDto updatedUser = userService.updateUser(id, userDTO, auth.getName(), role);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete user", description = "Admin only - Delete user from system")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Map<String, String>> deleteUser(@PathVariable Long id, Authentication auth) {
+        log.info("Delete user {} request from: {}", id, auth.getName());
+
+        if (!auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            throw new ForbiddenException("Only ADMIN can delete users");
+        }
+
+        userService.deleteUser(id, auth.getName());
+        return ResponseEntity.ok(Map.of("message", "User deleted successfully", "userId", String.valueOf(id)));
+    }
+
+    @PutMapping("/{id}/password")
+    @Operation(summary = "Update password", description = "User can update their own password")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Map<String, String>> updatePassword(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> passwordData,
+            Authentication auth) {
+        log.info("Update password request for user {} from: {}", id, auth.getName());
+
+        UserDto user = userService.getUserById(id);
+
+        // Only allow updating own password
+        if (!user.getEmail().equals(auth.getName()) &&
+                !auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            throw new ForbiddenException("You can only update your own password");
+        }
+
+        userService.updatePassword(
+                id,
+                passwordData.get("oldPassword"),
+                passwordData.get("newPassword"),
+                auth.getName()
         );
+
+        return ResponseEntity.ok(Map.of("message", "Password updated successfully"));
     }
 
-    @GetMapping("/one-user")
-    public ResponseEntity<UserDto> getUser(@RequestParam Long id) {
+    // ============ STATISTICS ENDPOINTS ============
 
-        log.info("Fetching User {}", id);
+    @GetMapping("/count/by-role/{role}")
+    @Operation(summary = "Get user count by role", description = "Get total count of users with specific role")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Map<String, Object>> getUserCountByRole(@PathVariable String role) {
+        log.info("Get user count for role: {}", role);
 
-        return ResponseEntity.ok(service.getUser(id));
+        long count = userService.getUserCountByRole(Role.valueOf(role));
+        return ResponseEntity.ok(Map.of(
+                "role", role,
+                "count", count
+        ));
     }
 
-    //Login
-    @GetMapping("/login")
-    public UserDto login(@RequestParam String username) {
+    @GetMapping("/count/by-role-and-dept/{role}/{department}")
+    @Operation(summary = "Get user count by role and department", description = "Get count of users by role and department")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Map<String, Object>> getUserCountByRoleAndDept(
+            @PathVariable String role,
+            @PathVariable String department) {
+        log.info("Get user count for role: {} and department: {}", role, department);
 
-        log.info("Login request {}", username);
-
-        return service.findByUsername(username);
-    }
-
-    //Forget/Update Password
-    @PostMapping("/update-password")
-    public String updatePassword(@RequestBody UpdatePasswordDto dto) {
-        return service.updatePassword(dto);
-    }
-
-    //By-Email
-    @GetMapping("/by-email")
-    public UserDto getByEmail(@RequestParam String email) {
-        return service.findByEmail(email);
+        long count = userService.getUserCountByRoleAndDepartment(Role.valueOf(role), department);
+        return ResponseEntity.ok(Map.of(
+                "role", role,
+                "department", department,
+                "count", count
+        ));
     }
 }

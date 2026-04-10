@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.NumberFormat;
 
 @Getter
 @Setter
@@ -16,4 +17,10 @@ public class UserDto {
     private String password;
     private String role;
     private String department;
+    private String profilePictureUrl;
+    private String bio;
+    private String UniversityId;
+    private Long studentServiceId;
+    @NumberFormat(pattern = "\\d{10}")
+    public String PhoneNumber;
 }

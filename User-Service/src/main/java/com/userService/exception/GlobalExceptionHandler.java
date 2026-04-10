@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
+import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -104,5 +104,95 @@ public class GlobalExceptionHandler {
                 .build();
 
         return new ResponseEntity<>(response, status);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleResourceNotFound(
+            ResourceNotFoundException ex, WebRequest request) {
+        log.warn("Resource not found: {}", ex.getMessage());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("timestamp", LocalDateTime.now());
+        response.put("status", HttpStatus.NOT_FOUND.value());
+        response.put("error", "NOT_FOUND");
+        response.put("message", ex.getMessage());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<Map<String, Object>> handleDuplicateResource(
+            DuplicateResourceException ex, WebRequest request) {
+        log.warn("Duplicate resource: {}", ex.getMessage());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("timestamp", LocalDateTime.now());
+        response.put("status", HttpStatus.CONFLICT.value());
+        response.put("error", "CONFLICT");
+        response.put("message", ex.getMessage());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(InvalidOperationException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidOperation(
+            InvalidOperationException ex, WebRequest request) {
+        log.warn("Invalid operation: {}", ex.getMessage());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("timestamp", LocalDateTime.now());
+        response.put("status", HttpStatus.BAD_REQUEST.value());
+        response.put("error", "BAD_REQUEST");
+        response.put("message", ex.getMessage());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<Map<String, Object>> handleUnauthorized(
+            UnauthorizedException ex, WebRequest request) {
+        log.warn("Unauthorized access: {}", ex.getMessage());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("timestamp", LocalDateTime.now());
+        response.put("status", HttpStatus.UNAUTHORIZED.value());
+        response.put("error", "UNAUTHORIZED");
+        response.put("message", ex.getMessage());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<Map<String, Object>> handleForbidden(
+            ForbiddenException ex, WebRequest request) {
+        log.warn("Forbidden access: {}", ex.getMessage());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("timestamp", LocalDateTime.now());
+        response.put("status", HttpStatus.FORBIDDEN.value());
+        response.put("error", "FORBIDDEN");
+        response.put("message", ex.getMessage());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, Object>> handleGenericException(
+            Exception ex, WebRequest request) {
+        log.error("Unexpected error occurred", ex);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("timestamp", LocalDateTime.now());
+        response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        response.put("error", "INTERNAL_SERVER_ERROR");
+        response.put("message", "An unexpected error occurred. Please try again later.");
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

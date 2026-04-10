@@ -1,9 +1,8 @@
 package com.collage.student.controller;
 
 
-import com.student.dto.StudentDTO;
-import com.student.entity.StudentEntity;
-import com.student.service.StudentService;
+import com.collage.student.dto.StudentDTO;
+import com.collage.student.service.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,7 @@ public class StudentController {
 
     @PostMapping
     @Operation(summary = "Create new student", description = "Create student profile with all required fields")
-    public ResponseEntity<StudentDTO> createStudent(@RequestBody StudentDTO studentDTO) {
+    public ResponseEntity<Long> createStudent(@RequestBody StudentDTO studentDTO) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(studentService.createStudent(studentDTO));
     }
@@ -101,7 +100,7 @@ public class StudentController {
 
     @GetMapping("/count")
     @Operation(summary = "Get total students count", description = "Get total number of active students")
-    public ResponseEntity<Map<String, Integer>> getTotalStudentsCount() {
+    public ResponseEntity<Map<String, Long>> getTotalStudentsCount() {
         return ResponseEntity.ok(Map.of("totalStudents", studentService.getTotalStudentsCount()));
     }
 }
