@@ -1,9 +1,11 @@
-package com.college.department_Service.service;
+package com.department_Service.service;
 
-import com.college.department_Service.dto.DepartmentDTO;
-import com.college.department_Service.entity.DepartmentEntity;
-import com.college.department_Service.exception.*;
-import com.college.department_Service.repository.DepartmentRepository;
+import com.department_Service.dto.DepartmentDTO;
+import com.department_Service.entity.DepartmentEntity;
+import com.department_Service.exception.*;
+import com.department_Service.exception.DuplicateResourceException;
+import com.department_Service.exception.ResourceNotFoundException;
+import com.department_Service.repository.DepartmentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;

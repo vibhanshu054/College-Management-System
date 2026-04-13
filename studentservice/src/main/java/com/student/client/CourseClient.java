@@ -1,6 +1,6 @@
 
 //Feign client to call Course Service
-package com.collage.student.client;
+package com.student.client;
 
   import org.springframework.cloud.openfeign.FeignClient;
   import org.springframework.web.bind.annotation.GetMapping;

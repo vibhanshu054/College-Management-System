@@ -1,41 +1,85 @@
 server:
   port: 8083
+
 spring:
   application:
     name: Auth-Service
+
   datasource:
-    url: jdbc:mysql://localhost:3306/auth_service_db
+    url: jdbc:mysql://localhost:3306/user_service_db
     username: root
-    password: ${DB_PASSWORD:Vivan@123}
+    password: Vivan@123
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
 
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: ${MAIL_USERNAME:vibhanshusoniofficial@gmail.com}
-    password: ${MAIL_PASSWORD:kqje dybt bbjr avls}
+    show-sql: false
     properties:
-      mail.smtp.auth: true
-      mail.smtp.starttls.enable: true
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
 
-jwt:
-  secret: ${JWT_SECRET:my-super-secret-key-that-is-at-least-32-characters-long!!}
-  expiration: ${JWT_EXPIRATION:86400000}
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+  # Email Configuration (Optional - only if you need password reset)
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: vibhanshusoniofficial@gmail.com
+    password: stmq amxq pnid tlin
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
 
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
-
+    register-with-eureka: true
+    fetch-registry: true
   instance:
     prefer-ip-address: true
-    ip-address: 0.0.0.0
+    ip-address: 127.0.0.1
+
+jwt:
+  secret: ${JWT_SECRET:my-super-secret-key-that-is-at-least-32-characters-long!!}
+  expiration: ${JWT_EXPIRATION:86400000}
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: FULL
+  compression:
+    request:
+      enabled: true
+      min-request-size: 2048
+
 springdoc:
   api-docs:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
+    enabled: true
+
+logging:
+  level:
+    root: INFO
+    com.authService: DEBUG
+    org.springframework.cloud.openfeign: DEBUG
+  file:
+    name: logs/auth-service.log
+    max-size: 10MB
+    max-history: 30

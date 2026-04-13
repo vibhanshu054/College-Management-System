@@ -1,4 +1,4 @@
-package com.college.attendance_Service.dto;
+package com.dashboard.dto;
 
 
 

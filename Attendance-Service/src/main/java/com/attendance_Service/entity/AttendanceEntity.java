@@ -1,7 +1,7 @@
-package com.college.attendance_Service.entity;
+package com.attendance_Service.entity;
 
 
-import com.college.attendance_Service.enums.AttendanceStatus;
+import com.attendance_Service.enums.AttendanceStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;

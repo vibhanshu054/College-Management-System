@@ -1,7 +1,8 @@
 package com.userService.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.userService.enums.Role;
+
+import com.userService.enums.FacultySubRole;
+import com.userService.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,42 +10,62 @@ import java.time.LocalDateTime;
 
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", indexes = {
+        @Index(name = "idx_user_email", columnList = "email"),
+        @Index(name = "idx_user_university_id", columnList = "universityId"),
+        @Index(name = "idx_user_role", columnList = "role")
+})
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@ToString(exclude = {"createdAt", "password"})
 public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 255)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String username;
 
-    @Column(nullable = false)
-    @JsonIgnore
+    @Column(nullable = false, length = 255)
+    private String name;
+
+    @Column(nullable = false, length = 255)
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role;
+    @Enumerated(EnumType.STRING)  // ✅ CRITICAL FIX
+    @Column(nullable = false, length = 50)
+    private UserRole role;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String department;
 
-    // Phone number (standard format)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 15)
     private String phoneNumber;
 
-    // 12-digit ID (unique per role)
     @Column(nullable = false, unique = true, length = 12)
     private String universityId;
+
+    // Optional fields for students
+    @Column(nullable = true, length = 50)
+    private String semester;
+
+    @Column(nullable = true, length = 50)
+    private String batch;
+
+    @Column(nullable = true, length = 50)
+    private String courseCode;
+
+    // Optional fields for faculty
+    @Enumerated(EnumType.STRING)  // ✅ CRITICAL FIX
+    @Column(nullable = true, length = 50)
+    private FacultySubRole facultySubRole;
 
     @Column(nullable = false)
     private boolean active = true;
@@ -55,34 +76,25 @@ public class UserEntity {
     @Column(nullable = false)
     private LocalDateTime updatedAt = LocalDateTime.now();
 
-    // Audit fields
-    @Column(name = "created_by")
+    @Column(name = "created_by", nullable = true)
     private String createdBy;
 
-    @Column(name = "updated_by")
+    @Column(name = "updated_by", nullable = true)
     private String updatedBy;
 
-    // Role-specific data (JSON stored as text)
-    @Column(columnDefinition = "JSON")
-    private String roleMetadata;
+    // Service IDs for cascade mapping
+    @Column(nullable = true)
+    private Long studentServiceId;
+
+    @Column(nullable = true)
+    private Long facultyServiceId;
+
+    @Column(nullable = true)
+    private Long librarianServiceId;
 
     @PreUpdate
-    public void preUpdate() {
+    protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
-
     }
 
-    public Long studentServiceId;
-
-    public Long facultyServiceId;
-
-    public Long LibrarianServiceId;
-
-    public String semester;
-
-    public String batch;
-
-    public String courseCode;
-
-    public Object facultySubRole;
 }

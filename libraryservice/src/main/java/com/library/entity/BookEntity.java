@@ -1,9 +1,10 @@
-package com.collage.library.entity;
+package com.library.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -54,9 +55,22 @@ public class BookEntity {
     @Column(nullable = false)
     private LocalDateTime updatedAt = LocalDateTime.now();
 
+    @PrePersist
+    public void prePersist() {
+        if (issuedCount == null) {
+            issuedCount = 0;
+        }
+        if (totalCount == null) {
+            totalCount = 0;
+        }
+        availableCount = totalCount - issuedCount;
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
     @PreUpdate
     public void preUpdate() {
-        this.updatedAt = LocalDateTime.now();
-        this.availableCount = this.totalCount - this.issuedCount;
+        updatedAt = LocalDateTime.now();
+        availableCount = totalCount - issuedCount;
     }
 }

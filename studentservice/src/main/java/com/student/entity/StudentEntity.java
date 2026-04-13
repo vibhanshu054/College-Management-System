@@ -1,16 +1,17 @@
-package com.collage.student.entity;
+package com.student.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "students", indexes = {
-        @Index(name = "idx_student_id", columnList = "universityId"),
-        @Index(name = "idx_student_email", columnList = "email"),
-        @Index(name = "idx_student_course", columnList = "courseId")
+        @Index(name = "idx_student_university_id", columnList = "universityId"),
+        @Index(name = "idx_student_email", columnList = "studentEmail"),
+        @Index(name = "idx_student_course_code", columnList = "courseCode")
 })
 @Data
 @NoArgsConstructor
@@ -21,9 +22,8 @@ public class StudentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Database Identity
     @Column(nullable = false, unique = true, length = 12)
-    private String universityId;  // 12-digit student ID
+    private String universityId;
 
     @Column(nullable = false)
     private String studentName;
@@ -49,21 +49,18 @@ public class StudentEntity {
     @Column(nullable = false)
     private String courseCode;
 
-    // Faculty ID (Foreign Reference - READ ONLY)
     @Column(name = "facultyId", nullable = false)
     private String facultyId;
 
     @Column(name = "faculty_name")
     private String facultyName;
 
-    // Attendance Calendar (JSON or separate table)
     @Column(columnDefinition = "JSON")
     private String attendanceCalendar;
 
     @Column(name = "attendance_percentage", columnDefinition = "FLOAT DEFAULT 0.0")
     private Float attendancePercentage = 0.0f;
 
-    // Books issued and returned count
     @Column(name = "books_issued", columnDefinition = "INT DEFAULT 0")
     private Integer booksIssued = 0;
 
@@ -84,6 +81,21 @@ public class StudentEntity {
 
     @Column(name = "updated_by")
     private String updatedBy;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+        if (this.booksIssued == null) {
+            this.booksIssued = 0;
+        }
+        if (this.booksReturned == null) {
+            this.booksReturned = 0;
+        }
+        if (this.attendancePercentage == null) {
+            this.attendancePercentage = 0.0f;
+        }
+    }
 
     @PreUpdate
     public void preUpdate() {

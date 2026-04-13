@@ -10,6 +10,9 @@ spring:
     username: root
     password: Vivan@123
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
 
   jpa:
     hibernate:
@@ -17,8 +20,11 @@ spring:
     show-sql: false
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
-        dialect: org.hibernate.dialect.MySQL8Dialect
+        jdbc.batch_size: 20
+        order_inserts: true
+        order_updates: true
 
   jackson:
     serialization:
@@ -28,9 +34,11 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
   instance:
     prefer-ip-address: true
-    ip-address: 0.0.0.0
+    ip-address: 127.0.0.1
 
 springdoc:
   api-docs:
@@ -38,9 +46,25 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
     enabled: true
-    operations-sorter: method
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: FULL
+  compression:
+    request:
+      enabled: true
+      min-request-size: 2048
 
 logging:
   level:
-    com.user: DEBUG
-    org.springframework.security: DEBUG
+    root: INFO
+    com.userService: DEBUG
+    org.springframework.cloud.openfeign: DEBUG
+  file:
+    name: logs/user-service.log
+    max-size: 10MB
+    max-history: 30

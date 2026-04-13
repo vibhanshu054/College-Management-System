@@ -1,4 +1,4 @@
-package com.college.department_Service.config;
+package com.department_Service.config;
 
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;

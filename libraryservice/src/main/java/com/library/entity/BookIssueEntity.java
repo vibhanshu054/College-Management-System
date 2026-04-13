@@ -1,12 +1,14 @@
-package com.collage.library.entity;
+package com.library.entity;
 
-import com.collage.library.enums.IssueStatus;
+import com.library.enums.IssueStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Entity
 @Table(name = "book_issues", indexes = {
@@ -33,7 +35,7 @@ public class BookIssueEntity {
     private String userId;
 
     @Column(nullable = false)
-    private String userRole; // STUDENT, FACULTY, etc.
+    private String userRole;
 
     @Column(nullable = false)
     private String userName;
@@ -44,7 +46,6 @@ public class BookIssueEntity {
     @Column(nullable = false)
     private LocalDate returnableDate;
 
-    @Column(nullable = true)
     private LocalDate returnedDate;
 
     @Enumerated(EnumType.STRING)
@@ -63,14 +64,28 @@ public class BookIssueEntity {
     @Column(nullable = false)
     private LocalDateTime updatedAt = LocalDateTime.now();
 
+    @PrePersist
+    public void prePersist() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+        if (fineAmount == null) {
+            fineAmount = 0;
+        }
+        if (finePaid == null) {
+            finePaid = false;
+        }
+        if (status == null) {
+            status = IssueStatus.ISSUED;
+        }
+    }
+
     @PreUpdate
     public void preUpdate() {
-        this.updatedAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
 
-        // Calculate fine if book is overdue
-        if (status == IssueStatus.ISSUED && LocalDate.now().isAfter(returnableDate)) {
-            long daysOverdue = java.time.temporal.ChronoUnit.DAYS.between(returnableDate, LocalDate.now());
-            this.fineAmount = (int) (daysOverdue * 5); // 5 Rs per day fine
+        if (status == IssueStatus.ISSUED && returnableDate != null && LocalDate.now().isAfter(returnableDate)) {
+            long daysOverdue = ChronoUnit.DAYS.between(returnableDate, LocalDate.now());
+            fineAmount = (int) (daysOverdue * 5);
         }
     }
 }

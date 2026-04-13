@@ -1,12 +1,12 @@
 package com.facultyService.repository;
 
-
-import com.facultyService.entity.Transaction;
+import com.facultyService.entity.FacultyAttendanceRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TransactionRepository extends JpaRepository<Transaction, Long> {
+import java.time.LocalDate;
+import java.util.List;
 
-    boolean existsByBookIdAndStudentIdAndReturnDateIsNull(Long bookId, Long studentId);
-
-    long countByStudentIdAndReturnDateIsNull(Long studentId);
+public interface FacultyAttendanceRepository extends JpaRepository<FacultyAttendanceRecord, Long> {
+    List<FacultyAttendanceRecord> findByFacultyId(Long facultyId);
+    List<FacultyAttendanceRecord> findByFacultyIdAndAttendanceDateBetween(Long facultyId, LocalDate start, LocalDate end);
 }

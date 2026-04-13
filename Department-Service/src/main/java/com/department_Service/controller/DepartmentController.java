@@ -1,8 +1,8 @@
-package com.college.department_Service.controller;
+package com.department_Service.controller;
 
 
-import com.college.department_Service.dto.DepartmentDTO;
-import com.college.department_Service.service.DepartmentService;
+import com.department_Service.dto.DepartmentDTO;
+import com.department_Service.service.DepartmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;

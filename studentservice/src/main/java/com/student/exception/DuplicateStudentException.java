@@ -1,4 +1,4 @@
-package com.collage.student.exception;
+package com.student.exception;
 
 public class DuplicateStudentException extends RuntimeException {
     public DuplicateStudentException(String message) {

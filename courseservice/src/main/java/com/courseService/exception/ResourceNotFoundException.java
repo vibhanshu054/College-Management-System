@@ -1,4 +1,4 @@
-package com.collage.courseservice.exception;
+package com.courseService.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String message) {

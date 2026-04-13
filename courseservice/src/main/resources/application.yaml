@@ -6,7 +6,7 @@ spring:
     name: Course-Service
 
   datasource:
-    url: jdbc:mysql://localhost:3306/courseservice
+    url: jdbc:mysql://localhost:3306/user_service_db
     username: root
     password: Vivan@123
 

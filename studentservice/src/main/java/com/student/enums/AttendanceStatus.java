@@ -1,4 +1,4 @@
-package com.collage.student.enums;
+package com.student.enums;
 
 public enum AttendanceStatus {
     PRESENT,

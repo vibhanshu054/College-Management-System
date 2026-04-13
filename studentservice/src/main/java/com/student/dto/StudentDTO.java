@@ -1,4 +1,4 @@
-package com.collage.student.dto;
+package com.student.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class StudentDTO {
+
     private Long id;
     private String universityId;
     private String studentName;

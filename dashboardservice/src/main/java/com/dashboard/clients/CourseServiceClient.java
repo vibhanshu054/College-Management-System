@@ -1,12 +1,13 @@
-package com.collage.dashboard.clients;
+package com.dashboard.clients;
 
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+
 import java.util.List;
 import java.util.Map;
 
-@FeignClient(name = "course-service", url = "http://localhost:8082")
+@FeignClient(name = "COURSE-SERVICE")
 public interface CourseServiceClient {
 
     @GetMapping("/api/courses")

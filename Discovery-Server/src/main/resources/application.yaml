@@ -9,4 +9,4 @@ eureka:
     fetch-registry: false
   instance:
     prefer-ip-address: true
-    ip-address: 0.0.0.0
+    ip-address: 127.0.0.1

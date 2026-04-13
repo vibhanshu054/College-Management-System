@@ -1,10 +1,23 @@
 package com.facultyService.repository;
 
-
-import com.facultyService.entity.Book;
+import com.facultyService.entity.FacultyEntity;
+import com.facultyService.enums.FacultySubRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BookRepository extends JpaRepository<Book, Long> {
+import java.util.List;
+import java.util.Optional;
 
-    boolean existsByNameIgnoreCaseAndAuthorIgnoreCase(String name, String author);
+public interface FacultyRepository extends JpaRepository<FacultyEntity, Long> {
+
+    Optional<FacultyEntity> findByUniversityId(String universityId);
+
+    List<FacultyEntity> findByDepartmentIgnoreCase(String department);
+
+    List<FacultyEntity> findBySubRole(FacultySubRole subRole);
+
+    List<FacultyEntity> findByDepartmentIgnoreCaseAndSubRole(String department, FacultySubRole subRole);
+    
+    Integer countByActiveTrue();
+
+    Optional<Object> findByFacultyEmail(String facultyEmail);
 }

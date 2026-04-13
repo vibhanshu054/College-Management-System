@@ -1,4 +1,4 @@
-package com.college.attendance_Service.exception;
+package com.attendance_Service.exception;
 
 public class DuplicateResourceException extends RuntimeException {
     public DuplicateResourceException(String message) {

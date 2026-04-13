@@ -1,6 +1,7 @@
-package com.collage.courseservice.validation;
+package com.courseService.validation;
 
-import com.collage.courseservice.entity.Course;
+import com.courseService.dto.CourseRequestDto;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -26,12 +27,11 @@ public class CourseValidation {
      * Runs all validations and returns a list of error messages.
      * An empty list means the course is valid.
      */
-    public List<String> validate(Course course) {
+    public List<String> validate(@Valid CourseRequestDto course) {
         List<String> errors = new ArrayList<>();
 
         validateName(course.getName(), errors);
         validateCode(course.getCode(), errors);
-        validateFacultyId(course.getFacultyId(), errors);
 
         return errors;
     }

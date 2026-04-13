@@ -1,9 +1,17 @@
+server:
+  port: 8085
+
 spring:
   application:
     name: Dashboard-Service
-
-server:
-  port: 8085
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connectTimeout: 5000
+            readTimeout: 5000
+            loggerLevel: basic
 
 eureka:
   client:
@@ -12,8 +20,19 @@ eureka:
   instance:
     prefer-ip-address: true
     ip-address: 127.0.0.1
+
 springdoc:
   api-docs:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
+    enabled: true
+
+logging:
+  level:
+    root: INFO
+    com.college: DEBUG
+  file:
+    name: logs/dashboard-service.log
+    max-size: 10MB
+    max-history: 30

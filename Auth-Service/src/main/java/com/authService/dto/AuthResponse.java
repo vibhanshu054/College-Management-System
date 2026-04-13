@@ -11,4 +11,9 @@ public class AuthResponse {
     private String username;
     private LocalDateTime timeStamp;
     private LocalDateTime expiryTime;
+    private String type = "Bearer";
+    private Long expiresIn;
+    private String email;
+    private LocalDateTime issuedAt;
+    private LocalDateTime expiresAt;
 }

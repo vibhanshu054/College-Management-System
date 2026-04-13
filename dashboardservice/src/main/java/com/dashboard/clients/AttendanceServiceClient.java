@@ -1,4 +1,4 @@
-package com.collage.dashboard.clients;
+package com.dashboard.clients;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(name = "attendance-service", url = "http://localhost:8090")
+@FeignClient(name = "ATTENDANCE-SERVICE")   // Eureka based
 public interface AttendanceServiceClient {
 
-    @GetMapping("/api/attendance/student/{studentId}")
+    @GetMapping("/attendance/student/{studentId}")  //  FIXED PATH
     List<?> getStudentAttendance(@PathVariable String studentId);
 }

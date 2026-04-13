@@ -1,8 +1,8 @@
-package com.collage.dashboard.controller;
+package com.dashboard.controller;
 
 
-import com.collage.dashboard.dto.*;
-import com.collage.dashboard.service.DashboardService;
+import com.dashboard.dto.*;
+import com.dashboard.service.DashboardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,7 +26,7 @@ public class DashboardController {
 
     @GetMapping("/admin")
     @Operation(summary = "Get admin dashboard", description = "Retrieve admin dashboard with statistics")
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<AdminDashboardDTO> getAdminDashboard(Authentication auth) {
         log.info("Admin dashboard request from: {}", auth.getName());
         return ResponseEntity.ok(dashboardService.getAdminDashboard());

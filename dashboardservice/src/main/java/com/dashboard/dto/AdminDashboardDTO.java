@@ -1,4 +1,4 @@
-package com.collage.dashboard.dto;
+package com.dashboard.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

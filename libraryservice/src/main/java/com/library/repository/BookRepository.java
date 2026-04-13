@@ -1,10 +1,18 @@
-package com.collage.library.repository;
+package com.library.repository;
 
-
-import com.collage.library.entity.Book;
+import com.library.entity.BookEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BookRepository extends JpaRepository<Book, Long> {
+import java.util.List;
+import java.util.Optional;
 
-    boolean existsByNameIgnoreCaseAndAuthorIgnoreCase(String name, String author);
+public interface BookRepository extends JpaRepository<BookEntity, Long> {
+
+    Optional<BookEntity> findByBookId(String bookId);
+
+    boolean existsByBookNameIgnoreCaseAndAuthorIgnoreCase(String bookName, String author);
+
+    List<BookEntity> findByBookNameContainingIgnoreCaseOrAuthorContainingIgnoreCase(String bookName, String author);
+
+    List<BookEntity> findByAvailableCountGreaterThan(Integer count);
 }

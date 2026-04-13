@@ -1,6 +1,6 @@
-package com.collage.student.repository;
+package com.student.repository;
 
-import com.collage.student.entity.StudentEntity;
+import com.student.entity.StudentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -13,7 +13,7 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Long> {
 
     Optional<StudentEntity> findByUniversityId(String universityId);
 
-    Optional<StudentEntity> findByStudentEmail(String email);
+    Optional<StudentEntity> findByStudentEmail(String studentEmail);
 
     List<StudentEntity> findByCourseCode(String courseCode);
 

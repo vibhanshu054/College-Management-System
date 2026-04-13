@@ -1,4 +1,4 @@
-package com.authService.dto;
+package com.userService.dto;
 
 
 import lombok.Getter;

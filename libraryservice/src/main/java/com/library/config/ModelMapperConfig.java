@@ -1,4 +1,4 @@
-package com.collage.library.config;
+package com.library.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

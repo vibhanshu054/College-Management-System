@@ -1,4 +1,4 @@
-package com.college.attendance_Service.enums;
+package com.attendance_Service.enums;
 
 public enum AttendanceStatus {
     PRESENT,

@@ -1,4 +1,4 @@
-package com.collage.library.config;
+package com.library.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -16,8 +16,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI libraryAPI() {
         return new OpenAPI()
-                .addServersItem(new Server()
-                        .url("http://localhost:8080"))   // FORCE GATEWAY
+                .addServersItem(new Server().url("http://localhost:8080"))
                 .info(new Info()
                         .title("Library Service API")
                         .version("v1")
@@ -38,7 +37,7 @@ public class SwaggerConfig {
     public GroupedOpenApi libraryGroup() {
         return GroupedOpenApi.builder()
                 .group("library-v1")
-                .pathsToMatch("/api/library/**")
+                .pathsToMatch("/library/**")
                 .build();
     }
 }

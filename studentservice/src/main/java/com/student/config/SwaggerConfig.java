@@ -1,4 +1,4 @@
-package com.collage.student.config;
+package com.student.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

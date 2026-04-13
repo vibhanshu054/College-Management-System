@@ -1,55 +1,102 @@
-package com.collage.courseservice.controller;
+package com.courseService.controller;
 
-import com.collage.courseservice.entity.Course;
-import com.collage.courseservice.service.CourseService;
-import com.collage.courseservice.validation.CourseValidation;
+import com.courseService.dto.ApiResponse;
+import com.courseService.dto.CourseRequestDto;
+import com.courseService.entity.Course;
+import com.courseService.service.CourseService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/courses")
+@RequiredArgsConstructor
+@Slf4j
 public class CourseController {
 
-    @Autowired
-    private CourseService service;
+    private final CourseService service;
 
-    @Autowired
-    private CourseValidation courseValidation;
-
+    // CREATE
     @PostMapping
-    public Course createCourse(@Valid @RequestBody Course course) {
-        List<String> errors = courseValidation.validate(course);
-        if (!errors.isEmpty()) {
-            throw new IllegalArgumentException(String.join(", ", errors));
-        }
-        return service.createCourse(course);
+    public ResponseEntity<ApiResponse> createCourse(@Valid @RequestBody CourseRequestDto dto) {
+        log.info("Request received to create course with name: {}", dto.getName());
+
+        Course course = service.createCourse(dto);
+
+        log.info("Course created successfully with ID: {}", course.getId());
+
+        ApiResponse response = new ApiResponse(
+                "Course created successfully",
+                201,
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(201).body(response);
     }
 
+    // READ ALL
     @GetMapping
-    public List<Course> getAllCourses() {
-        return service.getAllCourses();
+    public ResponseEntity<List<Course>> getAllCourses() {
+        log.info("Request received to fetch all courses");
+
+        List<Course> courses = service.getAllCourses();
+
+        log.info("Fetched {} courses", courses.size());
+
+        return ResponseEntity.ok(courses);
     }
 
+    // READ BY ID
     @GetMapping("/{id}")
-    public Course getCourse(@PathVariable Long id) {
-        return service.getCourseById(id);
+    public ResponseEntity<Course> getCourse(@PathVariable Long id) {
+        log.info("Request received to fetch course with ID: {}", id);
+
+        Course course = service.getCourseById(id);
+
+        log.info("Course fetched successfully with ID: {}", id);
+
+        return ResponseEntity.ok(course);
     }
 
+    // UPDATE
     @PutMapping("/{id}")
-    public Course updateCourse(@PathVariable Long id, @Valid @RequestBody Course course) {
-        List<String> errors = courseValidation.validate(course);
-        if (!errors.isEmpty()) {
-            throw new IllegalArgumentException(String.join(", ", errors));
-        }
-        return service.updateCourse(id, course);
+    public ResponseEntity<ApiResponse> updateCourse(@PathVariable Long id,
+                                                    @Valid @RequestBody CourseRequestDto dto) {
+        log.info("Request received to update course with ID: {}", id);
+
+        Course updated = service.updateCourse(id, dto);
+
+        log.info("Course updated successfully with ID: {}", updated.getId());
+
+        ApiResponse response = new ApiResponse(
+                "Course updated successfully",
+                200,
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity.ok(response);
     }
 
+    // DELETE
     @DeleteMapping("/{id}")
-    public String deleteCourse(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse> deleteCourse(@PathVariable Long id) {
+        log.info("Request received to delete course with ID: {}", id);
+
         service.deleteCourse(id);
-        return "Course deleted";
+
+        log.info("Course deleted successfully with ID: {}", id);
+
+        ApiResponse response = new ApiResponse(
+                "Course deleted successfully",
+                200,
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity.ok(response);
     }
 }

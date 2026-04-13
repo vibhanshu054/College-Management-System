@@ -1,7 +1,6 @@
-package com.collage.library.enums;
+package com.library.enums;
 
 public enum IssueStatus {
     ISSUED,
-    RETURNED,
-    OVERDUE
+    RETURNED
 }

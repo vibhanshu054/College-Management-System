@@ -1,8 +1,7 @@
-package com.collage.student.controller;
+package com.student.controller;
 
-
-import com.collage.student.dto.StudentDTO;
-import com.collage.student.service.StudentService;
+import com.student.dto.StudentDTO;
+import com.student.service.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -14,14 +13,12 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/students")
+@RequestMapping("/api/students")
 @RequiredArgsConstructor
 @Tag(name = "Student Management", description = "APIs for Student Profile and Management")
 public class StudentController {
 
     private final StudentService studentService;
-
-    // ============ PROFILE ENDPOINTS ============
 
     @PostMapping
     @Operation(summary = "Create new student", description = "Create student profile with all required fields")
@@ -37,7 +34,7 @@ public class StudentController {
     }
 
     @GetMapping("/university-id/{universityId}")
-    @Operation(summary = "Get student by University ID", description = "Retrieve student profile using 12-digit university ID")
+    @Operation(summary = "Get student by University ID", description = "Retrieve student profile using university ID")
     public ResponseEntity<StudentDTO> getStudentByUniversityId(@PathVariable String universityId) {
         return ResponseEntity.ok(studentService.getStudentByUniversityId(universityId));
     }
@@ -45,36 +42,34 @@ public class StudentController {
     @GetMapping
     @Operation(summary = "Get all students", description = "Retrieve all students with filters")
     public ResponseEntity<List<StudentDTO>> getAllStudents(
-            @RequestParam(required = false) String course,
+            @RequestParam(required = false) String courseCode,
             @RequestParam(required = false) String semester,
             @RequestParam(required = false) String department) {
-        return ResponseEntity.ok(studentService.getAllStudents(course, semester, department));
+        return ResponseEntity.ok(studentService.getAllStudents(courseCode, semester, department));
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Update student profile", description = "Update student information (not university ID)")
+    @Operation(summary = "Update student profile", description = "Update student information")
     public ResponseEntity<StudentDTO> updateStudent(@PathVariable Long id, @RequestBody StudentDTO studentDTO) {
         return ResponseEntity.ok(studentService.updateStudent(id, studentDTO));
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Delete student", description = "Remove student from system (cascade operations)")
+    @Operation(summary = "Delete student", description = "Soft delete student")
     public ResponseEntity<Map<String, String>> deleteStudent(@PathVariable Long id) {
         studentService.deleteStudent(id);
         return ResponseEntity.ok(Map.of("message", "Student deleted successfully"));
     }
 
-    // ============ DASHBOARD ENDPOINTS ============
-
     @GetMapping("/{id}/dashboard")
-    @Operation(summary = "Get student dashboard", description = "Get profile, books issued/returned, and attendance calendar")
+    @Operation(summary = "Get student dashboard", description = "Get student profile, book counts, and attendance details")
     public ResponseEntity<Map<String, Object>> getStudentDashboard(@PathVariable Long id) {
         return ResponseEntity.ok(studentService.getStudentDashboard(id));
     }
 
     @GetMapping("/{id}/attendance")
     @Operation(summary = "Get student attendance calendar", description = "Retrieve attendance record - READ ONLY")
-    public ResponseEntity<String> getAttendanceCalendar(@PathVariable Long id) {
+    public ResponseEntity<List<Map<String, Object>>> getAttendanceCalendar(@PathVariable Long id) {
         return ResponseEntity.ok(studentService.getAttendanceCalendar(id));
     }
 
@@ -83,8 +78,6 @@ public class StudentController {
     public ResponseEntity<Map<String, Integer>> getBooksStatus(@PathVariable Long id) {
         return ResponseEntity.ok(studentService.getBooksStatus(id));
     }
-
-    // ============ BULK OPERATIONS ============
 
     @GetMapping("/filter/by-course/{courseCode}")
     @Operation(summary = "Get students by course code", description = "Retrieve all students in specific course")
@@ -99,7 +92,7 @@ public class StudentController {
     }
 
     @GetMapping("/count")
-    @Operation(summary = "Get total students count", description = "Get total number of active students")
+    @Operation(summary = "Get total students count", description = "Get total number of students")
     public ResponseEntity<Map<String, Long>> getTotalStudentsCount() {
         return ResponseEntity.ok(Map.of("totalStudents", studentService.getTotalStudentsCount()));
     }

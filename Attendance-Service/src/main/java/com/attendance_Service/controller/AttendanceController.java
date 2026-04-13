@@ -1,12 +1,12 @@
-package com.college.attendance_Service.controller;
+package com.attendance_Service.controller;
 
 
-
-import com.college.attendance_Service.dto.AttendanceDTO;
-import com.college.attendance_Service.service.AttendanceService;
+import com.attendance_Service.dto.AttendanceDTO;
+import com.attendance_Service.service.AttendanceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -15,13 +15,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/attendance")
+@RequestMapping("/api/attendance")
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "Attendance Management", description = "APIs for Attendance Management")
@@ -31,7 +30,7 @@ public class AttendanceController {
 
     @PostMapping
     @Operation(summary = "Mark attendance", description = "Faculty - Mark attendance for students")
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<AttendanceDTO> markAttendance(
             @Valid @RequestBody AttendanceDTO attendanceDTO,
             Authentication auth) {

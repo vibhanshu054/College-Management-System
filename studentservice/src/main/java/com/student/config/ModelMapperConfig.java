@@ -1,4 +1,4 @@
-package com.collage.student.config;
+package com.student.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

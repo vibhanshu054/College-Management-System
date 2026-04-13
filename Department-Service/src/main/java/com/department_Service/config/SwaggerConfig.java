@@ -1,4 +1,4 @@
-package com.college.department_Service.config;
+package com.department_Service.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

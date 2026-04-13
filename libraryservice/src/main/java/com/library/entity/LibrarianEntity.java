@@ -1,9 +1,10 @@
-package com.collage.library.entity;
+package com.library.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,9 +21,8 @@ public class LibrarianEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Database Identity
     @Column(nullable = false, unique = true, length = 12)
-    private String universityId;  // 12-digit librarian ID
+    private String universityId;
 
     @Column(nullable = false)
     private String librarianName;
@@ -33,7 +33,6 @@ public class LibrarianEntity {
     @Column(nullable = false)
     private String librarianPhoneNumber;
 
-    // Attendance Calendar (JSON or separate table)
     @Column(columnDefinition = "JSON")
     private String attendanceCalendar;
 
@@ -55,8 +54,17 @@ public class LibrarianEntity {
     @Column(name = "updated_by")
     private String updatedBy;
 
+    @PrePersist
+    public void prePersist() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+        if (attendancePercentage == null) {
+            attendancePercentage = 0.0f;
+        }
+    }
+
     @PreUpdate
     public void preUpdate() {
-        this.updatedAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 }

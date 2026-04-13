@@ -1,4 +1,4 @@
-package com.college.attendance_Service.config;
+package com.dashboard.config;
 
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;

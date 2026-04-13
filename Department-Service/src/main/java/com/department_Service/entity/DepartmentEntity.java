@@ -1,4 +1,4 @@
-package com.college.department_Service.entity;
+package com.department_Service.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

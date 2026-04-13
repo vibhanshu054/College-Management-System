@@ -1,4 +1,4 @@
-package com.collage.courseservice;
+package com.courseService;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

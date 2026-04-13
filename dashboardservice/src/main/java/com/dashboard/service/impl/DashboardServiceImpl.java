@@ -1,18 +1,23 @@
-package com.dashboard.service;
+package com.dashboard.service.impl;
 
 import com.dashboard.clients.*;
 import com.dashboard.dto.*;
+import com.dashboard.service.DashboardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class DashboardService {
+public class DashboardServiceImpl implements DashboardService {
 
     private final UserServiceClient userServiceClient;
     private final StudentServiceClient studentServiceClient;
@@ -21,6 +26,7 @@ public class DashboardService {
     private final DepartmentServiceClient departmentServiceClient;
     private final LibraryServiceClient libraryServiceClient;
     private final AttendanceServiceClient attendanceServiceClient;
+    private final SubjectServiceClient subjectServiceClient;
 
     /**
      * ADMIN DASHBOARD
@@ -55,33 +61,86 @@ public class DashboardService {
     /**
      * STUDENT DASHBOARD
      */
+    @Override
     public StudentDashboardDTO getStudentDashboard(String studentId) {
 
+        //  1. Call Attendance Service
         List<?> attendanceList = attendanceServiceClient.getStudentAttendance(studentId);
 
         double percentage = calculateAttendance(attendanceList);
 
+        //  2. Call Subject Service
+        List<SubjectDTO> subjects = subjectServiceClient.getSubjectsByStudent(studentId);
+
+        //  3. Total classes (simple logic)
+        int totalClasses = (attendanceList != null) ? attendanceList.size() : 0;
+
+        //  4. Build response
         return StudentDashboardDTO.builder()
                 .studentName(studentId)
+                .courseName("N/A")   // can improve later
                 .attendancePercentage(percentage)
                 .booksIssued(0)
                 .booksReturned(0)
+                .totalClasses(totalClasses)
+                .enrolledSubjects(subjects)
                 .build();
     }
 
     /**
      * FACULTY DASHBOARD
      */
+    @Override
     public FacultyDashboardDTO getFacultyDashboard(String facultyId) {
+
+        // 1. Get all subjects ONCE
+        List<SubjectDTO> subjects = subjectServiceClient.getAllSubjects()
+                .stream()
+                .filter(sub -> facultyId.equals(sub.getFacultyId()))
+                .toList();
+
+        int totalCourses = subjects.size();
+
+        // 2. Total students (simple for now)
+        int totalStudents = studentServiceClient.getAllStudents().size();
+
+        // 3. Attendance (TEMP FIX - faculty attendance not valid)
+        double percentage = 0.0;
+
+        // 4. Today's schedule (DYNAMIC)
+        DayOfWeek today = LocalDate.now().getDayOfWeek();
+
+        List<Map<String, Object>> schedule = subjects.stream()
+                .filter(sub -> sub.getDay() != null &&
+                        sub.getDay().equalsIgnoreCase(today.name()))
+                .map(sub -> {
+
+                    if (sub.getScheduleTime() == null) return null;
+
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("course", sub.getSubjectName());
+
+                    try {
+                        String[] time = sub.getScheduleTime().split("-");
+                        map.put("start", time[0]);
+                        map.put("end", time[1]);
+                    } catch (Exception e) {
+                        log.error("Invalid schedule format for subject: {}", sub.getSubjectName());
+                    }
+
+                    return map;
+                })
+                .filter(obj -> obj != null)
+                .toList();
 
         return FacultyDashboardDTO.builder()
                 .facultyName(facultyId)
-                .totalClassesAssigned(0)
-                .totalStudents(0)
-                .attendancePercentage(0.0)
+                .totalClassesAssigned(totalCourses)
+                .totalStudents(totalStudents)
+                .attendancePercentage(percentage)
+                .todaySchedule(schedule)
                 .build();
     }
-
     /**
      * LIBRARIAN DASHBOARD
      */
@@ -129,7 +188,7 @@ public class DashboardService {
     /**
      * SIMPLE ATTENDANCE CALCULATION
      */
-    private double calculateAttendance(List<?> list) {
+    public double calculateAttendance(List<?> list) {
 
         if (list == null || list.isEmpty()) return 0.0;
 
@@ -139,4 +198,5 @@ public class DashboardService {
 
         return (double) present / list.size() * 100;
     }
+
 }

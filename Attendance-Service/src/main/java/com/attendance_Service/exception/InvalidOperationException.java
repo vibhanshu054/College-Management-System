@@ -1,4 +1,4 @@
-package com.college.attendance_Service.exception;
+package com.attendance_Service.exception;
 
 public class InvalidOperationException extends RuntimeException {
     public InvalidOperationException(String message) {

@@ -37,14 +37,13 @@ public class AuthFilter implements GatewayFilter, Ordered {
         log.info("Incoming request: {} {}", method, path);
 
         // Allow auth endpoints
-        if (path.contains("/api/auth/login") ||
-                path.contains("/api/auth/logout") ||
-                path.contains("/api/auth/validate") ||
-                path.contains("/v3/api-docs") ||
-                path.contains("/swagger-ui") ||
-                path.contains("/swagger-resources") ||
-                path.contains("/webjars")) {
-
+        if (path.equals("/api/auth/login") ||
+                path.equals("/api/auth/logout") ||
+                path.equals("/api/auth/validate") ||
+                path.startsWith("/swagger-ui") ||
+                path.startsWith("/v3/api-docs") ||
+                path.startsWith("/swagger-resources") ||
+                path.startsWith("/webjars")) {
             log.info("Swagger/Auth endpoint accessed, skipping filter");
             return chain.filter(exchange);
         }
@@ -68,12 +67,7 @@ public class AuthFilter implements GatewayFilter, Ordered {
             //  Reactive blacklist check (NO block)
             return webClientBuilder.build()
                     .get()
-                    .uri(uriBuilder -> uriBuilder
-                            .scheme("http")
-                            .host("AUTH-SERVICE")
-                            .path("/api/auth/validate")
-                            .queryParam("token", token)
-                            .build())
+                    .uri("lb://AUTH-SERVICE/api/auth/validate?token={token}", token)
                     .retrieve()
                     .bodyToMono(Boolean.class)
                     .flatMap(isBlacklisted -> {
@@ -87,24 +81,25 @@ public class AuthFilter implements GatewayFilter, Ordered {
 
                         //  ADMIN → Full access
                         if ("ADMIN".equals(role)) {
-                            log.info("ADMIN access granted");
                             ServerHttpRequest request = exchange.getRequest().mutate()
                                     .header("X-User-Name", username)
+                                    .header("X-User-Department", department != null ? department : "")
+                                    .header("X-User-Role", role)
                                     .build();
                             return chain.filter(exchange.mutate().request(request).build());
                         }
 
-                        //  CREATE USER → Only ADMIN
+                        //  CREATE USER → Only ADMIN and SYSTEM
                         if (path.equals("/api/users") && method.equals("POST")) {
-                            if (!"ADMIN".equals(role)) {
+                            if (!"ADMIN".equals(role) && !"SYSTEM".equals(role)) {
                                 log.error("Access denied: Only ADMIN can create users");
-                                return onError(exchange, "Only ADMIN can create users");
+                                return onError(exchange, "Only ADMIN or SYSTEM can create users");
                             }
                         }
 
                         //  VIEW ALL USERS → Only ADMIN
                         if (path.startsWith("/api/users/all")) {
-                            if (!"ADMIN".equals(role)) {
+                            if (!"ADMIN".equals(role) && !"SYSTEM".equals(role)) {
                                 log.error("Access denied: Only ADMIN can view all users");
                                 return onError(exchange, "Only ADMIN allowed");
                             }
@@ -112,36 +107,48 @@ public class AuthFilter implements GatewayFilter, Ordered {
 
                         //  ADMIN DASHBOARD
                         if (path.startsWith("/api/dashboard/admin")) {
-                            if (!"ADMIN".equals(role)) {
+                            if (!"ADMIN".equals(role) && !"SYSTEM".equals(role)) {
                                 return onError(exchange, "Only ADMIN allowed");
                             }
                         }
 
                         //  FACULTY DASHBOARD
                         if (path.startsWith("/api/dashboard/faculty")) {
-                            if (!"FACULTY".equals(role) && !"ADMIN".equals(role)) {
+                            if (!"FACULTY".equals(role) && !"ADMIN".equals(role) && !"SYSTEM".equals(role)) {
                                 return onError(exchange, "Access Denied");
                             }
                         }
 
                         //  FACULTY → Courses + Students
                         if (path.startsWith("/api/courses") || path.startsWith("/api/students")) {
-                            if (!"FACULTY".equals(role) && !"ADMIN".equals(role)) {
+                            if (!"FACULTY".equals(role) && !"ADMIN".equals(role) && !"SYSTEM".equals(role)) {
                                 log.error("Access denied: Only FACULTY or ADMIN allowed");
                                 return onError(exchange, "Access Denied");
                             }
                         }
 
-                        //  LIBRARIAN DASHBOARD
+                        // DASHBOARD
                         if (path.startsWith("/api/dashboard/library")) {
-                            if (!"LIBRARIAN".equals(role) && !"ADMIN".equals(role)) {
+                            if (!"DASHBOARD".equals(role) && !"ADMIN".equals(role) && !"SYSTEM".equals(role)) {
+                                return onError(exchange, "Access Denied");
+                            }
+                        }
+                        // DEPARTMENT
+                        if (path.startsWith("/api/department/library")) {
+                            if (!"DASHBOARD".equals(role) && !"ADMIN".equals(role) && !"SYSTEM".equals(role)) {
+                                return onError(exchange, "Access Denied");
+                            }
+                        }
+                        // SUBJECT
+                        if (path.startsWith("/api/subjects/library")) {
+                            if (!"SUBJECT".equals(role) && !"ADMIN".equals(role) && !"SYSTEM".equals(role)) {
                                 return onError(exchange, "Access Denied");
                             }
                         }
 
                         //  LIBRARIAN → Library only
                         if (path.startsWith("/api/library")) {
-                            if (!"LIBRARIAN".equals(role) && !"ADMIN".equals(role)) {
+                            if (!"LIBRARIAN".equals(role) && !"ADMIN".equals(role) && !"SYSTEM".equals(role)) {
                                 log.error("Access denied: Only LIBRARIAN or ADMIN allowed");
                                 return onError(exchange, "Access Denied");
                             }
@@ -152,7 +159,7 @@ public class AuthFilter implements GatewayFilter, Ordered {
                                 path.startsWith("/api/library/my-books") ||
                                 path.startsWith("/api/dashboard/student")) {
 
-                            if (!"STUDENT".equals(role) && !"ADMIN".equals(role)) {
+                            if (!"STUDENT".equals(role) && !"ADMIN".equals(role) && !"SYSTEM".equals(role)) {
                                 log.error("Access denied: Only STUDENT or ADMIN allowed");
                                 return onError(exchange, "Access Denied");
                             }

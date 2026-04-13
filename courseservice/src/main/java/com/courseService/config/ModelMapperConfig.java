@@ -1,4 +1,4 @@
-package com.collage.courseservice.config;
+package com.courseService.config;
 
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;

@@ -1,11 +1,17 @@
 package com.authService.util;
 
+import lombok.Getter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+@Getter
 @Component
 public class PasswordEncoderUtil {
 
+    /**
+     * -- GETTER --
+     *  Get the password encoder instance
+     */
     private final BCryptPasswordEncoder encoder;
 
     public PasswordEncoderUtil() {
@@ -26,10 +32,4 @@ public class PasswordEncoderUtil {
         return encoder.matches(rawPassword, encodedPassword);
     }
 
-    /**
-     * Get the password encoder instance
-     */
-    public BCryptPasswordEncoder getEncoder() {
-        return encoder;
-    }
 }

@@ -13,16 +13,24 @@ spring:
           lower-case-service-id: true
       routes:
         # Auth Service
-        - id: auth-service
-          uri: lb://auth-service
+        - id: auth-Service
+          uri: lb://Auth-Service
           predicates:
             - Path=/api/auth/**
           filters:
             - RewritePath=/api/auth/(?<path>.*), /${path}
 
+            # Attendance-Service Service
+        - id: attendance-service
+          uri: lb://Attendance-Service
+          predicates:
+            - Path=/api/attendance/**
+          filters:
+            - RewritePath=/api/attendance/(?<path>.*), /${path}
+
         # User Service
         - id: user-service
-          uri: lb://user-service
+          uri: lb://User-Service
           predicates:
             - Path=/api/users/**
           filters:
@@ -30,7 +38,7 @@ spring:
 
         # Course Service
         - id: course-service
-          uri: lb://courseservice
+          uri: lb://Course-Service
           predicates:
             - Path=/api/courses/**
           filters:
@@ -38,7 +46,7 @@ spring:
 
         # Student Service
         - id: student-service
-          uri: lb://student-service
+          uri: lb://Student-Service
           predicates:
             - Path=/api/students/**
           filters:
@@ -46,7 +54,7 @@ spring:
 
         # Faculty Service
         - id: faculty-service
-          uri: lb://faculty-service
+          uri: lb://Faculty-Service
           predicates:
             - Path=/api/faculty/**
           filters:
@@ -54,7 +62,7 @@ spring:
 
         # Library Service
         - id: library-service
-          uri: lb://libraryservice
+          uri: lb://Library-Service
           predicates:
             - Path=/api/library/**
           filters:
@@ -62,11 +70,27 @@ spring:
 
         # Dashboard Service
         - id: dashboard-service
-          uri: lb://dashboardservice
+          uri: lb://Dashboard-Service
           predicates:
             - Path=/api/dashboard/**
           filters:
             - RewritePath=/api/dashboard/(?<path>.*), /${path}
+
+            # Subject Service
+        - id: subject-service
+          uri: lb://Subject-Service
+          predicates:
+            - Path=/api/subjects/**
+          filters:
+            - RewritePath=/api/subjects/(?<path>.*), /${path}
+
+        # Department Service
+        - id: department-service
+          uri: lb://Department-Service
+          predicates:
+            - Path=/api/departments/**
+          filters:
+            - RewritePath=/api/departments/(?<path>.*), /${path}
 
       globalcors:
         add-to-simple-url-handler-mapping: true
@@ -99,16 +123,31 @@ springdoc:
     urls:
       - name: Auth Service
         url: /api/auth/v3/api-docs
+
+      - name: Attendance Service
+        url: /api/attendance/v3/api-docs
+
+      - name: Department Service
+        url: /api/departments/v3/api-docs
+
+      - name: Subject Service
+        url: /api/subjects/v3/api-docs
+
       - name: User Service
         url: /api/users/v3/api-docs
+
       - name: Course Service
         url: /api/courses/v3/api-docs
+
       - name: Student Service
         url: /api/students/v3/api-docs
+
       - name: Faculty Service
         url: /api/faculty/v3/api-docs
+
       - name: Library Service
         url: /api/library/v3/api-docs
+
       - name: Dashboard Service
         url: /api/dashboard/v3/api-docs
 
@@ -122,7 +161,7 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
   instance:
     prefer-ip-address: true
-    ip-address: 0.0.0.0
+    ip-address: 127.0.0.1
 
 logging:
   level:

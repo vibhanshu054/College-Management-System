@@ -1,4 +1,22 @@
 package com.courseService.dto;
 
-public class CourseDto {
+
+
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+
+@Data
+public class CourseRequestDto {
+
+
+    @NotBlank(message = "Course name is required")
+    private String name;
+
+    @NotBlank(message = "Course code is required")
+    private String code;
+
+
 }

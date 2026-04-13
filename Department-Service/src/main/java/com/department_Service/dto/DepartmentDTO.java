@@ -1,4 +1,4 @@
-package com.college.department_Service.dto;
+package com.department_Service.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;

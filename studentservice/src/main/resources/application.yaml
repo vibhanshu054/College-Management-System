@@ -8,7 +8,7 @@ spring:
     name: Student-Service
 
   datasource:
-    url: jdbc:mysql://localhost:3306/studentservice
+    url: jdbc:mysql://localhost:3306/user_service_db
     username: root
     password: Vivan@123
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -47,8 +47,8 @@ eureka:
     fetch-registry: true
   instance:
     prefer-ip-address: true
-    ip-address: 0.0.0.0
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    ip-address: 127.0.0.1
+    instance-id: ${spring.application.name}:${server.port}
     lease-renewal-interval-in-seconds: 10
     lease-expiration-duration-in-seconds: 30
 

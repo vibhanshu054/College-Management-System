@@ -1,4 +1,4 @@
-package com.collage.courseservice;
+package com.courseService;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -2,9 +2,11 @@ package com.authService.services.impl;
 
 import com.authService.dto.ApiResponse;
 import com.authService.dto.AuthResponse;
-import com.authService.dto.UserDto;
+import com.authService.dto.LoginRequest;
+import com.authService.dto.UserDTO;
 import com.authService.entity.BlacklistedToken;
 import com.authService.exception.InvalidCredentialsException;
+import com.authService.exception.InvalidTokenException;
 import com.authService.exception.UserNotFoundException;
 import com.authService.repository.BlacklistRepository;
 import com.authService.services.AuthService;
@@ -27,57 +29,72 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final RestTemplate restTemplate;
 
-    //  LOGIN
-    public AuthResponse login(String username, String password) {
+    @Override
+    public AuthResponse login(String email, String password) {
+        log.info("Authenticating user {}", email);
 
-        log.info("Authenticating user {}", username);
-
-        // CALL User SERVICE
-        UserDto user = restTemplate.getForObject(
-                "http://User-Service/api/users/login?username={username}",
-                UserDto.class,
-                username
-        );
-
-        if (username == null || username.isBlank()) {
-            throw new InvalidCredentialsException("Username cannot be empty");
+        // 1. Null / blank checks
+        if (email == null || email.trim().isEmpty()) {
+            throw new InvalidCredentialsException("Email must not be null or blank");
         }
 
-        if (password == null || password.isBlank()) {
-            throw new InvalidCredentialsException("Password cannot be empty");
+        if (password == null || password.trim().isEmpty()) {
+            throw new InvalidCredentialsException("Password must not be null or blank");
         }
 
+        UserDTO user;
+        try {
+            user = restTemplate.postForObject(
+                    "http://USER-SERVICE/api/users/verify",
+                    new LoginRequest(email, password),
+                    UserDTO.class
+            );
+        } catch (Exception ex) {
+            log.error("Error while calling USER-SERVICE: {}", ex.getMessage(), ex);
+            throw new InvalidCredentialsException("Unable to verify user credentials");
+        }
+
+        // 2. User null
         if (user == null) {
-            throw new UserNotFoundException("User not found");
+            throw new UserNotFoundException("User not found with email: " + email);
         }
 
-        if (user.getUsername() == null || !user.getUsername().equalsIgnoreCase(username)) {
-            log.warn("Username mismatch for requested username {}", username);
-            throw new InvalidCredentialsException("Invalid credentials");
-        }
-
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            log.warn("Invalid credentials for {}", username);
-            throw new InvalidCredentialsException("Invalid credentials");
-        }
+        // 3. Wrong password
+//        if (user.getPassword() == null || !passwordEncoder.matches(password, user.getPassword())) {
+//            log.warn("Invalid credentials for {}", email);
+//            throw new InvalidCredentialsException("Invalid email or password");
+//        }
 
         String role = user.getRole() != null ? user.getRole() : "USER";
-        String department = user.getDepartment() != null ? user.getDepartment() : "";
-        String token = jwtUtil.generateToken(user.getUsername(), role, department);
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime expiry = now.plusHours(1);
+
+        String token = jwtUtil.generateToken(
+                user.getEmail(),
+                role,
+                user.getDepartment() != null ? user.getDepartment() : ""
+        );
 
         return AuthResponse.builder()
                 .token(token)
+                .type("Bearer")
                 .username(user.getUsername())
-                .timeStamp(LocalDateTime.now())
-                .expiryTime(LocalDateTime.now().plusHours(1))
+                .email(user.getEmail())
+                .timeStamp(now)
+                .issuedAt(now)
+                .expiryTime(expiry)
+                .expiresAt(expiry)
+                .expiresIn(3600L)
                 .build();
     }
 
-    //  VALIDATE TOKEN
+    @Override
     public boolean validateToken(String token) {
-
-        // If token is blacklisted → reject
         log.info("Validating token");
+
+        if (token == null || token.trim().isEmpty()) {
+            return false;
+        }
 
         if (repository.existsByToken(token)) {
             log.warn("Token is blacklisted");
@@ -85,16 +102,31 @@ public class AuthServiceImpl implements AuthService {
         }
 
         try {
-            jwtUtil.extractUsername(token); // validates token
+            jwtUtil.extractUsername(token);
             return true;
         } catch (Exception e) {
+            log.warn("Invalid token: {}", e.getMessage());
             return false;
         }
     }
 
     // LOGOUT
+    @Override
     public ApiResponse logout(String token, String username) {
         log.warn("BLACKLISTING TOKEN: {}", token);
+
+        if (token == null || token.trim().isEmpty()) {
+            throw new InvalidTokenException("Token must not be null or blank");
+        }
+
+        if (username == null || username.trim().isEmpty()) {
+            throw new InvalidCredentialsException("Username must not be null or blank");
+        }
+
+        if (repository.existsByToken(token)) {
+            throw new InvalidTokenException("Token already blacklisted");
+        }
+
         BlacklistedToken entity = BlacklistedToken.builder()
                 .token(token)
                 .expiryTime(LocalDateTime.now().plusHours(1))

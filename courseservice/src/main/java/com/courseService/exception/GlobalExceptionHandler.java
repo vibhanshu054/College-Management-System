@@ -1,4 +1,4 @@
-package com.collage.courseservice.exception;
+package com.courseService.exception;
 
 
 import org.springframework.http.HttpStatus;

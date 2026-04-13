@@ -3,7 +3,7 @@ package com.subject_Service.service;
 
 import com.subject_Service.dto.SubjectDTO;
 import com.subject_Service.entity.SubjectEntity;
-import com.college.Subject_Service.exception.*;
+import com.subject_Service.exception.*;
 import com.subject_Service.exception.DuplicateResourceException;
 import com.subject_Service.exception.ResourceNotFoundException;
 import com.subject_Service.repository.SubjectRepository;

@@ -1,11 +1,11 @@
-package com.college.attendance_Service.repository;
+package com.attendance_Service.repository;
 
 
 
 
 
-import com.college.attendance_Service.entity.AttendanceEntity;
-import com.college.attendance_Service.enums.AttendanceStatus;
+import com.attendance_Service.entity.AttendanceEntity;
+import com.attendance_Service.enums.AttendanceStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -30,4 +30,7 @@ public interface AttendanceRepository extends JpaRepository<AttendanceEntity, Lo
 
     @Query("SELECT COUNT(a) FROM AttendanceEntity a WHERE a.studentId = ?1 AND a.attendanceDate BETWEEN ?2 AND ?3")
     long countByStudentAndDateRange(String studentId, LocalDate startDate, LocalDate endDate);
+
+    @Query("SELECT COUNT(a) FROM AttendanceEntity a WHERE a.studentId = ?1 AND a.status = ?2 AND a.attendanceDate BETWEEN ?3 AND ?4")
+    long countByStudentAndStatusAndDateRange(String studentId, AttendanceStatus status, LocalDate startDate, LocalDate endDate);
 }

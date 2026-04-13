@@ -1,8 +1,8 @@
-package com.college.department_Service.repository;
+package com.department_Service.repository;
 
 
 
-import com.college.department_Service.entity.DepartmentEntity;
+import com.department_Service.entity.DepartmentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

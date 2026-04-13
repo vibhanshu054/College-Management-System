@@ -3,7 +3,7 @@ package com.authService.services.impl;
 import com.authService.dto.OtpRequestDto;
 import com.authService.dto.ResetPasswordRequestDto;
 import com.authService.dto.UpdatePasswordDto;
-import com.authService.dto.UserDto;
+import com.authService.dto.UserDTO;
 import com.authService.entity.OtpEntity;
 import com.authService.entity.PasswordResetToken;
 import com.authService.exception.*;
@@ -14,11 +14,12 @@ import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
@@ -26,7 +27,6 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.UUID;
-
 
 @Service
 @RequiredArgsConstructor
@@ -45,14 +45,14 @@ public class PasswordServiceImpl implements PasswordService {
     public String forgotPassword(String email) {
 
         log.info("Password reset requested for email: {}", email);
-        UserDto user = null;
+        UserDTO user = null;
         //CHECK USER EXIST WITH EMAIL
         try {
             user = restTemplate.getForObject(
-                    "http://User-Service/user/by-email?email=" + email,
-                    UserDto.class
+                    "http://USER-SERVICE/api/users/internal/by-email?email=" + email,
+                    UserDTO.class
             );
-        } catch (UserNotFoundException ex) {
+        } catch (HttpClientErrorException.NotFound ex) {
             log.warn("User not found for email: {}", email);
             // user remains null, proceed accordingly
         }
@@ -135,9 +135,9 @@ public class PasswordServiceImpl implements PasswordService {
         log.info("OTP saved in database for email: {} | OTP: {}", tokenEntity.getEmail(), otpValue);
 
         // 4. Fetch user by email (fail fast if not found)
-        UserDto user = restTemplate.getForObject(
-                "http://User-Service/user/by-email?email=" + tokenEntity.getEmail(),
-                UserDto.class
+        UserDTO user = restTemplate.getForObject(
+                "http://USER-SERVICE/api/users/internal/by-email?email=" + tokenEntity.getEmail(),
+                UserDTO.class
         );
 
         if (user == null) {
@@ -250,9 +250,9 @@ public class PasswordServiceImpl implements PasswordService {
         }
 
         // 4. Fetch user
-        UserDto user = restTemplate.getForObject(
-                "http://User-Service/api/users/by-email?email=" + token.getEmail(),
-                UserDto.class
+        UserDTO user = restTemplate.getForObject(
+                "http://USER-SERVICE/api/users/internal/by-email?email=" + token.getEmail(),
+                UserDTO.class
         );
 
         if (user == null) {
@@ -271,7 +271,7 @@ public class PasswordServiceImpl implements PasswordService {
         dto.setNewPassword(request.getNewPassword());
 
         restTemplate.postForObject(
-                "http://User-Service/api/users/update-password",
+                "http://User-Service/users/update-password",
                 dto,
                 String.class
         );
@@ -306,7 +306,7 @@ public class PasswordServiceImpl implements PasswordService {
 
         } catch (Exception e) {
             log.error("Failed to send email to: {}", to, e);
-            throw new RuntimeException("Mail sending failed", e);
+            throw new RuntimeException("Mail sending failed");
         }
     }
 }

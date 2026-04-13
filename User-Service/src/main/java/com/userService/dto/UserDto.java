@@ -1,26 +1,59 @@
 package com.userService.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.*;
 import org.springframework.format.annotation.NumberFormat;
 
-@Getter
+import java.time.LocalDateTime;
+
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDto {
+
     private Long id;
-    private String username;
+
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email should be valid")
     private String email;
+
+    @NotBlank(message = "Username is required")
+    private String username;
+
+    @NotBlank(message = "Name is required")
+    private String name;
+
+    @NotBlank(message = "Password is required")
+    @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
-    private String role;
+
+    @NotBlank(message = "Role is required")
+    private String role;  // ADMIN, FACULTY, LIBRARIAN, STUDENT
+
+    @NotBlank(message = "Department is required")
     private String department;
-    private String profilePictureUrl;
-    private String bio;
-    private String UniversityId;
-    private Long studentServiceId;
-    @NumberFormat(pattern = "\\d{10}")
-    public String PhoneNumber;
+
+    @NotBlank(message = "Phone number is required")
+    private String phoneNumber;
+
+    @NotBlank(message = "University ID is required")
+    private String universityId;
+
+    // Optional for students
+    private String semester;
+    private String batch;
+    private String courseCode;
+
+    // Optional for faculty
+    private String facultySubRole;  // HOD, PROFESSOR, ASSISTANT_PROFESSOR, TRAINEE
+
+    private boolean active;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

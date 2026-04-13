@@ -1,4 +1,4 @@
-package com.college.attendance_Service.config;
+package com.attendance_Service.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -14,14 +14,13 @@ import org.springframework.context.annotation.Configuration;
 public class SwaggerConfig {
 
     @Bean
-    public OpenAPI departmentAPI() {
+    public OpenAPI attendanceAPI() {
         return new OpenAPI()
-                .addServersItem(new Server()
-                        .url("http://localhost:8080"))   // FORCE GATEWAY
+                .addServersItem(new Server().url("http://localhost:8080")) // change if needed
                 .info(new Info()
-                        .title("Department Service API")
+                        .title("Attendance Service API")
                         .version("v1")
-                        .description("Department Management APIs"))
+                        .description("Attendance Management APIs"))
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
                 .components(new Components()
                         .addSecuritySchemes("bearerAuth",
@@ -35,10 +34,10 @@ public class SwaggerConfig {
     }
 
     @Bean
-    public GroupedOpenApi departmentGroup() {
+    public GroupedOpenApi attendanceGroup() {
         return GroupedOpenApi.builder()
-                .group("department-v1")
-                .pathsToMatch("/api/department/**")
+                .group("attendance-v1")
+                .pathsToMatch("/attendance/**")   //  FIXED
                 .build();
     }
 }

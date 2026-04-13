@@ -1,7 +1,7 @@
-package com.college.attendance_Service.exception;
+package com.dashboard.exception;
 
-import com.college.department_Service.exception.DuplicateResourceException;
-import com.college.department_Service.exception.UnauthorizedException;
+import com.dashboard.exception.DuplicateResourceException;
+import com.dashboard.exception.UnauthorizedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

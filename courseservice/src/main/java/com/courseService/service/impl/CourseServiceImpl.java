@@ -1,8 +1,10 @@
-package com.courseService.service;
+package com.courseService.service.impl;
 
+import com.courseService.dto.CourseRequestDto;
 import com.courseService.entity.Course;
 import com.courseService.exception.ResourceNotFoundException;
 import com.courseService.repository.CourseRepository;
+import com.courseService.service.CourseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,51 +15,91 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CourseService {
+public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository repository;
 
-    //  CREATE - DTO to Entity conversion
-    public Course createCourse(@Valid Course dto) {
-        log.info("Creating course: {}", dto.getName());
+    // CREATE
+    @Override
+    public Course createCourse(@Valid CourseRequestDto dto) {
+        log.info("Attempting to create course with name: {} and code: {}", dto.getName(), dto.getCode());
+
+        if (repository.existsByCodeOrName(dto.getCode(), dto.getName())) {
+            log.warn("Course creation failed. Duplicate found for name: {} or code: {}", dto.getName(), dto.getCode());
+            throw new IllegalArgumentException("Course with same code or name already exists");
+        }
 
         Course course = new Course();
         course.setName(dto.getName());
         course.setCode(dto.getCode());
-        course.setFacultyId(dto.getFacultyId());
 
-        return repository.save(course);
+        Course saved = repository.save(course);
+
+        log.info("Course created successfully with ID: {}", saved.getId());
+        return saved;
     }
 
-    //  READ ALL
+    // READ ALL
+    @Override
     public List<Course> getAllCourses() {
         log.info("Fetching all courses");
-        return repository.findAll();
+
+        List<Course> courses = repository.findAll();
+
+        log.info("Total courses fetched: {}", courses.size());
+        return courses;
     }
 
-    //  READ BY ID
+    // READ BY ID
+    @Override
     public Course getCourseById(Long id) {
         log.info("Fetching course with ID: {}", id);
-        return repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Course not found with id: " + id));
+
+        Course course = repository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Course not found with ID: {}", id);
+                    return new ResourceNotFoundException("Course not found with id: " + id);
+                });
+
+        log.info("Course fetched successfully with ID: {}", id);
+        return course;
     }
 
-    //  UPDATE - Consistent DTO usage
-    public Course updateCourse(Long id, @Valid Course dto) {
-        log.info("Updating course with ID: {}", id);
+    // UPDATE
+    @Override
+    public Course updateCourse(Long id, @Valid CourseRequestDto dto) {
+        log.info("Attempting to update course with ID: {}", id);
 
         Course existing = getCourseById(id);
+
+        if (repository.existsByCodeAndIdNot(dto.getCode(), id)) {
+            log.warn("Update failed. Duplicate code: {}", dto.getCode());
+            throw new IllegalArgumentException("Course code already exists");
+        }
+
+        if (repository.existsByNameAndIdNot(dto.getName(), id)) {
+            log.warn("Update failed. Duplicate name: {}", dto.getName());
+            throw new IllegalArgumentException("Course name already exists");
+        }
+
         existing.setName(dto.getName());
         existing.setCode(dto.getCode());
-        existing.setFacultyId(dto.getFacultyId());
 
-        return repository.save(existing);
+        Course updated = repository.save(existing);
+
+        log.info("Course updated successfully with ID: {}", updated.getId());
+        return updated;
     }
 
-    //  DELETE
+    // DELETE
+    @Override
     public void deleteCourse(Long id) {
-        log.info("Deleting course with ID: {}", id);
-        Course existing = getCourseById(id);  // validates existence
+        log.info("Attempting to delete course with ID: {}", id);
+
+        Course existing = getCourseById(id);
+
         repository.delete(existing);
+
+        log.info("Course deleted successfully with ID: {}", id);
     }
 }

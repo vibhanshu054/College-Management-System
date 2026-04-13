@@ -1,48 +1,35 @@
 package com.userService.services;
 
-import com.userService.dto.UpdatePasswordDto;
 import com.userService.dto.UserDto;
-import com.userService.entity.UserEntity;
-import com.userService.enums.Role;
-
+import com.userService.enums.UserRole;
 
 import java.util.List;
 
 
 public interface UserService {
-    List<UserEntity> getAllUser();
 
-    UserDto findByUsername(String username);
-
-    UserDto save(UserDto dto);
-
-    UserDto getUser(Long userId);
-
-    UserDto login(String username, String password);
-
-    String updatePassword(UpdatePasswordDto dto);
-
-    UserDto findByEmail(String email);
-
-    UserDto createUser(UserDto userDTO, String name);
+    UserDto createUser(UserDto userDto, String createdBy);
 
     UserDto getUserById(Long id);
 
-    UserDto updateUser(Long id, UserDto userDTO, String name, Role role);
+    List<UserDto> getUsersByRole(String role);
 
-    void updatePassword(Long id, String oldPassword, String newPassword, String name);
+    List<UserDto> getAllUsers();
 
-    long getUserCountByRoleAndDepartment(Role role, String department);
+    UserDto updateUser(Long id, UserDto userDto, String updatedBy, UserRole userRole);
 
-    long getUserCountByRole(Role role);
+    void deleteUser(Long id, String deletedBy);
 
-    void deleteUser(Long id, String name);
+    void updatePassword(Long id, String oldPassword, String newPassword, String updatedBy);
 
-    UserDto getUserByUniversityId(String universityId);
+    long getUserCountByRole(String role);
+
+    long getUserCountByRoleAndDepartment(String role, String department);
 
     UserDto getUserByEmail(String email);
 
-    List<UserDto> getUsersByRole(Role role);
 
-    List<UserDto> getAllUsers();
+    UserDto verifyCredentials(String email, String rawPassword);
+
+    UserDto getUserByUniversityId(String universityId);
 }

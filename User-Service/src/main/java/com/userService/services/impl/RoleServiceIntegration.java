@@ -1,140 +1,177 @@
 package com.userService.services.impl;
 
 
+import com.userService.client.FacultyServiceClient;
+import com.userService.client.LibraryServiceClient;
+import com.userService.client.StudentServiceClient;
 import com.userService.dto.FacultyDTO;
 import com.userService.dto.LibrarianDTO;
-import com.userService.dto.StudentDto;
+import com.userService.dto.StudentDTO;
 import com.userService.entity.UserEntity;
+import com.userService.enums.FacultySubRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
+@Slf4j
+@Transactional
 public class RoleServiceIntegration {
 
     private final StudentServiceClient studentServiceClient;
     private final FacultyServiceClient facultyServiceClient;
     private final LibraryServiceClient libraryServiceClient;
 
-    public Long createStudentInStudentService(UserEntity user) {
-        log.info("Creating student in Student-Service for user: {}", user.getEmail());
+    /**
+     * Create role-specific records in respective services
+     * Called when a new user is created
+     */
+    public void createRoleSpecificRecord(UserEntity user) {
+        log.info("Creating role-specific record for user: {} with role: {}", user.getEmail(), user.getRole());
+
         try {
-            return studentServiceClient.createStudentFromUser(convertToStudentDto(user));
+            switch (user.getRole()) {
+                case STUDENT:
+                    createStudentRecord(user);
+                    break;
+                case FACULTY:
+                    createFacultyRecord(user);
+                    break;
+                case LIBRARIAN:
+                    createLibrarianRecord(user);
+                    break;
+                case ADMIN:
+                    log.debug("No role-specific record needed for ADMIN");
+                    break;
+                default:
+                    log.warn("Unknown role: {}", user.getRole());
+            }
         } catch (Exception e) {
-            log.error("Error creating student in Student-Service: {}", e.getMessage());
-            throw new RuntimeException("Failed to create student in Student-Service", e);
+            log.error("Error creating role-specific record for user: {}", user.getEmail(), e);
+            // Don't throw - let the user be created even if service is unavailable
+            // Fallback pattern handles this
         }
     }
 
-    public Long createFacultyInFacultyService(UserEntity user) {
-        log.info("Creating faculty in Faculty-Service for user: {}", user.getEmail());
+    /**
+     * Delete role-specific records in respective services
+     * Called when a user is deleted
+     */
+    public void deleteRoleSpecificRecord(UserEntity user) {
+        log.info("Deleting role-specific record for user: {} with role: {}", user.getEmail(), user.getRole());
+
         try {
-            return facultyServiceClient.createFacultyFromUser(convertToFacultyDTO(user));
+            switch (user.getRole()) {
+                case STUDENT:
+                    if (user.getStudentServiceId() != null) {
+                        studentServiceClient.deleteStudent(user.getStudentServiceId());
+                        log.debug("Student record deleted from Student-Service");
+                    }
+                    break;
+                case FACULTY:
+                    if (user.getFacultyServiceId() != null) {
+                        facultyServiceClient.deleteFaculty(user.getFacultyServiceId());
+                        log.debug("Faculty record deleted from Faculty-Service");
+                    }
+                    break;
+                case LIBRARIAN:
+                    if (user.getLibrarianServiceId() != null) {
+                        libraryServiceClient.deleteLibrarian(user.getLibrarianServiceId());
+                        log.debug("Librarian record deleted from Library-Service");
+                    }
+                    break;
+                case ADMIN:
+                    log.debug("No role-specific record to delete for ADMIN");
+                    break;
+                default:
+                    log.warn("Unknown role: {}", user.getRole());
+            }
         } catch (Exception e) {
-            log.error("Error creating faculty in Faculty-Service: {}", e.getMessage());
-            throw new RuntimeException("Failed to create faculty in Faculty-Service", e);
+            log.error("Error deleting role-specific record for user: {}", user.getEmail(), e);
+            // Don't throw - let the user be deleted even if service is unavailable
         }
     }
 
-    public Long createLibrarianInLibraryService(UserEntity user) {
-        log.info("Creating librarian in Library-Service for user: {}", user.getEmail());
-        try {
-            return libraryServiceClient.createLibrarianFromUser(convertToLibrarianDTO(user));
-        } catch (Exception e) {
-            log.error("Error creating librarian in Library-Service: {}", e.getMessage());
-            throw new RuntimeException("Failed to create librarian in Library-Service", e);
-        }
-    }
+    /**
+     * Create student record in Student-Service
+     */
+    private void createStudentRecord(UserEntity user) {
+        log.debug("Creating student record for user: {}", user.getEmail());
 
-    public void deleteStudentFromStudentService(Long studentServiceId) {
-        log.info("Deleting student from Student-Service with ID: {}", studentServiceId);
-        try {
-            studentServiceClient.deleteStudent(studentServiceId);
-        } catch (Exception e) {
-            log.error("Error deleting student from Student-Service: {}", e.getMessage());
-        }
-    }
-
-    public void deleteFacultyFromFacultyService(Long facultyServiceId) {
-        log.info("Deleting faculty from Faculty-Service with ID: {}", facultyServiceId);
-        try {
-            facultyServiceClient.deleteFaculty(facultyServiceId);
-        } catch (Exception e) {
-            log.error("Error deleting faculty from Faculty-Service: {}", e.getMessage());
-        }
-    }
-
-    public void deleteLibrarianFromLibraryService(Long librarianServiceId) {
-        log.info("Deleting librarian from Library-Service with ID: {}", librarianServiceId);
-        try {
-            libraryServiceClient.deleteLibrarian(librarianServiceId);
-        } catch (Exception e) {
-            log.error("Error deleting librarian from Library-Service: {}", e.getMessage());
-        }
-    }
-
-    private StudentDto convertToStudentDto(UserEntity user) {
-        return StudentDto.builder()
-                .universityId(user.getUniversityId())
+        StudentDTO studentDTO = StudentDTO.builder()
                 .studentName(user.getUsername())
                 .studentEmail(user.getEmail())
-                .phoneNumber(user.getPhoneNumber())
+                .studentPhoneNumber(user.getPhoneNumber())
+                .universityId(user.getUniversityId())
                 .semester(user.getSemester())
                 .batch(user.getBatch())
                 .department(user.getDepartment())
+                .course(user.getCourseCode())
                 .courseCode(user.getCourseCode())
+                .active(user.isActive())
                 .build();
+
+        try {
+            var response = studentServiceClient.createStudentFromUser(studentDTO);
+            if (response.getStatusCode().is2xxSuccessful()) {
+                log.info("Student record created successfully for user: {}", user.getEmail());
+            }
+        } catch (Exception e) {
+            log.warn("Failed to create student record, continuing with user creation", e);
+        }
     }
 
-    private FacultyDTO convertToFacultyDTO(UserEntity user) {
-        return FacultyDTO.builder()
-                .universityId(user.getUniversityId())
+    /**
+     * Create faculty record in Faculty-Service
+     */
+    private void createFacultyRecord(UserEntity user) {
+        log.debug("Creating faculty record for user: {}", user.getEmail());
+
+        FacultyDTO facultyDTO = FacultyDTO.builder()
                 .facultyName(user.getUsername())
                 .facultyEmail(user.getEmail())
                 .facultyPhoneNumber(user.getPhoneNumber())
+                .universityId(user.getUniversityId())
                 .department(user.getDepartment())
-                .subRole(user.getFacultySubRole() != null ? user.getFacultySubRole().toString() : "TRAINEE")
+                .subRole(user.getFacultySubRole() != null ?
+                        user.getFacultySubRole().toString() : FacultySubRole.TRAINEE.toString())
+                .active(user.isActive())
                 .build();
+
+        try {
+            var response = facultyServiceClient.createFacultyFromUser(facultyDTO);
+            if (response.getStatusCode().is2xxSuccessful()) {
+                log.info("Faculty record created successfully for user: {}", user.getEmail());
+            }
+        } catch (Exception e) {
+            log.warn("Failed to create faculty record, continuing with user creation", e);
+        }
     }
 
-    private LibrarianDTO convertToLibrarianDTO(UserEntity user) {
-        return LibrarianDTO.builder()
-                .universityId(user.getUniversityId())
+    /**
+     * Create librarian record in Library-Service
+     */
+    private void createLibrarianRecord(UserEntity user) {
+        log.debug("Creating librarian record for user: {}", user.getEmail());
+
+        LibrarianDTO librarianDTO = LibrarianDTO.builder()
                 .librarianName(user.getUsername())
                 .librarianEmail(user.getEmail())
                 .librarianPhoneNumber(user.getPhoneNumber())
+                .universityId(user.getUniversityId())
+                .active(user.isActive())
                 .build();
+
+        try {
+            var response = libraryServiceClient.createLibrarianFromUser(librarianDTO);
+            if (response.getStatusCode().is2xxSuccessful()) {
+                log.info("Librarian record created successfully for user: {}", user.getEmail());
+            }
+        } catch (Exception e) {
+            log.warn("Failed to create librarian record, continuing with user creation", e);
+        }
     }
-}
-
-// Feign Clients
-@FeignClient(name = "student-service")
-interface StudentServiceClient {
-    @PostMapping("/students/internal/create")
-    Long createStudentFromUser(@RequestBody StudentDto StudentDto);
-
-    @DeleteMapping("/students/{id}")
-    void deleteStudent(@PathVariable Long id);
-}
-
-@FeignClient(name = "faculty-service")
-interface FacultyServiceClient {
-    @PostMapping("/faculty/internal/create")
-    Long createFacultyFromUser(@RequestBody FacultyDTO facultyDTO);
-
-    @DeleteMapping("/faculty/{id}")
-    void deleteFaculty(@PathVariable Long id);
-}
-
-@FeignClient(name = "libraryservice")
-interface LibraryServiceClient {
-    @PostMapping("/library/librarian/internal/create")
-    Long createLibrarianFromUser(@RequestBody LibrarianDTO librarianDTO);
-
-    @DeleteMapping("/library/librarian/{id}")
-    void deleteLibrarian(@PathVariable Long id);
 }

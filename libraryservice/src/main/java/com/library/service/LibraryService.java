@@ -1,91 +1,47 @@
-package com.collage.library.service;
+package com.library.service;
 
 
-import com.collage.library.client.StudentClient;
-import com.collage.library.entity.BookEntity;
-import com.collage.library.entity.BookIssueEntity;
-import com.collage.library.entity.Transaction;
-import com.collage.library.repository.BookRepository;
-import com.collage.library.repository.TransactionRepository;
-import com.collage.library.validation.LibraryValidation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.library.dto.BookDTO;
+import com.library.dto.BookIssueDTO;
+import com.library.dto.LibrarianDTO;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Service
-public class LibraryService {
+public interface LibraryService {
 
-    private static final Logger logger = LoggerFactory.getLogger(LibraryService.class);
 
-    @Autowired
-    private BookRepository bookRepo;
+    LibrarianDTO createLibrarian(LibrarianDTO librarianDTO);
 
-    @Autowired
-    private StudentClient studentClient;
+    LibrarianDTO getLibrarian(Long id);
 
-    @Autowired
-    private TransactionRepository transactionRepo;
+    BookDTO addBook(BookDTO bookDTO);
 
-    @Autowired
-    private LibraryValidation libraryValidation;
+    List<BookDTO> getAllBooks(String searchTerm, boolean availableOnly);
 
-    // Add Book
-    public BookEntity addBook(BookEntity book) {
-        libraryValidation.validateBookFields(book);
-        logger.info("Adding book: {}", book.getName());
-        return bookRepo.save(book);
-    }
+    BookDTO getBookById(String bookId);
 
-    // Get all books
-    public List<BookEntity> getAllBooks() {
-        logger.info("Fetching all books");
-        return bookRepo.findAll();
-    }
+    BookDTO updateBook(String bookId, BookDTO bookDTO);
 
-    // Issue Book
-    public BookIssueEntity issueBook(Long bookId, Long studentId) {
-        logger.info("Issuing book ID {} to student ID {}", bookId, studentId);
+    void deleteBook(String bookId);
 
-        BookEntity book = libraryValidation.validateIssueBook(bookId, studentId);
+    BookIssueDTO issueBook(BookIssueDTO bookIssueDTO);
 
-        try {
-            studentClient.getStudentById(studentId);
-        } catch (Exception e) {
-            throw new RuntimeException("Student not found with id: " + studentId);
-        }
+    BookIssueDTO returnBook(Long issueId);
 
-        book.setAvailable(false);
-        bookRepo.save(book);
+    List<BookIssueDTO> getIssueRecords(String userRole, String userId);
 
-        BookIssueEntity tx = new BookIssueEntity();
-        tx.setBookId(bookId);
-        tx.setStudentId(studentId);
-        tx.setIssueDate(LocalDate.now());
+    List<Map<String, Object>> getOverdueBooks();
 
-        return transactionRepo.save(tx);
-    }
+    Map<String, Object> getLibraryDashboard();
 
-    // Get all transactions
-    public List<Transaction> getAllTransactions() {
-        logger.info("Fetching all transactions");
-        return transactionRepo.findAll();
-    }
+    Map<String, Integer> getTotalBooksCount();
 
-    // Return Book
-    public Transaction returnBook(Long transactionId) {
-        logger.info("Returning book for transaction ID {}", transactionId);
+    Map<String, Integer> getAvailableBooksCount();
 
-        Transaction tx = libraryValidation.validateReturnBook(transactionId);
+    Map<String, Object> getTodayActivity();
 
-        Book book = bookRepo.findById(tx.getBookId()).get();
-        book.setAvailable(true);
-        bookRepo.save(book);
-
-        tx.setReturnDate(LocalDate.now());
-        return transactionRepo.save(tx);
-    }
+    Map<String, Object> getTotalMembers();
 }

@@ -2,9 +2,8 @@ package com.facultyService.entity;
 
 import com.facultyService.enums.FacultySubRole;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,7 +12,8 @@ import java.time.LocalDateTime;
         @Index(name = "idx_faculty_email", columnList = "facultyEmail"),
         @Index(name = "idx_faculty_dept", columnList = "department")
 })
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class FacultyEntity {
@@ -22,9 +22,8 @@ public class FacultyEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Database Identity
     @Column(nullable = false, unique = true, length = 12)
-    private String universityId;  // 12-digit faculty ID
+    private String universityId;
 
     @Column(nullable = false)
     private String facultyName;
@@ -38,37 +37,33 @@ public class FacultyEntity {
     @Column(nullable = false)
     private String department;
 
-    // Sub-role: HOD, Professor, Assistant Professor, Trainee
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private FacultySubRole subRole;
 
-    // Attendance Calendar (JSON or separate table)
     @Column(columnDefinition = "JSON")
     private String attendanceCalendar;
 
-    @Column(name = "attendance_percentage", columnDefinition = "FLOAT DEFAULT 0.0")
+    @Column(name = "attendance_percentage")
     private Float attendancePercentage = 0.0f;
 
-    // Books issued and returned count
-    @Column(name = "books_issued", columnDefinition = "INT DEFAULT 0")
+    @Column(name = "books_issued")
     private Integer booksIssued = 0;
 
-    @Column(name = "books_returned", columnDefinition = "INT DEFAULT 0")
+    @Column(name = "books_returned")
     private Integer booksReturned = 0;
 
-    // Schedule (if HOD)
     @Column(columnDefinition = "JSON")
     private String scheduleData;
 
     @Column(nullable = false)
-    private boolean active = true;
+    private Boolean active = true;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
     @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @Column(nullable = false)
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    private LocalDateTime updatedAt;
 
     @Column(name = "created_by")
     private String createdBy;
@@ -76,9 +71,26 @@ public class FacultyEntity {
     @Column(name = "updated_by")
     private String updatedBy;
 
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+        if (this.active == null) {
+            this.active = true;
+        }
+        if (this.attendancePercentage == null) {
+            this.attendancePercentage = 0.0f;
+        }
+        if (this.booksIssued == null) {
+            this.booksIssued = 0;
+        }
+        if (this.booksReturned == null) {
+            this.booksReturned = 0;
+        }
+    }
+
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 }
-

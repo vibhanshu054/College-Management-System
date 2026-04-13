@@ -1,4 +1,4 @@
-package com.collage.dashboard.clients;
+package com.dashboard.clients;
 
 
 import org.springframework.cloud.openfeign.FeignClient;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 // User-Service Client
-@FeignClient(name = "user-service", url = "http://localhost:8081")
+@FeignClient(name = "USER-SERVICE")
 public interface UserServiceClient {
 
     @GetMapping("/api/users/count/by-role/{role}")

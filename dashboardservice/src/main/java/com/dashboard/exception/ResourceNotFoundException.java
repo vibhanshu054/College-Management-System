@@ -1,4 +1,4 @@
-package com.college.attendance_Service.exception;
+package com.dashboard.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String message) {

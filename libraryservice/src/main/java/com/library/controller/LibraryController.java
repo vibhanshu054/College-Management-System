@@ -1,4 +1,4 @@
-package com.collage.library.controller;
+package com.library.controller;
 
 import com.library.dto.BookDTO;
 import com.library.dto.BookIssueDTO;
@@ -15,14 +15,12 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/library")
+@RequestMapping("/api/library")
 @RequiredArgsConstructor
 @Tag(name = "Library Management", description = "APIs for Book Management and Issue/Return Operations")
 public class LibraryController {
 
     private final LibraryService libraryService;
-
-    // ============ LIBRARIAN PROFILE ENDPOINTS ============
 
     @PostMapping("/librarian")
     @Operation(summary = "Create librarian profile", description = "Create librarian with 12-digit ID and attendance calendar")
@@ -36,8 +34,6 @@ public class LibraryController {
     public ResponseEntity<LibrarianDTO> getLibrarian(@PathVariable Long id) {
         return ResponseEntity.ok(libraryService.getLibrarian(id));
     }
-
-    // ============ BOOK MANAGEMENT ENDPOINTS ============
 
     @PostMapping("/books")
     @Operation(summary = "Add new book", description = "Add book with ID, name, author, publication, count")
@@ -61,7 +57,7 @@ public class LibraryController {
     }
 
     @PutMapping("/books/{bookId}")
-    @Operation(summary = "Update book", description = "Update book count only (not book ID or name)")
+    @Operation(summary = "Update book", description = "Update book count only (not book ID)")
     public ResponseEntity<BookDTO> updateBook(@PathVariable String bookId, @RequestBody BookDTO bookDTO) {
         return ResponseEntity.ok(libraryService.updateBook(bookId, bookDTO));
     }
@@ -72,8 +68,6 @@ public class LibraryController {
         libraryService.deleteBook(bookId);
         return ResponseEntity.ok(Map.of("message", "Book deleted successfully"));
     }
-
-    // ============ ISSUE/RETURN ENDPOINTS ============
 
     @PostMapping("/issue")
     @Operation(summary = "Issue book", description = "Issue book to student/faculty with issue date and returnable date")
@@ -101,8 +95,6 @@ public class LibraryController {
     public ResponseEntity<List<Map<String, Object>>> getOverdueBooks() {
         return ResponseEntity.ok(libraryService.getOverdueBooks());
     }
-
-    // ============ DASHBOARD ENDPOINTS ============
 
     @GetMapping("/dashboard")
     @Operation(summary = "Get library dashboard", description = "Complete library statistics and information")

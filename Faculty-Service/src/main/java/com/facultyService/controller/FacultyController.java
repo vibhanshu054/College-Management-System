@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/faculty")
+@RequestMapping("/api/faculty")
 @RequiredArgsConstructor
 @Tag(name = "Faculty Management", description = "APIs for Faculty Profile and Management")
 public class FacultyController {

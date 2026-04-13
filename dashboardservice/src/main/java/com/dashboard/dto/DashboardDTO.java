@@ -1,4 +1,4 @@
-package com.collage.dashboard.dto;
+package com.dashboard.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

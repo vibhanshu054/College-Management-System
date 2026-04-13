@@ -1,22 +1,21 @@
-package com.collage.dashboard.dto;
+package com.dashboard.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class StudentDashboardDTO {
+
     private String studentName;
     private String courseName;
     private double attendancePercentage;
     private int booksIssued;
     private int booksReturned;
-    private List<Map<String, Object>> enrolledSubjects;
+    private int totalClasses;
+
+    private List<SubjectDTO> enrolledSubjects;
 }

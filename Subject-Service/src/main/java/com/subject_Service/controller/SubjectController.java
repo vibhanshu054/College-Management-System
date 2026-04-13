@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/subjects")
+@RequestMapping("/api/subjects")
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "Subject Management", description = "APIs for Subject Management")

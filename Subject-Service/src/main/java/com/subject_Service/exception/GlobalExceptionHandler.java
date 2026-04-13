@@ -1,6 +1,6 @@
 package com.subject_Service.exception;
 
-import com.college.Subject_Service.exception.*;
+import com.subject_Service.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

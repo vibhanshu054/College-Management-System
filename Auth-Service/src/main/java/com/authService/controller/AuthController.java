@@ -1,15 +1,16 @@
 package com.authService.controller;
 
+
 import com.authService.dto.ApiResponse;
 import com.authService.dto.AuthResponse;
 import com.authService.dto.LoginRequest;
 import com.authService.services.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
-
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -20,17 +21,15 @@ public class AuthController {
     //  LOGIN
     @PostMapping("/login")
     public AuthResponse login(@RequestBody LoginRequest request) {
-        log.info("Login API called for {}", request.getUsername());
-        return service.login(request.getUsername(), request.getPassword());
+        log.info("Login API called for {}", request.getEmail());
+        return service.login(request.getEmail(), request.getPassword());
     }
 
-    //  VALIDATE TOKEN (VERY IMPORTANT)
     @GetMapping("/validate")
-    public boolean validateToken(@RequestParam String token) {
-        log.info("Validate API called");
-        return service.validateToken(token);
+    public ResponseEntity<Boolean> validateToken(@RequestParam String token) {
+        boolean isValid = service.validateToken(token);
+        return ResponseEntity.ok(isValid);
     }
-
     //  LOGOUT
     @PostMapping("/logout")
     public ApiResponse logout(
