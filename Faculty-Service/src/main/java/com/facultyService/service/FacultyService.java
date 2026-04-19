@@ -1,41 +1,75 @@
 package com.facultyService.service;
 
-
+import com.facultyService.dto.ApiResponse;
 import com.facultyService.dto.FacultyDTO;
-
-import org.springframework.stereotype.Service;
-
+import com.student.enums.AttendanceStatus;
 
 import java.util.List;
 import java.util.Map;
 
-@Service
 public interface FacultyService {
 
-    
+    // ================= PROFILE =================
+    ApiResponse createFaculty(FacultyDTO facultyDTO);
+
+    ApiResponse getFaculty(String universityId);
+
+    ApiResponse getAllFaculty(String department, String subRole);
+
+    ApiResponse updateFaculty(String universityId, FacultyDTO facultyDTO);
+
+    ApiResponse deleteFaculty(String universityId);
 
 
-    FacultyDTO createFaculty(FacultyDTO facultyDTO);
+    // ================= DASHBOARD =================
+    ApiResponse getDashboard(String universityId);
 
-    FacultyDTO getFaculty(Long id);
+    ApiResponse getFacultyDashboard(String universityId);
 
-    FacultyDTO getFacultyByUniversityId(String universityId);
 
-    List<FacultyDTO> getAllFaculty(String department, String subRole);
+    // ================= SCHEDULE =================
+    ApiResponse getSchedule(String universityId);
 
-    FacultyDTO updateFaculty(Long id, FacultyDTO facultyDTO);
+    ApiResponse getAttendanceCalendar(String universityId);
 
-    void deleteFaculty(Long id);
+    ApiResponse updateSchedule(String universityId, Map<String, Object> scheduleData);
 
-    Map<String, Object> getFacultyDashboard(Long id);
+    ApiResponse assignSchedule(String facultyId, Map<String, Object> schedule);
 
-    String getAttendanceCalendar(Long id);
+    ApiResponse assignScheduleById(String universityId, Map<String, Object> schedule);
 
-    String getSchedule(Long id);
 
-    void updateSchedule(Long id, Map<String, Object> scheduleData);
+    // ================= COURSES =================
+    ApiResponse getAssignedCourses(String facultyId);
 
-    List<FacultyDTO> getFacultyByDepartment(String department);
+    ApiResponse getCoursesById(String universityId);
 
-    Integer getTotalFacultyCount();
+    ApiResponse assignCourses(String facultyId, List<Long> courseIds);
+
+    ApiResponse assignCoursesById(String universityId, List<Long> courseIds);
+
+
+    // ================= STUDENTS =================
+    ApiResponse getStudents(String facultyId);
+
+    ApiResponse getStudentsById(String universityId);
+
+    ApiResponse getTotalStudents(String facultyId);
+
+    ApiResponse getStudentCountById(String universityId);
+
+
+    // ================= ATTENDANCE =================
+    ApiResponse getAttendance(String facultyId);
+
+    ApiResponse getAttendanceById(String universityId);
+    ApiResponse markFacultySelfAttendance(String universityId,Long facultyId);
+    ApiResponse markAttendance(String universityId,
+                               AttendanceStatus status,
+                               Long facultyId,
+                               String courseCode);
+    // ================= BOOKS =================
+    ApiResponse updateBookStatsByFacultyUniversityId(String facultyUniversityId, int issued, int returned);
+
+    ApiResponse getFacultyByFacultyUniversityId(String facultyUniversityId);
 }

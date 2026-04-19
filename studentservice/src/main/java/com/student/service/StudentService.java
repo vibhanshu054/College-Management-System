@@ -1,46 +1,55 @@
 package com.student.service;
 
-import com.student.dto.StudentDTO;
+import com.student.dto.ApiResponse;
 import com.student.enums.AttendanceStatus;
 
 import java.util.List;
-import java.util.Map;
 
 public interface StudentService {
 
-    Long createStudent(StudentDTO studentDto);
+    ApiResponse getStudentsByFacultyUniversityId(String facultyUniversityId);
 
-    StudentDTO getStudent(Long id);
+    ApiResponse createStudent(StudentCreateRequest request, String createdBy, String role);
 
-    StudentDTO getStudentByUniversityId(String universityId);
+    ApiResponse getStudent(Long id);
 
-    List<StudentDTO> getAllStudents(String courseCode, String semester, String department);
+    ApiResponse getStudentByUniversityId(String universityId);
 
-    StudentDTO updateStudent(Long id, StudentDTO studentDto);
+    ApiResponse getAllStudents(String courseCode, String semester, String department, String role);
 
-    void deleteStudent(Long id);
+    ApiResponse updateStudent(String universityId, StudentUpdateRequest request, String updatedBy, String role);
 
-    Map<String, Object> getStudentDashboard(Long id);
+    ApiResponse deleteStudent(String universityId, String deletedBy, String role);
 
-    void markAttendance(Long studentId, AttendanceStatus status, Long facultyId, String courseCode);
+    ApiResponse getStudentDashboard(String universityId);
 
-    void recalculateAttendancePercentage(Long studentId);
+    ApiResponse markAttendance(String universityId, AttendanceStatus status, Long facultyId, String courseCode);
 
-    List<Map<String, Object>> getAttendanceCalendar(Long id);
+    void recalculateAttendancePercentage(String universityId);
 
-    void incrementBooksIssued(Long studentId);
+    ApiResponse getAttendanceCalendar(String universityId);
 
-    void incrementBooksReturned(Long studentId);
+    void incrementBooksIssued(String universityId);
 
-    List<StudentDTO> getStudentsByCourse(String courseCode);
+    void incrementBooksReturned(String universityId);
 
-    long getTotalStudentsCount();
+    ApiResponse getStudentsByCourse(String courseCode);
 
-    long getStudentsCountByCourse(String courseCode);
+    ApiResponse getTotalStudentsCount();
 
-    List<StudentDTO> getStudentsByDepartment(String department);
+    ApiResponse getStudentsCountByCourse(String courseCode);
 
-    long getStudentsCountByDepartment(String department);
+    ApiResponse getStudentsByDepartment(String department);
 
-    Map<String, Integer> getBooksStatus(Long id);
+    ApiResponse getStudentsCountByDepartment(String department);
+
+    ApiResponse getBooksStatus(String universityId);
+
+    ApiResponse updateBookStats(String universityId, int issued, int returned);
+
+    ApiResponse updateSubjects(String universityId, List<String> subjects, String role);
+
+    ApiResponse getStudentCountByCourse();
+
+    ApiResponse updateSemester(String universityId, String semester, String role);
 }

@@ -12,7 +12,9 @@ public class ModelMapperConfig {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration()
                 .setSkipNullEnabled(true)
-                .setAmbiguityIgnored(true);
+                .setAmbiguityIgnored(true)
+                .setFieldMatchingEnabled(true)
+                .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE);
         return modelMapper;
     }
 }

@@ -4,6 +4,7 @@ package com.userService.entity;
 import com.userService.enums.FacultySubRole;
 import com.userService.enums.UserRole;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -39,7 +40,7 @@ public class UserEntity {
     @Column(nullable = false, length = 255)
     private String password;
 
-    @Enumerated(EnumType.STRING)  // ✅ CRITICAL FIX
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
     private UserRole role;
 
@@ -63,7 +64,7 @@ public class UserEntity {
     private String courseCode;
 
     // Optional fields for faculty
-    @Enumerated(EnumType.STRING)  // ✅ CRITICAL FIX
+    @Enumerated(EnumType.STRING)
     @Column(nullable = true, length = 50)
     private FacultySubRole facultySubRole;
 
@@ -84,13 +85,13 @@ public class UserEntity {
 
     // Service IDs for cascade mapping
     @Column(nullable = true)
-    private Long studentServiceId;
+    private String studentServiceUniversityId;
 
     @Column(nullable = true)
-    private Long facultyServiceId;
+    private String facultyServiceUniversityId;
 
     @Column(nullable = true)
-    private Long librarianServiceId;
+    private String librarianServiceUniversityId;
 
     @PreUpdate
     protected void onUpdate() {

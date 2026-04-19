@@ -19,14 +19,14 @@ public class BookIssueDTO {
     private String bookId;
     private String bookName;
     private String userId;
-    private String userRole;
     private String userName;
+    private String userEmail;
+    private String department;
+    private String course;
+    private String userRole;
     private LocalDate issueDate;
     private LocalDate returnableDate;
     private LocalDate returnedDate;
+    private Boolean activeIssue;
     private IssueStatus status;
-    private Integer fineAmount;
-    private Boolean finePaid;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }

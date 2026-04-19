@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -18,7 +19,7 @@ public class LibrarianDTO {
     private String librarianName;
     private String librarianEmail;
     private String librarianPhoneNumber;
-    private String attendanceCalendar;
+    private Map<String, Object> attendanceCalendar;
     private Float attendancePercentage;
     private boolean active;
     private LocalDateTime createdAt;

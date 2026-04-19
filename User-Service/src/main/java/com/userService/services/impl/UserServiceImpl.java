@@ -11,6 +11,7 @@ import com.userService.entity.UserEntity;
 import com.userService.enums.FacultySubRole;
 import com.userService.enums.UserRole;
 import com.userService.exception.DuplicateResourceException;
+import com.userService.exception.ForbiddenException;
 import com.userService.exception.InvalidOperationException;
 import com.userService.exception.ResourceNotFoundException;
 import com.userService.repository.FacultyRepository;
@@ -29,10 +30,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -49,22 +51,47 @@ public class UserServiceImpl implements UserService {
     // CREATE USER
     // =========================================================
     @Override
-    public UserDto createUser(UserDto dto, String createdBy) {
-
-        log.info("CREATE USER | email={} | role={}", dto.getEmail(), dto.getRole());
+    @Transactional(rollbackFor = Exception.class)
+    public UserDto createUser(UserDto dto, String createdBy, String role) {
 
         validate(dto);
-        checkDuplicate(dto);
+        log.info("Creating user {}", dto.getEmail());
 
-        UserEntity user = buildUser(dto, createdBy);
+        if (!"ADMIN".equals(role) && !"SYSTEM".equals(role)) {
+            throw new ForbiddenException("Only ADMIN can create users");
+        }
 
-        user = userRepository.save(user);
+        if (userRepository.existsByEmail(dto.getEmail())) {
+            throw new DuplicateResourceException("Email already exists");
+        }
 
-        log.info("USER SAVED | id={} | email={}", user.getId(), user.getEmail());
+        // SAVE USER
+        UserEntity user = modelMapper.map(dto, UserEntity.class);
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setCreatedBy(createdBy);
+        user.setActive(true);
+        UserEntity saved = userRepository.save(user);
 
-        cascadeCreate(user);
+        // GENERATE UNIVERSITY ID
+        String prefix = switch (dto.getRole().toUpperCase()) {
+            case "STUDENT" -> "STU";
+            case "FACULTY" -> "FAC";
+            case "LIBRARIAN" -> "LIB";
+            case "ADMIN" -> "ADM";
+            default -> "USR";
+        };
 
-        return modelMapper.map(user, UserDto.class);
+        String universityId = prefix + String.format("%06d", saved.getId());
+        saved.setUniversityId(universityId);
+
+        userRepository.save(saved);
+
+        // CASCADE CALL (IMPORTANT)
+        cascadeCreate(saved);
+
+        log.info("User created successfully with universityId {}", universityId);
+
+        return modelMapper.map(saved, UserDto.class);
     }
 
     // =========================================================
@@ -74,6 +101,9 @@ public class UserServiceImpl implements UserService {
 
         if (dto == null)
             throw new InvalidOperationException("User data cannot be null");
+
+        if (dto.getName() == null || dto.getName().isBlank())
+            throw new InvalidOperationException("Name is required");
 
         if (dto.getEmail() == null || dto.getEmail().isBlank())
             throw new InvalidOperationException("Email is required");
@@ -109,6 +139,7 @@ public class UserServiceImpl implements UserService {
         return UserEntity.builder()
                 .email(dto.getEmail())
                 .username(dto.getUsername())
+                .name(dto.getName())
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .role(parseRole(dto.getRole()))
                 .department(dto.getDepartment())
@@ -140,78 +171,10 @@ public class UserServiceImpl implements UserService {
     }
 
     // =========================================================
-    // CASCADE CREATE (FIXED)
-    // =========================================================
-    private void cascadeCreate(UserEntity user) {
-
-        try {
-            switch (user.getRole()) {
-
-                case STUDENT -> {
-                    StudentDTO dto = StudentDTO.builder()
-                            .studentName(user.getUsername())
-                            .studentEmail(user.getEmail())
-                            .studentPhoneNumber(user.getPhoneNumber())
-                            .universityId(user.getUniversityId())
-                            .semester(user.getSemester())
-                            .batch(user.getBatch())
-                            .department(user.getDepartment())
-                            .courseCode(user.getCourseCode())
-                            .active(true)
-                            .build();
-
-                    var res = studentServiceClient.createStudentFromUser(dto);
-                    if (res.getBody() != null)
-                        user.setStudentServiceId(res.getBody().getId());
-                }
-
-                case FACULTY -> {
-                    FacultyDTO dto = FacultyDTO.builder()
-                            .facultyName(user.getUsername())
-                            .facultyEmail(user.getEmail())
-                            .facultyPhoneNumber(user.getPhoneNumber())
-                            .universityId(user.getUniversityId())
-                            .department(user.getDepartment())
-                            .subRole(user.getFacultySubRole() != null
-                                    ? user.getFacultySubRole().name()
-                                    : "TRAINEE")
-                            .active(true)
-                            .build();
-
-                    var res = facultyServiceClient.createFacultyFromUser(dto);
-                    if (res.getBody() != null)
-                        user.setFacultyServiceId(res.getBody().getId());
-                }
-
-                case LIBRARIAN -> {
-                    LibrarianDTO dto = LibrarianDTO.builder()
-                            .librarianName(user.getUsername())
-                            .librarianEmail(user.getEmail())
-                            .librarianPhoneNumber(user.getPhoneNumber())
-                            .universityId(user.getUniversityId())
-                            .active(true)
-                            .build();
-
-                    var res = libraryServiceClient.createLibrarianFromUser(dto);
-                    if (res.getBody() != null)
-                        user.setLibrarianServiceId(res.getBody().getId());
-                }
-
-                case ADMIN -> log.info("ADMIN - no cascade required");
-            }
-
-            userRepository.save(user); // IMPORTANT FIX
-
-        } catch (Exception e) {
-            log.error("CASCADE CREATE FAILED | email={}", user.getEmail(), e);
-        }
-    }
-
-    // =========================================================
     // GET METHODS (CLEAN)
     // =========================================================
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public UserDto getUserById(Long id) {
 
         return userRepository.findById(id)
@@ -220,7 +183,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public UserDto getUserByEmail(String email) {
 
         return userRepository.findByEmail(email)
@@ -229,17 +192,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public UserDto getUserByUniversityId(String universityId) {
+        if (universityId == null || universityId.isBlank()) {
+            throw new IllegalArgumentException("University ID is required");
+        }
 
-        return userRepository.findByUniversityId(universityId)
-                .map(u -> modelMapper.map(u, UserDto.class))
-                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + universityId));
+        UserEntity user = userRepository.findByUniversityId(universityId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with universityId: " + universityId));
+
+        return modelMapper.map(user, UserDto.class);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<UserDto> getAllUsers() {
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public List<UserDto> getAllUsers(String role) {
+
+        // ROLE VALIDATION
+        if (!"ADMIN".equals(role) && !"SYSTEM".equals(role)) {
+            throw new ForbiddenException("Only ADMIN allowed");
+        }
 
         return userRepository.findByActiveTrue()
                 .stream()
@@ -248,7 +220,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<UserDto> getUsersByRole(String role) {
 
         UserRole userRole = UserRole.valueOf(role.trim().toUpperCase());
@@ -269,9 +241,11 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         if (dto.getUsername() != null) user.setUsername(dto.getUsername());
+
+        if (dto.getName() != null && !dto.getName().isBlank()) user.setName(dto.getName());
+
         if (dto.getPhoneNumber() != null) user.setPhoneNumber(dto.getPhoneNumber());
         if (dto.getDepartment() != null) user.setDepartment(dto.getDepartment());
-
         if (dto.getEmail() != null &&
                 !dto.getEmail().equalsIgnoreCase(user.getEmail())) {
 
@@ -292,7 +266,11 @@ public class UserServiceImpl implements UserService {
     // DELETE
     // =========================================================
     @Override
-    public void deleteUser(Long id, String deletedBy) {
+    public void deleteUser(Long id, String deletedBy, String role) {
+
+        if (!"ADMIN".equals(role) && !"SYSTEM".equals(role)) {
+            throw new ForbiddenException("Only ADMIN can delete users");
+        }
 
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
@@ -346,40 +324,77 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(user, UserDto.class);
     }
 
-    // =========================================================
-    // CASCADE DELETE
-    // =========================================================
-    private void cascadeDelete(UserEntity user) {
 
-        try {
-            switch (user.getRole()) {
+    @Override
+    public void deleteUserByUniversityId(String universityId, String deletedBy, String role) {
 
-                case STUDENT -> {
-                    if (user.getStudentServiceId() != null)
-                        studentServiceClient.deleteStudent(user.getStudentServiceId());
-                }
-
-                case FACULTY -> {
-                    if (user.getFacultyServiceId() != null)
-                        facultyServiceClient.deleteFaculty(user.getFacultyServiceId());
-                }
-
-                case LIBRARIAN -> {
-                    if (user.getLibrarianServiceId() != null)
-                        libraryServiceClient.deleteLibrarian(user.getLibrarianServiceId());
-                }
-
-                case ADMIN -> log.info("ADMIN delete");
-            }
-
-        } catch (Exception e) {
-            log.error("CASCADE DELETE FAILED | email={}", user.getEmail(), e);
+        if (!"ADMIN".equals(role) && !"SYSTEM".equals(role)) {
+            throw new ForbiddenException("Only ADMIN can delete users");
         }
+
+        UserEntity user = userRepository.findByUniversityId(universityId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with universityId: " + universityId));
+
+        cascadeDelete(user);
+
+        user.setActive(false);
+        user.setUpdatedBy(deletedBy);
+        user.setUpdatedAt(LocalDateTime.now());
+
+        userRepository.save(user);
+    }
+
+    @Override
+    public UserDto updateUserByUniversityId(String universityId, UserDto dto, String updatedBy) {
+
+        UserEntity user = userRepository.findByUniversityId(universityId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with universityId: " + universityId));
+
+        if (dto.getUsername() != null) user.setUsername(dto.getUsername());
+        if (dto.getName() != null) user.setName(dto.getName());
+        if (dto.getPhoneNumber() != null) user.setPhoneNumber(dto.getPhoneNumber());
+        if (dto.getDepartment() != null) user.setDepartment(dto.getDepartment());
+
+        user.setUpdatedBy(updatedBy);
+        user.setUpdatedAt(LocalDateTime.now());
+
+        cascadeUpdate(user);
+
+        return modelMapper.map(userRepository.save(user), UserDto.class);
     }
 
 
     @Override
-    @Transactional(readOnly = true)
+    public void updatePasswordByUniversityId(
+            String universityId,
+            String oldPwd,
+            String newPwd,
+            String updatedBy
+    ) {
+
+        UserEntity user = userRepository.findByUniversityId(universityId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        if (!passwordEncoder.matches(oldPwd, user.getPassword())) {
+            throw new InvalidOperationException("Old password incorrect");
+        }
+
+        if (newPwd == null || newPwd.length() < 8) {
+            throw new InvalidOperationException("Password must be at least 8 characters");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPwd));
+        user.setUpdatedBy(updatedBy);
+        user.setUpdatedAt(LocalDateTime.now());
+
+        userRepository.save(user);
+    }
+
+
+
+
+    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public long getUserCountByRole(String role) {
 
         try {
@@ -392,7 +407,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public long getUserCountByRoleAndDepartment(String role, String department) {
 
         if (department == null || department.isBlank()) {
@@ -407,16 +422,17 @@ public class UserServiceImpl implements UserService {
             throw new InvalidOperationException("Invalid role or department");
         }
     }
+
     // =========================================================
-// CASCADE UPDATE (FINAL FIX)
-// =========================================================
+    // CASCADE UPDATE
+    // =========================================================
     private void cascadeUpdate(UserEntity user) {
 
         try {
             switch (user.getRole()) {
 
                 case STUDENT -> {
-                    if (user.getStudentServiceId() != null) {
+                    if (user.getStudentServiceUniversityId() != null) {
 
                         StudentDTO dto = StudentDTO.builder()
                                 .studentName(user.getUsername())
@@ -429,19 +445,20 @@ public class UserServiceImpl implements UserService {
                                 .build();
 
                         studentServiceClient.updateStudent(
-                                user.getStudentServiceId(),
+                                user.getUniversityId(),   //
                                 dto
                         );
                     }
                 }
 
                 case FACULTY -> {
-                    if (user.getFacultyServiceId() != null) {
+                    if (user.getFacultyServiceUniversityId() != null) {
 
                         FacultyDTO dto = FacultyDTO.builder()
                                 .facultyName(user.getUsername())
                                 .facultyEmail(user.getEmail())
                                 .facultyPhoneNumber(user.getPhoneNumber())
+                                .facultyUniversityId(user.getUniversityId()) //
                                 .department(user.getDepartment())
                                 .subRole(user.getFacultySubRole() != null
                                         ? user.getFacultySubRole().name()
@@ -449,14 +466,14 @@ public class UserServiceImpl implements UserService {
                                 .build();
 
                         facultyServiceClient.updateFaculty(
-                                user.getFacultyServiceId(),
+                                user.getUniversityId(),   //
                                 dto
                         );
                     }
                 }
 
                 case LIBRARIAN -> {
-                    if (user.getLibrarianServiceId() != null) {
+                    if (user.getLibrarianServiceUniversityId() != null) {
 
                         LibrarianDTO dto = LibrarianDTO.builder()
                                 .librarianName(user.getUsername())
@@ -465,18 +482,131 @@ public class UserServiceImpl implements UserService {
                                 .build();
 
                         libraryServiceClient.updateLibrarian(
-                                user.getLibrarianServiceId(),
+                                user.getUniversityId(),   //
                                 dto
                         );
                     }
                 }
 
-                case ADMIN -> log.info("ADMIN - no cascade update required");
+                case ADMIN -> log.info("No update needed");
             }
 
         } catch (Exception e) {
-            log.error("CASCADE FAILED", e);
-            throw new RuntimeException("Service sync failed");
+            log.error("CASCADE UPDATE FAILED", e);
+            throw new RuntimeException("Update sync failed");
+        }
+    }
+    // =========================================================
+    // CASCADE DELETE
+    // =========================================================
+    private void cascadeDelete(UserEntity user) {
+
+        try {
+            switch (user.getRole()) {
+
+                case STUDENT -> {
+                    if (user.getStudentServiceUniversityId() != null) {
+                        studentServiceClient.deleteStudent(user.getUniversityId());
+                    }
+                }
+
+                case FACULTY -> {
+                    if (user.getFacultyServiceUniversityId() != null) {
+                        facultyServiceClient.deleteFaculty(user.getUniversityId());
+                    }
+                }
+
+                case LIBRARIAN -> {
+                    if (user.getLibrarianServiceUniversityId() != null) {
+                        libraryServiceClient.deleteLibrarian(user.getUniversityId());
+                    }
+                }
+
+                case ADMIN -> log.info("ADMIN delete");
+            }
+
+        } catch (Exception e) {
+            log.error("CASCADE DELETE FAILED", e);
+        }
+    }
+    // =========================================================
+    // CASCADE CREATE
+    // =========================================================
+    private void cascadeCreate(UserEntity user) {
+
+        try {
+            switch (user.getRole()) {
+
+                case STUDENT -> {
+                    StudentDTO dto = StudentDTO.builder()
+                            .studentName(user.getUsername())
+                            .studentEmail(user.getEmail())
+                            .studentPhoneNumber(user.getPhoneNumber())
+                            .universityId(user.getUniversityId())   // SAME ID
+                            .semester(user.getSemester())
+                            .batch(user.getBatch())
+                            .department(user.getDepartment())
+                            .courseCode(user.getCourseCode())
+                            .active(true)
+                            .build();
+
+                    var res = studentServiceClient.createStudentFromUser(dto);
+
+                    if (res.getStatusCode().is2xxSuccessful() && res.getBody() != null) {
+                        user.setStudentServiceUniversityId(user.getUniversityId());
+                    } else {
+                        throw new RuntimeException("Student service failed");
+                    }
+                }
+
+                case FACULTY -> {
+                    FacultyDTO dto = FacultyDTO.builder()
+                            .facultyName(user.getUsername())
+                            .facultyEmail(user.getEmail())
+                            .facultyPhoneNumber(user.getPhoneNumber())
+                            .facultyUniversityId(user.getUniversityId())
+                            .department(user.getDepartment())
+                            .subRole(user.getFacultySubRole() != null
+                                    ? user.getFacultySubRole().name()
+                                    : "TRAINEE")
+                            .active(true)
+                            .build();
+
+                    var res = facultyServiceClient.createFacultyFromUser(dto);
+
+                    if (res.getStatusCode().is2xxSuccessful() && res.getBody() != null) {
+                        user.setFacultyServiceUniversityId(user.getUniversityId());
+                    } else {
+                        throw new RuntimeException("Faculty service failed");
+                    }
+                }
+
+                case LIBRARIAN -> {
+                    LibrarianDTO dto = LibrarianDTO.builder()
+                            .librarianName(user.getUsername())
+                            .librarianEmail(user.getEmail())
+                            .librarianPhoneNumber(user.getPhoneNumber())
+                            .universityId(user.getUniversityId())
+                            .active(true)
+                            .build();
+
+                    var res = libraryServiceClient.createLibrarianFromUser(dto);
+
+                    if (res.getStatusCode().is2xxSuccessful() && res.getBody() != null) {
+                        user.setLibrarianServiceUniversityId(user.getUniversityId());
+                    } else {
+                        throw new RuntimeException("Library service failed");
+                    }
+                }
+
+                case ADMIN -> log.info("ADMIN - no cascade required");
+            }
+
+            userRepository.save(user);
+
+        } catch (Exception e) {
+            log.error("CASCADE CREATE FAILED", e);
+            throw new RuntimeException("Failed to sync services");
         }
     }
 }

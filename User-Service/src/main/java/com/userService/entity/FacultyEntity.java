@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "faculty", indexes = {
-        @Index(name = "idx_faculty_id", columnList = "universityId"),
+        @Index(name = "idx_faculty_id", columnList = "facultyUniversityId"),
         @Index(name = "idx_faculty_email", columnList = "facultyEmail"),
         @Index(name = "idx_faculty_dept", columnList = "department")
 })
@@ -25,8 +25,8 @@ public class FacultyEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 12)
-    private String universityId;
+    @Column(name = "faculty_university_id", nullable = false, unique = true, length = 12)
+    private String facultyUniversityId;
 
     @Column(nullable = false)
     private String facultyName;

@@ -1,5 +1,6 @@
 package com.userService.client;
 
+import com.userService.dto.ApiResponse;
 import com.userService.dto.FacultyDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -11,18 +12,18 @@ import org.springframework.web.bind.annotation.*;
 public interface FacultyServiceClient {
 
     @PostMapping("/api/faculty")   //  FIXED
-    ResponseEntity<FacultyDTO> createFacultyFromUser(
+    ResponseEntity<ApiResponse> createFacultyFromUser(
             @RequestBody FacultyDTO facultyDTO
     );
 
-    @DeleteMapping("/api/faculty/{id}")
-    ResponseEntity<Void> deleteFaculty(
-            @PathVariable Long id
+    @DeleteMapping("/api/faculty/{facultyUniversityId}")
+    ResponseEntity<ApiResponse> deleteFaculty(
+            @PathVariable String facultyUniversityId
     );
 
-    @PutMapping("/api/faculty/{id}")
-    ResponseEntity<FacultyDTO> updateFaculty(
-            @PathVariable Long id,
+    @PutMapping("/api/faculty/{facultyUniversityId}")
+    ResponseEntity<ApiResponse> updateFaculty(
+            @PathVariable String facultyUniversityId,
             @RequestBody FacultyDTO dto
     );
 }

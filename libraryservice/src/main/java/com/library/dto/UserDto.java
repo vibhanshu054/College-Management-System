@@ -1,4 +1,4 @@
-package com.student.dto;
+package com.library.dto;
 
 import lombok.*;
 

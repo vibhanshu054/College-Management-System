@@ -1,11 +1,13 @@
 package com.library.entity;
 
+import com.library.config.MapToJsonConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Entity
 @Table(name = "librarians", indexes = {
@@ -34,7 +36,8 @@ public class LibrarianEntity {
     private String librarianPhoneNumber;
 
     @Column(columnDefinition = "JSON")
-    private String attendanceCalendar;
+    @Convert(converter = MapToJsonConverter.class)
+    private Map<String, Object> attendanceCalendar;
 
     @Column(name = "attendance_percentage", columnDefinition = "FLOAT DEFAULT 0.0")
     private Float attendancePercentage = 0.0f;

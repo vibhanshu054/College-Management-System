@@ -1,6 +1,7 @@
 package com.department_Service.controller;
 
 
+import com.department_Service.dto.ApiResponse;
 import com.department_Service.dto.DepartmentDTO;
 import com.department_Service.service.DepartmentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
-
 @RestController
 @RequestMapping("/api/departments")
 @RequiredArgsConstructor
@@ -26,69 +26,90 @@ public class DepartmentController {
 
     private final DepartmentService departmentService;
 
+    // ================= CREATE =================
     @PostMapping
-    @Operation(summary = "Create department", description = "Admin only - Create new department")
-    @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<DepartmentDTO> createDepartment(
+    public ResponseEntity<ApiResponse> createDepartment(
             @Valid @RequestBody DepartmentDTO departmentDTO,
             Authentication auth) {
-        log.info("Create department request from: {}", auth.getName());
-        DepartmentDTO created = departmentService.createDepartment(departmentDTO, auth.getName());
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+
+        String username = (auth != null && auth.getName() != null)
+                ? auth.getName()
+                : "SYSTEM";
+
+        log.info("Create department request from: {}", username);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(departmentService.createDepartment(departmentDTO, username));
     }
 
+    // ================= GET BY ID =================
     @GetMapping("/{id}")
-    @Operation(summary = "Get department by ID", description = "Retrieve department details")
-    @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<DepartmentDTO> getDepartment(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse> getDepartment(@PathVariable Long id) {
+
         log.info("Get department {} request", id);
-        return ResponseEntity.ok(departmentService.getDepartmentById(id));
+
+        return ResponseEntity.ok(
+                departmentService.getDepartmentById(id)
+        );
     }
 
+    // ================= GET BY CODE =================
     @GetMapping("/code/{code}")
-    @Operation(summary = "Get department by code", description = "Retrieve department using department code")
-    @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<DepartmentDTO> getDepartmentByCode(@PathVariable String code) {
+    public ResponseEntity<ApiResponse> getDepartmentByCode(@PathVariable String code) {
+
         log.info("Get department by code: {}", code);
-        return ResponseEntity.ok(departmentService.getDepartmentByCode(code));
+
+        return ResponseEntity.ok(
+                departmentService.getDepartmentByCode(code)
+        );
     }
 
+    // ================= GET ALL =================
     @GetMapping
-    @Operation(summary = "Get all departments", description = "Retrieve all active departments")
-    @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<List<DepartmentDTO>> getAllDepartments() {
+    public ResponseEntity<ApiResponse> getAllDepartments() {
+
         log.info("Get all departments request");
-        return ResponseEntity.ok(departmentService.getAllDepartments());
+
+        return ResponseEntity.ok(
+                departmentService.getAllDepartments()
+        );
     }
 
+    // ================= UPDATE =================
     @PutMapping("/{id}")
-    @Operation(summary = "Update department", description = "Update department information")
-    @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<DepartmentDTO> updateDepartment(
+    public ResponseEntity<ApiResponse> updateDepartment(
             @PathVariable Long id,
             @Valid @RequestBody DepartmentDTO departmentDTO,
             Authentication auth) {
+
         log.info("Update department {} request from: {}", id, auth.getName());
-        DepartmentDTO updated = departmentService.updateDepartment(id, departmentDTO, auth.getName());
-        return ResponseEntity.ok(updated);
+
+        return ResponseEntity.ok(
+                departmentService.updateDepartment(id, departmentDTO, auth.getName())
+        );
     }
 
+    // ================= DELETE =================
     @DeleteMapping("/{id}")
-    @Operation(summary = "Delete department", description = "Delete department from system")
-    @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<Map<String, String>> deleteDepartment(
+    public ResponseEntity<ApiResponse> deleteDepartment(
             @PathVariable Long id,
             Authentication auth) {
+
         log.info("Delete department {} request from: {}", id, auth.getName());
-        departmentService.deleteDepartment(id, auth.getName());
-        return ResponseEntity.ok(Map.of("message", "Department deleted successfully"));
+
+        return ResponseEntity.ok(
+                departmentService.deleteDepartment(id, auth.getName())
+        );
     }
 
+    // ================= COUNT =================
     @GetMapping("/count/total")
-    @Operation(summary = "Get total departments", description = "Get count of all active departments")
-    @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<Map<String, Long>> getTotalCount() {
+    public ResponseEntity<ApiResponse> getTotalCount() {
+
         log.info("Get total departments count request");
-        return ResponseEntity.ok(Map.of("totalDepartments", departmentService.getTotalDepartmentsCount()));
+
+        return ResponseEntity.ok(
+                departmentService.getTotalDepartmentsCount()
+        );
     }
 }

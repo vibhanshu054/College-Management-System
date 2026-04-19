@@ -64,6 +64,9 @@ public class AttendanceEntity {
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Column(name = "student_university_id", nullable = false)
+    private String studentUniversityId;
+
     @Column(nullable = false)
     private LocalDateTime updatedAt = LocalDateTime.now();
 

@@ -1,4 +1,4 @@
-package com.student.dto;
+package com.facultyService.dto;
 
 import lombok.*;
 
@@ -17,8 +17,6 @@ public class UserDto {
     private String department;
     private String phoneNumber;
     private String universityId;
-
-    private String semester;
-    private String batch;
-    private String courseCode;
+    private String facultyUniversityId;
+    private String facultySubRole;
 }

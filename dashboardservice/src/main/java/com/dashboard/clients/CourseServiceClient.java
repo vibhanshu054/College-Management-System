@@ -1,18 +1,19 @@
 package com.dashboard.clients;
 
 
+import com.dashboard.dto.ApiResponse;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(name = "COURSE-SERVICE")
 public interface CourseServiceClient {
 
     @GetMapping("/api/courses")
-    List<?> getAllCourses();
-
-    @GetMapping("/api/courses/count/total")
-    Map<String, Long> getTotalCoursesCount();
+    ResponseEntity<ApiResponse> getAllCourses();
+    @GetMapping("/api/courses/count")
+    ResponseEntity<ApiResponse> getTotalCoursesCount();
+    @GetMapping("/api/courses/faculty/{universityId}")
+    ResponseEntity<ApiResponse> getCoursesByFaculty(@PathVariable String universityId);
 }

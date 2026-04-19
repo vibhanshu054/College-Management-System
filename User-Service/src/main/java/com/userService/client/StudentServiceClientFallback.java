@@ -21,13 +21,13 @@ public class StudentServiceClientFallback implements StudentServiceClient {
     }
 
     @Override
-    public ResponseEntity<Void> deleteStudent(Long id) {
+    public ResponseEntity<Void> deleteStudent(String universityId) {
         log.error("Student-Service DOWN (DELETE)");
         throw new RuntimeException("Student service unavailable");
     }
 
     @Override
-    public ResponseEntity<StudentDTO> updateStudent(Long id, StudentDTO dto) {
+    public ResponseEntity<StudentDTO> updateStudent(String universityId, StudentDTO dto) {
         log.error("Student-Service DOWN (UPDATE)");
         throw new RuntimeException("Student service unavailable");
     }

@@ -23,7 +23,7 @@ public class StudentDTO {
     private String department;
     private String course;
     private String courseCode;
-    private String facultyId;
+    private String facultyUniversityId;
     private String facultyName;
     private Integer booksIssued;
     private Integer booksReturned;

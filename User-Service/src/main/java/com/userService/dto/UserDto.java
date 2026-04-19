@@ -45,6 +45,7 @@ public class UserDto {
     @NotBlank(message = "University ID is required")
     private String universityId;
 
+
     // Optional for students
     private String semester;
     private String batch;
@@ -53,7 +54,7 @@ public class UserDto {
     // Optional for faculty
     private String facultySubRole;  // HOD, PROFESSOR, ASSISTANT_PROFESSOR, TRAINEE
 
-    private boolean active;
+    private boolean active= true;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

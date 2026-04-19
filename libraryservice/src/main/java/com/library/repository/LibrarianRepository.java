@@ -10,4 +10,5 @@ public interface LibrarianRepository extends JpaRepository<LibrarianEntity, Long
     Optional<LibrarianEntity> findByUniversityId(String universityId);
 
     Optional<LibrarianEntity> findByLibrarianEmail(String librarianEmail);
+
 }

@@ -1,8 +1,11 @@
 package com.userService.repository;
 
 
+import com.userService.dto.UserDto;
 import com.userService.entity.UserEntity;
 import com.userService.enums.UserRole;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -16,7 +19,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByEmail(String email);
 
     Optional<UserEntity> findByUniversityId(String universityId);
-
+    UserDto getUserByUniversityId(String universityId);
     Optional<UserEntity> findByUsername(String username);
 
     @Query("SELECT u FROM UserEntity u WHERE u.role = ?1 AND u.active = true")
@@ -30,4 +33,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     @Query("SELECT COUNT(u) FROM UserEntity u WHERE u.role = ?1 AND u.department = ?2 AND u.active = true")
     long countByRoleAndDepartmentAndActiveTrue(UserRole role, String department);
+
+    boolean existsByEmail(@NotBlank(message = "Email is required") @Email(message = "Email should be valid") String email);
 }

@@ -1,14 +1,15 @@
 package com.authService.services;
 
+import com.authService.dto.ApiResponse;
 import com.authService.dto.OtpRequestDto;
 import com.authService.dto.ResetPasswordRequestDto;
-
 public interface PasswordService {
-    String forgotPassword(String email);
 
-    String generateOtp(String token);
+    ApiResponse forgotPassword(String email);
 
-    String verifyOtp(OtpRequestDto req);
+    ApiResponse generateOtp(String token);
 
-    String resetPassword(ResetPasswordRequestDto req);
+    ApiResponse verifyOtp(OtpRequestDto request);
+
+    ApiResponse resetPassword(ResetPasswordRequestDto request);
 }

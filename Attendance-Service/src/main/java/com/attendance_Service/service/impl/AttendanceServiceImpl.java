@@ -41,7 +41,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         );
 
         AttendanceEntity saved = attendanceRepository.save(attendance);
-
+        attendance.setStudentUniversityId(attendanceDTO.getStudentUniversityId());
         return modelMapper.map(saved, AttendanceDTO.class);
     }
 
@@ -112,6 +112,10 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         if (dto.getRemarks() != null) {
             attendance.setRemarks(dto.getRemarks());
+        }
+
+        if (dto.getStudentUniversityId() != null) {
+            attendance.setStudentUniversityId(dto.getStudentUniversityId());
         }
 
         attendance.setUpdatedBy(user);

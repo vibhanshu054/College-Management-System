@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(name = "ATTENDANCE-SERVICE")   // Eureka based
+@FeignClient(name = "ATTENDANCE-SERVICE")
 public interface AttendanceServiceClient {
 
-    @GetMapping("/attendance/student/{studentId}")  //  FIXED PATH
+    @GetMapping("/api/attendance/student/{studentId}")
     List<?> getStudentAttendance(@PathVariable String studentId);
 }

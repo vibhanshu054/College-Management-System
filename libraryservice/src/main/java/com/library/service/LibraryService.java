@@ -1,47 +1,59 @@
 package com.library.service;
 
-
+import com.library.dto.ApiResponse;
 import com.library.dto.BookDTO;
 import com.library.dto.BookIssueDTO;
 import com.library.dto.LibrarianDTO;
-import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
-
-@Service
 public interface LibraryService {
 
+    // ================= LIBRARIAN =================
+    ApiResponse createLibrarian(LibrarianDTO librarianDTO);
+    ApiResponse getLibrarian(Long id);
 
-    LibrarianDTO createLibrarian(LibrarianDTO librarianDTO);
+    // ================= BOOK =================
+    ApiResponse addBook(BookDTO bookDTO);
+    ApiResponse getAllBooks(String searchTerm, boolean availableOnly);
+    ApiResponse getBookById(String bookId);
+    ApiResponse updateBook(String bookId, BookDTO bookDTO);
 
-    LibrarianDTO getLibrarian(Long id);
+    ApiResponse updateBookQuantity(String bookId, int quantityToAdd);
 
-    BookDTO addBook(BookDTO bookDTO);
+    ApiResponse deleteBook(String bookId);
 
-    List<BookDTO> getAllBooks(String searchTerm, boolean availableOnly);
+    // ================= BOOK ISSUE =================
+    ApiResponse issueBook(BookIssueDTO bookIssueDTO);
+    ApiResponse returnBook(Long issueId);
 
-    BookDTO getBookById(String bookId);
+    ApiResponse getBooksByUser(String userId);
+    ApiResponse getBookCountByUser(String userId);
 
-    BookDTO updateBook(String bookId, BookDTO bookDTO);
+    ApiResponse getIssueRecords(String userRole, String userId);
 
-    void deleteBook(String bookId);
+    @Transactional(readOnly = true)
+    ApiResponse getTotalMembersByUserId();
 
-    BookIssueDTO issueBook(BookIssueDTO bookIssueDTO);
+    @Transactional(readOnly = true)
+    ApiResponse getAllIssueRecords();
 
-    BookIssueDTO returnBook(Long issueId);
+    // ================= ANALYTICS =================
+    ApiResponse getOverdueBooks();
+    ApiResponse getLibraryDashboard();
+    ApiResponse getTotalBooksCount();
+    ApiResponse getAvailableBooksCount();
+    ApiResponse getTodayActivity();
+    ApiResponse getTotalMembers();
 
-    List<BookIssueDTO> getIssueRecords(String userRole, String userId);
+    // ================= ADVANCED =================
+    ApiResponse getOverdueBooksDetailed();
+    ApiResponse getBookStock();
+    ApiResponse getWeeklyCirculation();
 
-    List<Map<String, Object>> getOverdueBooks();
+    ApiResponse getLibraryMembers();
 
-    Map<String, Object> getLibraryDashboard();
 
-    Map<String, Integer> getTotalBooksCount();
+    ApiResponse updateReturnableDate(Long issueId, String returnableDate);
 
-    Map<String, Integer> getAvailableBooksCount();
-
-    Map<String, Object> getTodayActivity();
-
-    Map<String, Object> getTotalMembers();
+    ApiResponse getIssueRecordsByRole(String role, String action);
 }

@@ -21,13 +21,13 @@ public class LibraryServiceClientFallback implements LibraryServiceClient {
     }
 
     @Override
-    public ResponseEntity<Void> deleteLibrarian(Long id) {
+    public ResponseEntity<Void> deleteLibrarian(String universityId) {
         log.error("Library-Service DOWN (DELETE)");
         throw new RuntimeException("Library service unavailable");
     }
 
     @Override
-    public ResponseEntity<LibrarianDTO> updateLibrarian(Long id, LibrarianDTO dto) {
+    public ResponseEntity<LibrarianDTO> updateLibrarian(String universityId, LibrarianDTO dto) {
         log.error("Library-Service DOWN (UPDATE)");
         throw new RuntimeException("Library service unavailable");
     }

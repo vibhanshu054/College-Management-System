@@ -26,6 +26,83 @@ public class UserController {
 
     private final UserService userService;
 
+
+    @PutMapping("/university/{universityId}/password")
+    public ResponseEntity<ApiResponse> updatePasswordByUniversityId(
+            @PathVariable String universityId,
+            @RequestBody Map<String, String> passwordData,
+            @RequestHeader(value = "X-User-Name", required = false) String username
+    ) {
+
+        username = getUsername(username);
+
+        log.info("UPDATE PASSWORD BY UNIVERSITY ID | universityId={} | requestedBy={}",
+                universityId, username);
+
+        userService.updatePasswordByUniversityId(
+                universityId,
+                passwordData.get("oldPassword"),
+                passwordData.get("newPassword"),
+                username
+        );
+
+        return ResponseEntity.ok(
+                ApiResponse.builder()
+                        .timestamp(LocalDateTime.now())
+                        .status(HttpStatus.OK.value())
+                        .message("Password updated successfully")
+                        .build()
+        );
+    }
+
+
+
+    @PutMapping("/university/{universityId}")
+    public ResponseEntity<ApiResponse> updateUserByUniversityId(
+            @PathVariable String universityId,
+            @RequestBody UserDto dto,
+            @RequestHeader(value = "X-User-Name", required = false) String username
+    ) {
+
+        username = getUsername(username);
+
+        log.info("UPDATE USER BY UNIVERSITY ID | universityId={} | requestedBy={}",
+                universityId, username);
+
+        UserDto updated = userService.updateUserByUniversityId(universityId, dto, username);
+
+        return ResponseEntity.ok(
+                ApiResponse.builder()
+                        .timestamp(LocalDateTime.now())
+                        .status(HttpStatus.OK.value())
+                        .message("User updated successfully")
+                        .data(updated)
+                        .build()
+        );
+    }
+    @DeleteMapping("/university/{universityId}")
+    public ResponseEntity<ApiResponse> deleteUserByUniversityId(
+            @PathVariable String universityId,
+            @RequestHeader(value = "X-User-Name", required = false) String username,
+            @RequestHeader(value = "X-User-Role", required = false) String role
+    ) {
+
+        username = getUsername(username);
+
+        log.info("DELETE USER BY UNIVERSITY ID | universityId={} | requestedBy={} | role={}",
+                universityId, username, role);
+
+        userService.deleteUserByUniversityId(universityId, username, role);
+
+        return ResponseEntity.ok(
+                ApiResponse.builder()
+                        .timestamp(LocalDateTime.now())
+                        .status(HttpStatus.OK.value())
+                        .message("User deleted successfully")
+                        .reason("Soft delete applied")
+                        .build()
+        );
+    }
     // ================= HELPER =================
     private String getUsername(String username) {
         return (username != null && !username.isBlank()) ? username : "SYSTEM";
@@ -47,14 +124,7 @@ public class UserController {
 
         log.info("CREATE USER | requestedBy={} | role={}", username, role);
 
-        if (!isAdmin(role)) {
-            log.error("ACCESS DENIED | user={} | role={}", username, role);
-            throw new ForbiddenException("Only ADMIN can create users");
-        }
-
-        UserDto created = userService.createUser(userDTO, username);
-
-        log.info("USER CREATED SUCCESS | email={}", created.getEmail());
+        UserDto created = userService.createUser(userDTO, username, role);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 ApiResponse.builder()
@@ -62,6 +132,7 @@ public class UserController {
                         .status(HttpStatus.CREATED.value())
                         .message("User created successfully")
                         .username(created.getEmail())
+                        .data(created)
                         .build()
         );
     }
@@ -84,7 +155,7 @@ public class UserController {
 
         List<UserDto> users = (role != null && !role.isBlank())
                 ? userService.getUsersByRole(role)
-                : userService.getAllUsers();
+                : userService.getAllUsers(userRole);
 
         return ResponseEntity.ok(
                 ApiResponse.builder()
@@ -95,7 +166,28 @@ public class UserController {
                         .build()
         );
     }
+// Get user by university ID
+    @GetMapping("/university/{universityId}")
+    public ResponseEntity<ApiResponse> getUserByUniversityId(
+            @PathVariable String universityId,
+            @RequestHeader(value = "X-User-Name", required = false) String username
+    ) {
+        username = getUsername(username);
 
+        log.info("GET USER BY UNIVERSITY ID | universityId={} | requestedBy={}", universityId, username);
+
+        UserDto user = userService.getUserByUniversityId(universityId);
+
+        return ResponseEntity.ok(
+                ApiResponse.builder()
+                        .timestamp(LocalDateTime.now())
+                        .status(HttpStatus.OK.value())
+                        .message("User fetched successfully")
+                        .username(user.getEmail())
+                        .data(user)
+                        .build()
+        );
+    }
     // ================= GET USER BY ID =================
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse> getUserById(
@@ -132,11 +224,8 @@ public class UserController {
 
         log.info("DELETE USER | id={} | requestedBy={} | role={}", id, username, role);
 
-        if (!isAdmin(role)) {
-            throw new ForbiddenException("Only ADMIN can delete users");
-        }
 
-        userService.deleteUser(id, username);
+        userService.deleteUser(id, username, role);
 
         return ResponseEntity.ok(
                 ApiResponse.builder()
@@ -190,9 +279,6 @@ public class UserController {
 
         log.info("UPDATE USER | id={} | requestedBy={} | role={}", id, username, role);
 
-        if (!isAdmin(role)) {
-            throw new ForbiddenException("Only ADMIN can update users");
-        }
 
         UserDto updated = userService.updateUser(
                 id,
@@ -230,8 +316,6 @@ public class UserController {
     @GetMapping("/internal/by-email")
     public ResponseEntity<ApiResponse> lookupUserByEmail(@RequestParam String email) {
 
-        log.info("INTERNAL LOOKUP | email={}", email);
-
         UserDto user = userService.getUserByEmail(email);
 
         return ResponseEntity.ok(
@@ -239,7 +323,7 @@ public class UserController {
                         .timestamp(LocalDateTime.now())
                         .status(HttpStatus.OK.value())
                         .message("User fetched successfully")
-                        .username(user.getEmail())
+                        .data(user)
                         .build()
         );
     }

@@ -30,12 +30,17 @@ public class SubjectEntity {
 
     @Column(nullable = false)
     private String courseId;
+    @Column(nullable = false)
+    private String courseCode;
 
     @Column(nullable = false)
     private String courseName;
 
     @Column(nullable = false)
     private String departmentId;
+
+    @Column(nullable = false)
+    private String departmentCode;
 
     @Column(nullable = false)
     private Integer credits = 0;
@@ -76,6 +81,8 @@ public class SubjectEntity {
 
     @Column(name = "updated_by")
     private String updatedBy;
+
+   private String studentUniversityId;
 
     @PreUpdate
     protected void onUpdate() {

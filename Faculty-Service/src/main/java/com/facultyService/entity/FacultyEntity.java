@@ -1,10 +1,15 @@
 package com.facultyService.entity;
 
+import com.facultyService.config.MapToJsonConverter;
 import com.facultyService.enums.FacultySubRole;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Entity
 @Table(name = "faculty", indexes = {
@@ -23,7 +28,7 @@ public class FacultyEntity {
     private Long id;
 
     @Column(nullable = false, unique = true, length = 12)
-    private String universityId;
+    private String facultyUniversityId;
 
     @Column(nullable = false)
     private String facultyName;
@@ -41,8 +46,12 @@ public class FacultyEntity {
     @Column(nullable = false)
     private FacultySubRole subRole;
 
+    @Column(name = "total_courses")
+    private Integer totalCourses = 0;
+
     @Column(columnDefinition = "JSON")
-    private String attendanceCalendar;
+    @Convert(converter = MapToJsonConverter.class)
+    private Map<String, Object> attendanceCalendar;
 
     @Column(name = "attendance_percentage")
     private Float attendancePercentage = 0.0f;
@@ -54,7 +63,8 @@ public class FacultyEntity {
     private Integer booksReturned = 0;
 
     @Column(columnDefinition = "JSON")
-    private String scheduleData;
+    @Convert(converter = MapToJsonConverter.class)
+    private Map<String, Object> scheduleData;
 
     @Column(nullable = false)
     private Boolean active = true;

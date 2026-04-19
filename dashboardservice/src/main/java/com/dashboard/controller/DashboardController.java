@@ -1,7 +1,6 @@
 package com.dashboard.controller;
 
-
-import com.dashboard.dto.*;
+import com.dashboard.dto.ApiResponse;
 import com.dashboard.service.DashboardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -10,64 +9,71 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/dashboard")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "Dashboard", description = "APIs for Role-Based Dashboards")
+@Tag(name = "Dashboard APIs", description = "Role-based dashboard endpoints")
 public class DashboardController {
 
     private final DashboardService dashboardService;
 
     @GetMapping("/admin")
-    @Operation(summary = "Get admin dashboard", description = "Retrieve admin dashboard with statistics")
-    @SecurityRequirement(name = "bearerAuth")
-    public ResponseEntity<AdminDashboardDTO> getAdminDashboard(Authentication auth) {
-        log.info("Admin dashboard request from: {}", auth.getName());
+    @Operation(summary = "Admin dashboard statistics")
+    @SecurityRequirement(name = "Bearer Authentication") // FIXED: Consistent name
+    public ResponseEntity<ApiResponse> getAdminDashboard(Authentication auth) {
+        String username = getUsername(auth);
+        log.info("Admin dashboard requested by: {}", username);
         return ResponseEntity.ok(dashboardService.getAdminDashboard());
     }
 
-    @GetMapping("/faculty/{facultyId}")
-    @Operation(summary = "Get faculty dashboard", description = "Retrieve faculty dashboard")
+    @GetMapping("/student/{universityId}")
+    @Operation(summary = "Student dashboard")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<FacultyDashboardDTO> getFacultyDashboard(
-            @PathVariable String facultyId,
+    public ResponseEntity<ApiResponse> getStudentDashboard(
+            @PathVariable String universityId,
             Authentication auth) {
-        log.info("Faculty dashboard request from: {}", auth.getName());
-        return ResponseEntity.ok(dashboardService.getFacultyDashboard(facultyId));
+        String username = getUsername(auth);
+        log.info("Student dashboard requested by: {} for universityId: {}", username, universityId);
+        return ResponseEntity.ok(dashboardService.getStudentDashboard(universityId));
     }
 
-    @GetMapping("/student/{studentId}")
-    @Operation(summary = "Get student dashboard", description = "Retrieve student dashboard")
+    @GetMapping("/faculty/{facultyUniversityId}")
+    @Operation(summary = "Faculty dashboard")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<StudentDashboardDTO> getStudentDashboard(
-            @PathVariable String studentId,
+    public ResponseEntity<ApiResponse> getFacultyDashboard(
+            @PathVariable String facultyUniversityId,
             Authentication auth) {
-        log.info("Student dashboard request from: {}", auth.getName());
-        return ResponseEntity.ok(dashboardService.getStudentDashboard(studentId));
+        String username = getUsername(auth);
+        log.info("Faculty dashboard requested by: {} for facultyUniversityId: {}", username, facultyUniversityId);
+        return ResponseEntity.ok(dashboardService.getFacultyDashboard(facultyUniversityId));
     }
 
     @GetMapping("/librarian")
-    @Operation(summary = "Get librarian dashboard", description = "Retrieve librarian dashboard")
+    @Operation(summary = "Librarian dashboard")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<LibrarianDashboardDTO> getLibrarianDashboard(Authentication auth) {
-        log.info("Librarian dashboard request from: {}", auth.getName());
+    public ResponseEntity<ApiResponse> getLibrarianDashboard(Authentication auth) {
+        String username = getUsername(auth);
+        log.info("Librarian dashboard requested by: {}", username);
         return ResponseEntity.ok(dashboardService.getLibrarianDashboard());
     }
 
-    @GetMapping("/{role}/{userId}")
-    @Operation(summary = "Get dashboard by role", description = "Retrieve role-based dashboard")
+    // Generic role-based (optional fallback)
+    @GetMapping("/role/{role}/{userId}")
+    @Operation(summary = "Generic role-based dashboard (use specific endpoints preferred)")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<DashboardDTO> getDashboardByRole(
+    public ResponseEntity<ApiResponse> getDashboardByRole(
             @PathVariable String role,
             @PathVariable String userId,
             Authentication auth) {
-        log.info("Dashboard request for role: {} from: {}", role, auth.getName());
+        String username = getUsername(auth);
+        log.info("Role-based dashboard requested by: {} for role: {} userId: {}", username, role, userId);
         return ResponseEntity.ok(dashboardService.getDashboardByRole(role, userId));
+    }
+
+    private String getUsername(Authentication auth) {
+        return auth != null && auth.getName() != null ? auth.getName() : "ANONYMOUS";
     }
 }

@@ -47,4 +47,6 @@ public class AttendanceDTO {
     private LocalDateTime updatedAt;
     private String createdBy;
     private String updatedBy;
+
+    private String StudentUniversityId;
 }

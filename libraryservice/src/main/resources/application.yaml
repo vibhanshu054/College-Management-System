@@ -1,6 +1,8 @@
 server:
   port: 8084
-
+library:
+  issue:
+    max-days: 14
 spring:
   application:
     name: Library-Service

@@ -2,6 +2,7 @@ package com.subject_Service.controller;
 
 
 
+import com.subject_Service.dto.ApiResponse;
 import com.subject_Service.dto.SubjectDTO;
 import com.subject_Service.service.SubjectService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,7 +10,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -30,18 +31,25 @@ public class SubjectController {
     @PostMapping
     @Operation(summary = "Create subject", description = "Admin/Faculty - Create new subject")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<SubjectDTO> createSubject(
-            @Valid @RequestBody SubjectDTO subjectDTO,
-            Authentication auth) {
-        log.info("Create subject request from: {}", auth.getName());
-        SubjectDTO created = subjectService.createSubject(subjectDTO, auth.getName());
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
-    }
+
+
+        public ResponseEntity<ApiResponse> createSubject(
+                @Valid @RequestBody SubjectDTO subjectDTO,
+                Authentication auth) {
+
+        String username = (auth != null && auth.getName() != null)
+                ? auth.getName()
+                : "SYSTEM";
+        log.info("Create subject request from: {}", username);
+            return ResponseEntity.status(201)
+                    .body(subjectService.createSubject(subjectDTO, username));
+        }
+
 
     @GetMapping("/{id}")
     @Operation(summary = "Get subject by ID", description = "Retrieve subject details")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<SubjectDTO> getSubject(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse> getSubject(@PathVariable Long id) {
         log.info("Get subject {} request", id);
         return ResponseEntity.ok(subjectService.getSubjectById(id));
     }
@@ -49,7 +57,7 @@ public class SubjectController {
     @GetMapping("/code/{code}")
     @Operation(summary = "Get subject by code", description = "Retrieve subject using subject code")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<SubjectDTO> getSubjectByCode(@PathVariable String code) {
+    public ResponseEntity<ApiResponse> getSubjectByCode(@PathVariable String code) {
         log.info("Get subject by code: {}", code);
         return ResponseEntity.ok(subjectService.getSubjectByCode(code));
     }
@@ -57,75 +65,109 @@ public class SubjectController {
     @GetMapping
     @Operation(summary = "Get all subjects", description = "Retrieve all active subjects")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<List<SubjectDTO>> getAllSubjects() {
+    public ResponseEntity<ApiResponse> getAllSubjects() {
         log.info("Get all subjects request");
         return ResponseEntity.ok(subjectService.getAllSubjects());
     }
 
-    @GetMapping("/course/{courseId}")
+
     @Operation(summary = "Get subjects by course", description = "Retrieve all subjects in a course")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<List<SubjectDTO>> getSubjectsByCourse(@PathVariable String courseId) {
-        log.info("Get subjects for course: {}", courseId);
-        return ResponseEntity.ok(subjectService.getSubjectsByCourse(courseId));
+    @GetMapping("/course/{courseCode}")
+    public ResponseEntity<ApiResponse> getSubjectsByCourse(@PathVariable String courseCode) {
+
+        return ResponseEntity.ok(subjectService.getSubjectsByCourse(courseCode));
     }
 
-    @GetMapping("/department/{departmentId}")
+
     @Operation(summary = "Get subjects by department", description = "Retrieve all subjects in a department")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<List<SubjectDTO>> getSubjectsByDepartment(@PathVariable String departmentId) {
-        log.info("Get subjects for department: {}", departmentId);
-        return ResponseEntity.ok(subjectService.getSubjectsByDepartment(departmentId));
+    @GetMapping("/department/{departmentCode}")
+    public ResponseEntity<ApiResponse> getSubjectsByDepartment(@PathVariable String departmentCode) {
+
+        List<SubjectDTO> list = subjectService.getSubjectsByDepartment(departmentCode);
+
+        return ResponseEntity.ok(
+                new ApiResponse("Subjects fetched", 200, list, java.time.LocalDateTime.now())
+        );
     }
 
-    @GetMapping("/semester/{semester}")
     @Operation(summary = "Get subjects by semester", description = "Retrieve all subjects in a semester")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<List<SubjectDTO>> getSubjectsBySemester(@PathVariable Integer semester) {
-        log.info("Get subjects for semester: {}", semester);
-        return ResponseEntity.ok(subjectService.getSubjectsBySemester(semester));
+    @GetMapping("/semester/{semester}")
+    public ResponseEntity<ApiResponse> getSubjectsBySemester(@PathVariable Integer semester) {
+
+        List<SubjectDTO> list = subjectService.getSubjectsBySemester(semester);
+
+        return ResponseEntity.ok(
+                new ApiResponse("Subjects fetched", 200, list, java.time.LocalDateTime.now())
+        );
     }
 
-    @GetMapping("/faculty/{facultyId}")
+
     @Operation(summary = "Get subjects by faculty", description = "Retrieve all subjects assigned to faculty")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<List<SubjectDTO>> getSubjectsByFaculty(@PathVariable String facultyId) {
-        log.info("Get subjects for faculty: {}", facultyId);
-        return ResponseEntity.ok(subjectService.getSubjectsByFaculty(facultyId));
-    }
+    @GetMapping("/faculty/{facultyUniversityId}")
+    public ResponseEntity<ApiResponse> getSubjectsByFaculty(@PathVariable String facultyUniversityId) {
 
-    @PutMapping("/{id}")
+        List<SubjectDTO> list = subjectService.getSubjectsByFaculty(facultyUniversityId);
+
+        return ResponseEntity.ok(
+                new ApiResponse("Subjects fetched", 200, list, java.time.LocalDateTime.now())
+        );
+    }
     @Operation(summary = "Update subject", description = "Update subject information")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<SubjectDTO> updateSubject(
-            @PathVariable Long id,
+    @PutMapping("/{subjectCode}")
+    public ResponseEntity<ApiResponse> updateSubject(
+            @PathVariable String subjectCode,
             @Valid @RequestBody SubjectDTO subjectDTO,
             Authentication auth) {
-        log.info("Update subject {} request from: {}", id, auth.getName());
-        SubjectDTO updated = subjectService.updateSubject(id, subjectDTO, auth.getName());
-        return ResponseEntity.ok(updated);
+
+        SubjectDTO updated = subjectService.updateSubject(subjectCode, subjectDTO, auth.getName());
+
+        return ResponseEntity.ok(
+                new ApiResponse("Subject updated", 200, updated, java.time.LocalDateTime.now())
+        );
     }
 
-    @DeleteMapping("/{id}")
     @Operation(summary = "Delete subject", description = "Delete subject from system")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<Map<String, String>> deleteSubject(
-            @PathVariable Long id,
+    @DeleteMapping("/{subjectCode}")
+    public ResponseEntity<ApiResponse> deleteSubject(
+            @PathVariable String subjectCode,
             Authentication auth) {
-        log.info("Delete subject {} request from: {}", id, auth.getName());
-        subjectService.deleteSubject(id, auth.getName());
-        return ResponseEntity.ok(Map.of("message", "Subject deleted successfully"));
+
+        String username = (auth != null && auth.getName() != null)
+                ? auth.getName()
+                : "SYSTEM";
+
+        log.info("Delete subject {} request from: {}", subjectCode, username);
+
+        ApiResponse response = subjectService.deleteSubject(subjectCode, username);
+
+        return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{subjectId}/assign-faculty/{facultyId}")
+
     @Operation(summary = "Assign faculty to subject", description = "Assign a faculty to teach subject")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<Map<String, String>> assignFacultyToSubject(
-            @PathVariable Long subjectId,
-            @PathVariable String facultyId,
+    @PutMapping("/{subjectCode}/assign-faculty/{facultyUniversityId}")
+    public ResponseEntity<ApiResponse> assignFacultyToSubject(
+            @PathVariable String subjectCode,
+            @PathVariable String facultyUniversityId,
             @RequestParam String facultyName) {
-        log.info("Assigning faculty {} to subject {}", facultyId, subjectId);
-        subjectService.assignFacultyToSubject(subjectId, facultyId, facultyName);
-        return ResponseEntity.ok(Map.of("message", "Faculty assigned successfully"));
+
+        subjectService.assignFacultyToSubject(subjectCode,facultyUniversityId, facultyName);
+
+        return ResponseEntity.ok(
+                new ApiResponse("Faculty assigned successfully", 200, null, java.time.LocalDateTime.now())
+        );
+    }
+
+    @GetMapping("/student/{universityId}")
+    ResponseEntity<ApiResponse> getSubjectsByStudentUniversityId(@PathVariable String universityId){
+        log.info("Get subjects for student: {}", universityId);
+        return ResponseEntity.ok(subjectService.getSubjectsByStudentUniversityId(universityId));
     }
 }

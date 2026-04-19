@@ -1,10 +1,12 @@
 package com.apiGateway.filter;
 
 import com.apiGateway.util.JwtUtil;
+import feign.RequestInterceptor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
@@ -30,28 +32,30 @@ public class AuthFilter implements GatewayFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
         String path = exchange.getRequest().getURI().getPath();
-
-        exchange.getRequest().getMethod();
         String method = exchange.getRequest().getMethod().name();
 
         log.info("Incoming request: {} {}", method, path);
 
-        // Allow auth endpoints
-        if (path.equals("/api/auth/login") ||
-                path.equals("/api/auth/logout") ||
-                path.equals("/api/auth/validate") ||
+        // ================= PUBLIC APIs =================
+        if (path.startsWith("/api/auth") ||
                 path.startsWith("/swagger-ui") ||
                 path.startsWith("/v3/api-docs") ||
                 path.startsWith("/swagger-resources") ||
                 path.startsWith("/webjars")) {
-            log.info("Swagger/Auth endpoint accessed, skipping filter");
+
             return chain.filter(exchange);
         }
-        // Extract token
+
+        // ================= INTERNAL SERVICE CALL =================
+        if (exchange.getRequest().getHeaders().getFirst("X-Internal-Call") != null) {
+            log.info("Internal call detected → skipping auth");
+            return chain.filter(exchange);
+        }
+
+        // ================= TOKEN =================
         String header = exchange.getRequest().getHeaders().getFirst("Authorization");
 
         if (header == null || !header.startsWith("Bearer ")) {
-            log.error("Authorization header missing or invalid");
             return onError(exchange, "Missing or Invalid Token");
         }
 
@@ -62,122 +66,82 @@ public class AuthFilter implements GatewayFilter, Ordered {
             String role = jwtUtil.extractRole(token);
             String department = jwtUtil.extractDepartment(token);
 
-            log.info("Token validated. User: {}, Role: {}, Department: {}", username, role, department);
+            log.info("User: {}, Role: {}", username, role);
 
-            //  Reactive blacklist check (NO block)
             return webClientBuilder.build()
                     .get()
                     .uri("lb://AUTH-SERVICE/api/auth/validate?token={token}", token)
                     .retrieve()
                     .bodyToMono(Boolean.class)
-                    .flatMap(isBlacklisted -> {
+                    .flatMap(valid -> {
 
-                        if (Boolean.FALSE.equals(isBlacklisted)) {
-                            log.error("Invalid or blacklisted token for user {}", username);
-                            return onError(exchange, "You are logged out. Please login again.");
+                        if (Boolean.FALSE.equals(valid)) {
+                            return onError(exchange, "Token expired or blacklisted");
                         }
 
-                        log.info("Token is valid and not blacklisted");
-
-                        //  ADMIN → Full access
-                        if ("ADMIN".equals(role)) {
-                            ServerHttpRequest request = exchange.getRequest().mutate()
-                                    .header("X-User-Name", username)
-                                    .header("X-User-Department", department != null ? department : "")
-                                    .header("X-User-Role", role)
-                                    .build();
-                            return chain.filter(exchange.mutate().request(request).build());
+                        // ================= ADMIN / SYSTEM =================
+                        if ("ADMIN".equals(role) || "SYSTEM".equals(role)) {
+                            return chain.filter(addHeaders(exchange, username, role, department));
                         }
 
-                        //  CREATE USER → Only ADMIN and SYSTEM
-                        if (path.equals("/api/users") && method.equals("POST")) {
-                            if (!"ADMIN".equals(role) && !"SYSTEM".equals(role)) {
-                                log.error("Access denied: Only ADMIN can create users");
-                                return onError(exchange, "Only ADMIN or SYSTEM can create users");
+                        // ================= STUDENT =================
+                        if ("STUDENT".equals(role)) {
+
+                            if (path.startsWith("/api/students") ||
+                                    path.startsWith("/api/student") ||
+                                    path.startsWith("/api/library") ||
+                                    path.startsWith("/api/dashboard/student") ||
+                                    path.startsWith("/api/attendance/student")||
+                                    path.startsWith("/api/subjects")) {
+                                if ((method.equals("DELETE") || method.equals("PUT"))
+                                        && path.startsWith("/api/subjects")) {
+
+                                    return onError(exchange, "Only admin can update/delete subjects");
+                                }
+                                //  Library → only GET
+                                if (path.startsWith("/api/library") && !method.equals("GET")) {
+                                    return onError(exchange, "Students can only view library data");
+                                }
+
+                                return chain.filter(addHeaders(exchange, username, role, department));
                             }
+
+                            return onError(exchange, "Access Denied");
                         }
 
-                        //  VIEW ALL USERS → Only ADMIN
-                        if (path.startsWith("/api/users/all")) {
-                            if (!"ADMIN".equals(role) && !"SYSTEM".equals(role)) {
-                                log.error("Access denied: Only ADMIN can view all users");
-                                return onError(exchange, "Only ADMIN allowed");
+                        // ================= FACULTY =================
+                        if ("FACULTY".equals(role)) {
+
+                            if (path.startsWith("/api/faculty") ||
+                                    path.startsWith("/api/students") ||
+                                    path.startsWith("/api/courses") ||
+                                    path.startsWith("/api/attendance") ||
+                                    path.startsWith("/api/dashboard/faculty") ||
+                                    path.startsWith("/api/library")) {
+
+                                return chain.filter(addHeaders(exchange, username, role, department));
                             }
+
+                            return onError(exchange, "Access Denied");
                         }
 
-                        //  ADMIN DASHBOARD
-                        if (path.startsWith("/api/dashboard/admin")) {
-                            if (!"ADMIN".equals(role) && !"SYSTEM".equals(role)) {
-                                return onError(exchange, "Only ADMIN allowed");
+                        // ================= LIBRARIAN =================
+                        if ("LIBRARIAN".equals(role)) {
+
+                            if (path.startsWith("/api/library") ||
+                                    path.startsWith("/api/dashboard/library")) {
+
+                                return chain.filter(addHeaders(exchange, username, role, department));
                             }
+
+                            return onError(exchange, "Access Denied");
                         }
 
-                        //  FACULTY DASHBOARD
-                        if (path.startsWith("/api/dashboard/faculty")) {
-                            if (!"FACULTY".equals(role) && !"ADMIN".equals(role) && !"SYSTEM".equals(role)) {
-                                return onError(exchange, "Access Denied");
-                            }
-                        }
-
-                        //  FACULTY → Courses + Students
-                        if (path.startsWith("/api/courses") || path.startsWith("/api/students")) {
-                            if (!"FACULTY".equals(role) && !"ADMIN".equals(role) && !"SYSTEM".equals(role)) {
-                                log.error("Access denied: Only FACULTY or ADMIN allowed");
-                                return onError(exchange, "Access Denied");
-                            }
-                        }
-
-                        // DASHBOARD
-                        if (path.startsWith("/api/dashboard/library")) {
-                            if (!"DASHBOARD".equals(role) && !"ADMIN".equals(role) && !"SYSTEM".equals(role)) {
-                                return onError(exchange, "Access Denied");
-                            }
-                        }
-                        // DEPARTMENT
-                        if (path.startsWith("/api/department/library")) {
-                            if (!"DASHBOARD".equals(role) && !"ADMIN".equals(role) && !"SYSTEM".equals(role)) {
-                                return onError(exchange, "Access Denied");
-                            }
-                        }
-                        // SUBJECT
-                        if (path.startsWith("/api/subjects/library")) {
-                            if (!"SUBJECT".equals(role) && !"ADMIN".equals(role) && !"SYSTEM".equals(role)) {
-                                return onError(exchange, "Access Denied");
-                            }
-                        }
-
-                        //  LIBRARIAN → Library only
-                        if (path.startsWith("/api/library")) {
-                            if (!"LIBRARIAN".equals(role) && !"ADMIN".equals(role) && !"SYSTEM".equals(role)) {
-                                log.error("Access denied: Only LIBRARIAN or ADMIN allowed");
-                                return onError(exchange, "Access Denied");
-                            }
-                        }
-
-                        //  STUDENT → Profile + own books + Dashboard
-                        if (path.startsWith("/api/users/profile") ||
-                                path.startsWith("/api/library/my-books") ||
-                                path.startsWith("/api/dashboard/student")) {
-
-                            if (!"STUDENT".equals(role) && !"ADMIN".equals(role) && !"SYSTEM".equals(role)) {
-                                log.error("Access denied: Only STUDENT or ADMIN allowed");
-                                return onError(exchange, "Access Denied");
-                            }
-                        }
-
-                        //  Pass username and department downstream
-                        ServerHttpRequest request = exchange.getRequest().mutate()
-                                .header("X-User-Name", username)
-                                .header("X-User-Department", department)
-                                .build();
-
-                        log.info("Request authorized for user {}", username);
-
-                        return chain.filter(exchange.mutate().request(request).build());
+                        return onError(exchange, "Unauthorized Role");
                     });
 
         } catch (Exception e) {
-            log.error("JWT validation failed: {}", e.getMessage());
+            log.error("JWT validation failed", e);
             return onError(exchange, "Invalid Token");
         }
     }
@@ -196,6 +160,26 @@ public class AuthFilter implements GatewayFilter, Ordered {
         log.error("Unauthorized access: {}", message);
 
         return response.writeWith(Mono.just(buffer));
+    }
+
+    private ServerWebExchange addHeaders(ServerWebExchange exchange,
+                                         String username,
+                                         String role,
+                                         String department) {
+
+        ServerHttpRequest request = exchange.getRequest().mutate()
+                .header("X-User-Name", username)
+                .header("X-User-Role", role)
+                .header("X-User-Department", department != null ? department : "")
+                .build();
+
+        return exchange.mutate().request(request).build();
+    }
+    @Bean
+    public RequestInterceptor interceptor() {
+        return template -> {
+            template.header("X-Internal-Call", "true");
+        };
     }
 
     @Override

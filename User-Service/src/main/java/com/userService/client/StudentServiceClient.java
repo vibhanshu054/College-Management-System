@@ -16,14 +16,14 @@ public interface StudentServiceClient {
             @RequestBody StudentDTO studentDTO
     );
 
-    @DeleteMapping("/api/students/{id}")
+    @DeleteMapping("/api/students/{universityId}")
     ResponseEntity<Void> deleteStudent(
-            @PathVariable Long id
+            @PathVariable String universityId
     );
 
-    @PutMapping("/api/students/{id}")
+    @PutMapping("/api/students/{universityId}")
     ResponseEntity<StudentDTO> updateStudent(
-            @PathVariable Long id,
+            @PathVariable String universityId,
             @RequestBody StudentDTO dto
     );
 }

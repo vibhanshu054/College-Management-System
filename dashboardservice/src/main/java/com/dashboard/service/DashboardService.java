@@ -1,18 +1,25 @@
 package com.dashboard.service;
 
 
-import com.dashboard.dto.*;
+import com.dashboard.dto.ApiResponse;
+
+import java.util.List;
 
 public interface DashboardService {
 
-    AdminDashboardDTO getAdminDashboard();
 
-    StudentDashboardDTO getStudentDashboard(String studentId);
+    ApiResponse getAdminDashboard();
 
-    FacultyDashboardDTO getFacultyDashboard(String facultyId);
+    ApiResponse getStudentDashboard(String universityId);
 
-    LibrarianDashboardDTO getLibrarianDashboard();
+    ApiResponse getFacultyDashboard(String facultyUniversityId);
 
-    DashboardDTO getDashboardByRole(String role, String userId);
+
+    ApiResponse getLibrarianDashboard();
+
+
+    ApiResponse getDashboardByRole(String role, String userId);
+
+    double calculateAttendance(List<?> list);
 
 }

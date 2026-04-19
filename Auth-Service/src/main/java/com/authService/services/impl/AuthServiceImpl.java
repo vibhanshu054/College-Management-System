@@ -72,7 +72,8 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtUtil.generateToken(
                 user.getEmail(),
                 role,
-                user.getDepartment() != null ? user.getDepartment() : ""
+                user.getDepartment() != null ? user.getDepartment() : "",
+                user.getUniversityId() != null ? user.getUniversityId() : ""
         );
 
         return AuthResponse.builder()
@@ -80,6 +81,8 @@ public class AuthServiceImpl implements AuthService {
                 .type("Bearer")
                 .username(user.getUsername())
                 .email(user.getEmail())
+                .id(user.getId())
+                .universityId(user.getUniversityId())
                 .timeStamp(now)
                 .issuedAt(now)
                 .expiryTime(expiry)

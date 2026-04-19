@@ -1,6 +1,8 @@
 package com.dashboard.clients;
 
+import com.dashboard.dto.ApiResponse;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
@@ -10,8 +12,8 @@ import java.util.Map;
 public interface DepartmentServiceClient {
 
     @GetMapping("/api/departments")
-    List<?> getAllDepartments();
+    ResponseEntity<ApiResponse> getAllDepartments();
 
     @GetMapping("/api/departments/count/total")
-    Map<String, Long> getTotalDepartmentsCount();
+    ResponseEntity<ApiResponse> getTotalDepartmentsCount();
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Setter
 @Getter
@@ -14,17 +15,20 @@ import java.time.LocalDateTime;
 public class FacultyDTO {
 
     private Long id;
-    private String universityId;
+    private String facultyUniversityId;
     private String facultyName;
     private String facultyEmail;
+    private String username;
+    private String password;
     private String facultyPhoneNumber;
     private String department;
     private FacultySubRole subRole;
-    private String attendanceCalendar;
+
     private Float attendancePercentage;
     private Integer booksIssued;
     private Integer booksReturned;
-    private String scheduleData;
+    private Map<String, Object> attendanceCalendar;
+    private Map<String, Object> scheduleData;
     private Boolean active;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

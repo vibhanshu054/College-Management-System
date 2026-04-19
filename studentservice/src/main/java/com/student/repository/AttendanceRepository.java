@@ -4,6 +4,7 @@ import com.student.entity.AttendanceRecord;
 import com.student.enums.AttendanceStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Arrays;
 import java.util.List;
 
 public interface AttendanceRepository extends JpaRepository<AttendanceRecord, Long> {
@@ -12,5 +13,11 @@ public interface AttendanceRepository extends JpaRepository<AttendanceRecord, Lo
 
     long countByStudentIdAndStatus(Long studentId, AttendanceStatus attendanceStatus);
 
-    List<AttendanceRecord> findByStudentIdOrderByAttendanceDateDesc(Long studentId);
+    long countByStudentUniversityId(String universityId);
+
+
+    List<AttendanceRecord> findByStudentUniversityIdOrderByAttendanceDateDesc(String universityId);
+
+
+    long countByStudentUniversityIdAndStatus(String universityId, AttendanceStatus attendanceStatus);
 }

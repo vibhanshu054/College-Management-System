@@ -9,6 +9,8 @@ public class AuthResponse {
 
     private String token;
     private String username;
+    private Long id;
+    private String universityId;
     private LocalDateTime timeStamp;
     private LocalDateTime expiryTime;
     private String type = "Bearer";

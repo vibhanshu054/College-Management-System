@@ -1,5 +1,6 @@
 package com.department_Service.exception;
 
+import com.department_Service.dto.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,13 +25,19 @@ public class GlobalExceptionHandler {
         log.warn("Resource not found: {}", ex.getMessage());
         return buildErrorResponse(HttpStatus.NOT_FOUND, "NOT_FOUND", ex.getMessage(), request);
     }
-
     @ExceptionHandler(DuplicateResourceException.class)
-    public ResponseEntity<Map<String, Object>> handleDuplicateResource(
-            DuplicateResourceException ex, WebRequest request) {
-        log.warn("Duplicate resource: {}", ex.getMessage());
-        return buildErrorResponse(HttpStatus.CONFLICT, "CONFLICT", ex.getMessage(), request);
+    public ResponseEntity<ApiResponse> handleDuplicate(Exception ex) {
+
+        return ResponseEntity.status(409).body(
+                new ApiResponse(
+                        ex.getMessage(),
+                        409,
+                        null,
+                        LocalDateTime.now()
+                )
+        );
     }
+
 
     @ExceptionHandler(InvalidOperationException.class)
     public ResponseEntity<Map<String, Object>> handleInvalidOperation(
@@ -83,6 +90,18 @@ public class GlobalExceptionHandler {
         log.error("Unexpected error occurred", ex);
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR",
                 "An unexpected error occurred. Please try again later.", request);
+    }
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse> handleIllegal(IllegalArgumentException ex) {
+
+        return ResponseEntity.badRequest().body(
+                new ApiResponse(
+                        ex.getMessage(),
+                        400,
+                        null,
+                        LocalDateTime.now()
+                )
+        );
     }
 
     private ResponseEntity<Map<String, Object>> buildErrorResponse(

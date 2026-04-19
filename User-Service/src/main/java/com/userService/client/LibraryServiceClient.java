@@ -16,15 +16,14 @@ public interface LibraryServiceClient {
             @RequestBody LibrarianDTO librarianDTO
     );
 
-    @DeleteMapping("/api/library/librarian/{id}")
+    @DeleteMapping("/api/library/librarian/{universityId}")
     ResponseEntity<Void> deleteLibrarian(
-            @PathVariable Long id
+            @PathVariable String universityId
     );
 
-    // 🔥 NEW
-    @PutMapping("/api/library/librarian/{id}")
+    @PutMapping("/api/library/librarian/{universityId}")
     ResponseEntity<LibrarianDTO> updateLibrarian(
-            @PathVariable Long id,
+            @PathVariable String universityId,
             @RequestBody LibrarianDTO dto
     );
 }

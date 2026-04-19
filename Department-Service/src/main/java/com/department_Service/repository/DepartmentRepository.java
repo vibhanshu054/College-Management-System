@@ -22,4 +22,6 @@ public interface DepartmentRepository extends JpaRepository<DepartmentEntity, Lo
 
     @Query("SELECT COUNT(d) FROM DepartmentEntity d WHERE d.active = true")
     long countActiveOnly();
+    @Query("SELECT COUNT(d) FROM DepartmentEntity d WHERE d.departmentCode LIKE ?1%")
+    long countByPrefix(String prefix);
 }

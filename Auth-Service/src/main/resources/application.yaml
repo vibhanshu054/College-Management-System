@@ -32,7 +32,7 @@ spring:
     host: ${MAIL_HOST:smtp.gmail.com}
     port: ${MAIL_PORT:587}
     username: vibhanshusoniofficial@gmail.com
-    password: stmq amxq pnid tlin
+    password: nwhz bubl bkcu mlte
     properties:
       mail:
         smtp:
@@ -40,6 +40,9 @@ spring:
           starttls:
             enable: true
             required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
 
 eureka:
   client:
@@ -76,10 +79,15 @@ springdoc:
 
 logging:
   level:
+    org.springframework.mail: DEBUG
     root: INFO
     com.authService: DEBUG
     org.springframework.cloud.openfeign: DEBUG
+
   file:
     name: logs/auth-service.log
-    max-size: 10MB
-    max-history: 30
+
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 30

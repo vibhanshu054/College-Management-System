@@ -1,16 +1,14 @@
 package com.student.controller;
 
-import com.student.dto.StudentDTO;
+import com.student.dto.*;
+import com.student.enums.AttendanceStatus;
 import com.student.service.StudentService;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/students")
@@ -21,79 +19,126 @@ public class StudentController {
     private final StudentService studentService;
 
     @PostMapping
-    @Operation(summary = "Create new student", description = "Create student profile with all required fields")
-    public ResponseEntity<Long> createStudent(@RequestBody StudentDTO studentDTO) {
+    public ResponseEntity<ApiResponse> createStudent(
+            @Valid @RequestBody UserDto userDto,
+            @RequestHeader(value = "X-User-Name", required = false) String username,
+            @RequestHeader(value = "X-User-Role", required = false) String role
+    ) {
+        username = (username != null && !username.isBlank()) ? username : "SYSTEM";
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(studentService.createStudent(studentDTO));
+                .body(studentService.createStudent(userDto, username, role));
     }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Get student by ID", description = "Retrieve student profile - READ ONLY")
-    public ResponseEntity<StudentDTO> getStudent(@PathVariable Long id) {
-        return ResponseEntity.ok(studentService.getStudent(id));
+    @PutMapping("/{universityId}/semester")
+    public ResponseEntity<ApiResponse> updateSemester(
+            @PathVariable String universityId,
+            @RequestParam String semester,
+            @RequestHeader("X-User-Role") String role
+    ) {
+        return ResponseEntity.ok(studentService.updateSemester(universityId, semester, role));
+    }
+
+    @GetMapping("/courses/student-count")
+    public ResponseEntity<ApiResponse> getStudentCountByCourse() {
+        return ResponseEntity.ok(studentService.getStudentCountByCourse());
+    }
+
+    @PutMapping("/{universityId}/subjects")
+    public ResponseEntity<ApiResponse> updateSubjects(
+            @PathVariable String universityId,
+            @RequestBody SubjectUpdateRequest request,
+            @RequestHeader("X-User-Role") String role
+    ) {
+        return ResponseEntity.ok(studentService.updateSubjects(universityId, request.getSubjects(), role));
+    }
+
+    @PutMapping("/books/update/{universityId}")
+    public ResponseEntity<ApiResponse> updateBooks(
+            @PathVariable String universityId,
+            @RequestParam int issued,
+            @RequestParam int returned
+    ) {
+        return ResponseEntity.ok(studentService.updateBookStats(universityId, issued, returned));
+    }
+
+    @GetMapping("/faculty/{facultyUniversityId}")
+    public ResponseEntity<ApiResponse> getStudentsByFacultyUniversityId(@PathVariable String facultyUniversityId) {
+        return ResponseEntity.ok(studentService.getStudentsByFacultyUniversityId(facultyUniversityId));
     }
 
     @GetMapping("/university-id/{universityId}")
-    @Operation(summary = "Get student by University ID", description = "Retrieve student profile using university ID")
-    public ResponseEntity<StudentDTO> getStudentByUniversityId(@PathVariable String universityId) {
+    public ResponseEntity<ApiResponse> getStudentByUniversityId(@PathVariable String universityId) {
         return ResponseEntity.ok(studentService.getStudentByUniversityId(universityId));
     }
 
     @GetMapping
-    @Operation(summary = "Get all students", description = "Retrieve all students with filters")
-    public ResponseEntity<List<StudentDTO>> getAllStudents(
+    public ResponseEntity<ApiResponse> getAllStudents(
             @RequestParam(required = false) String courseCode,
             @RequestParam(required = false) String semester,
-            @RequestParam(required = false) String department) {
-        return ResponseEntity.ok(studentService.getAllStudents(courseCode, semester, department));
+            @RequestParam(required = false) String department,
+            @RequestHeader(value = "X-User-Role", required = false) String role
+    ) {
+        return ResponseEntity.ok(studentService.getAllStudents(courseCode, semester, department, role));
     }
 
-    @PutMapping("/{id}")
-    @Operation(summary = "Update student profile", description = "Update student information")
-    public ResponseEntity<StudentDTO> updateStudent(@PathVariable Long id, @RequestBody StudentDTO studentDTO) {
-        return ResponseEntity.ok(studentService.updateStudent(id, studentDTO));
+    @PutMapping("/{universityId}")
+    public ResponseEntity<ApiResponse> updateStudent(
+            @PathVariable String universityId,
+            @RequestBody StudentUpdateRequest request,
+            @RequestHeader(value = "X-User-Name", required = false) String username,
+            @RequestHeader(value = "X-User-Role", required = false) String role
+    ) {
+        username = (username != null && !username.isBlank()) ? username : "SYSTEM";
+        return ResponseEntity.ok(studentService.updateStudent(universityId, request, username, role));
     }
 
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete student", description = "Soft delete student")
-    public ResponseEntity<Map<String, String>> deleteStudent(@PathVariable Long id) {
-        studentService.deleteStudent(id);
-        return ResponseEntity.ok(Map.of("message", "Student deleted successfully"));
+    @DeleteMapping("/{universityId}")
+    public ResponseEntity<ApiResponse> deleteStudent(
+            @PathVariable String universityId,
+            @RequestHeader(value = "X-User-Name", required = false) String username,
+            @RequestHeader(value = "X-User-Role", required = false) String role
+    ) {
+        username = (username != null && !username.isBlank()) ? username : "SYSTEM";
+        return ResponseEntity.ok(studentService.deleteStudent(universityId, username, role));
     }
 
-    @GetMapping("/{id}/dashboard")
-    @Operation(summary = "Get student dashboard", description = "Get student profile, book counts, and attendance details")
-    public ResponseEntity<Map<String, Object>> getStudentDashboard(@PathVariable Long id) {
-        return ResponseEntity.ok(studentService.getStudentDashboard(id));
+    @GetMapping("/{universityId}/dashboard")
+    public ResponseEntity<ApiResponse> getStudentDashboard(@PathVariable String universityId) {
+        return ResponseEntity.ok(studentService.getStudentDashboard(universityId));
     }
 
-    @GetMapping("/{id}/attendance")
-    @Operation(summary = "Get student attendance calendar", description = "Retrieve attendance record - READ ONLY")
-    public ResponseEntity<List<Map<String, Object>>> getAttendanceCalendar(@PathVariable Long id) {
-        return ResponseEntity.ok(studentService.getAttendanceCalendar(id));
+    @GetMapping("/{universityId}/attendance")
+    public ResponseEntity<ApiResponse> getAttendanceCalendar(@PathVariable String universityId) {
+        return ResponseEntity.ok(studentService.getAttendanceCalendar(universityId));
     }
 
-    @GetMapping("/{id}/books-status")
-    @Operation(summary = "Get student books status", description = "Total books issued and returned")
-    public ResponseEntity<Map<String, Integer>> getBooksStatus(@PathVariable Long id) {
-        return ResponseEntity.ok(studentService.getBooksStatus(id));
+    @PostMapping("/attendance")
+    public ResponseEntity<ApiResponse> markAttendance(
+            @RequestParam String universityId,
+            @RequestParam AttendanceStatus status,
+            @RequestParam Long facultyId,
+            @RequestParam String courseCode
+    ) {
+        return ResponseEntity.ok(studentService.markAttendance(universityId, status, facultyId, courseCode));
+    }
+
+    @GetMapping("/{universityId}/books-status")
+    public ResponseEntity<ApiResponse> getBooksStatus(@PathVariable String universityId) {
+        return ResponseEntity.ok(studentService.getBooksStatus(universityId));
     }
 
     @GetMapping("/filter/by-course/{courseCode}")
-    @Operation(summary = "Get students by course code", description = "Retrieve all students in specific course")
-    public ResponseEntity<List<StudentDTO>> getStudentsByCourse(@PathVariable String courseCode) {
+    public ResponseEntity<ApiResponse> getStudentsByCourse(@PathVariable String courseCode) {
         return ResponseEntity.ok(studentService.getStudentsByCourse(courseCode));
     }
 
     @GetMapping("/filter/by-department/{department}")
-    @Operation(summary = "Get students by department", description = "Retrieve all students in specific department")
-    public ResponseEntity<List<StudentDTO>> getStudentsByDepartment(@PathVariable String department) {
+    public ResponseEntity<ApiResponse> getStudentsByDepartment(@PathVariable String department) {
         return ResponseEntity.ok(studentService.getStudentsByDepartment(department));
     }
 
     @GetMapping("/count")
-    @Operation(summary = "Get total students count", description = "Get total number of students")
-    public ResponseEntity<Map<String, Long>> getTotalStudentsCount() {
-        return ResponseEntity.ok(Map.of("totalStudents", studentService.getTotalStudentsCount()));
+    public ResponseEntity<ApiResponse> getTotalStudentsCount() {
+        return ResponseEntity.ok(studentService.getTotalStudentsCount());
     }
 }

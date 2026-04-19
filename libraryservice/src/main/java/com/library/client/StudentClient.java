@@ -3,12 +3,23 @@ package com.library.client;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
 
-@FeignClient(name = "studentservice", url = "${student.service.url:http://localhost:8083}")
+@FeignClient(name = "STUDENT-SERVICE")
 public interface StudentClient {
 
-    @GetMapping("/api/students/{id}")
-    Map<String, Object> getStudentById(@PathVariable Long id);
+    @GetMapping("/api/students/{universityId}")
+    Map<String, Object> getStudentById(@PathVariable String universityId);
+
+    @PutMapping("/api/students/books/update/{universityId}")   //  CHANGE
+    void updateStudentBooks(
+            @PathVariable String universityId,
+            @RequestParam int issued,
+            @RequestParam int returned
+    );
+
+
 }

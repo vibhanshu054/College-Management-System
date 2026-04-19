@@ -23,8 +23,8 @@ public class AdminEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 12)
-    private String universityId;  // 12-digit admin ID
+    @Column(nullable = false, unique = true)
+    private String universityId;
 
     @Column(nullable = false)
     private String adminName;
@@ -53,9 +53,9 @@ public class AdminEntity {
     @Column(name = "updated_by")
     private String updatedBy = "SYSTEM";
 
-    @PreUpdate
-    public void preUpdate() {
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
-        log.debug("Admin entity updated: {}", this.id);
     }
 }

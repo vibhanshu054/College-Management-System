@@ -27,7 +27,7 @@ public class FacultyDTO {
     private String facultyPhoneNumber;
 
     @NotBlank(message = "University ID is required")
-    private String universityId;
+    private String facultyUniversityId;
 
     private String department;
     private String subRole;

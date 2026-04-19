@@ -29,6 +29,9 @@ public class AttendanceRecord {
     @Column(nullable = false)
     private Long studentId;
 
+    @Column(name = "student_university_id", nullable = false)
+    private String studentUniversityId;
+
     @Column(nullable = false)
     private String studentName;
 
@@ -63,4 +66,5 @@ public class AttendanceRecord {
         this.updatedAt = LocalDateTime.now();
         log.debug("Attendance record updated for student: {}", this.studentId);
     }
+
 }

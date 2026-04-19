@@ -1,13 +1,19 @@
-package com.student.client;
+package com.facultyService.client;
 
-import com.student.dto.UserDto;
+import com.facultyService.config.FeignConfig;
+import com.facultyService.dto.UserDto;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 @FeignClient(name = "USER-SERVICE")
 public interface UserServiceClient {
 
     @PostMapping("/api/users")
-    void createUser(@RequestBody UserDto dto);
+    void createUser(
+            @RequestBody UserDto dto,
+            @RequestHeader("X-User-Name") String username,
+            @RequestHeader("X-User-Role") String role
+    );
+    @PutMapping("/api/users/deactivate/{universityId}")
+    void deactivateUser(@PathVariable String universityId);
 }

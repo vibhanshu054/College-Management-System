@@ -1,14 +1,18 @@
 package com.dashboard.clients;
 
 
+import com.dashboard.dto.ApiResponse;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(name = "LIBRARY-SERVICE")
 public interface LibraryServiceClient {
 
     @GetMapping("/api/library/dashboard")
-    Map<String, Object> getLibraryDashboard();
+    ResponseEntity<ApiResponse> getLibraryDashboard();
+
+    @GetMapping("/api/library/user/{universityId}/books/count")
+    ResponseEntity<ApiResponse> getBookCountByUser(@PathVariable String universityId);
 }

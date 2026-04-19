@@ -32,7 +32,34 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<Map<String, Object>> handleForbidden(
+            ForbiddenException ex, WebRequest request) {
+        log.warn("Forbidden access: {}", ex.getMessage());
 
+        Map<String, Object> response = new HashMap<>();
+        response.put("timestamp", LocalDateTime.now());
+        response.put("status", HttpStatus.FORBIDDEN.value());
+        response.put("error", "FORBIDDEN");
+        response.put("message", ex.getMessage());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(DuplicateUserException.class)
+    public ResponseEntity<Map<String, Object>> handleDuplicateUser(
+            DuplicateUserException ex, WebRequest request) {
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("timestamp", LocalDateTime.now());
+        response.put("status", 409);
+        response.put("error", "CONFLICT");
+        response.put("message", ex.getMessage());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
     @ExceptionHandler(DuplicateStudentException.class)
     public ResponseEntity<Map<String, Object>> handleDuplicateStudent(
             DuplicateStudentException ex, WebRequest request) {

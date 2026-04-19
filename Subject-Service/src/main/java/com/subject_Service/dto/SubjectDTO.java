@@ -26,17 +26,22 @@ public class SubjectDTO {
     @NotBlank(message = "Course ID is required")
     private String courseId;
 
+    @NotBlank(message = "Course Code is required")
+    private String courseCode;
+
     private String courseName;
 
     @NotBlank(message = "Department ID is required")
     private String departmentId;
+    @NotBlank(message = "Department Code is required")
+    private String departmentCode;
 
     @Min(value = 1, message = "Credits must be at least 1")
     private Integer credits;
 
     @Min(value = 1, message = "Semester must be at least 1")
     private Integer semester;
-
+   private String studentUniversityId;
     private String description;
     private String courseObjectives;
     private String outcomes;

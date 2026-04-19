@@ -1,6 +1,7 @@
 package com.subject_Service.service;
 
 
+import com.subject_Service.dto.ApiResponse;
 import com.subject_Service.dto.SubjectDTO;
 import com.subject_Service.entity.SubjectEntity;
 import com.subject_Service.exception.*;
@@ -29,57 +30,129 @@ public class SubjectService {
     /**
      * Create a new subject
      */
-    public SubjectDTO createSubject(SubjectDTO subjectDTO, String createdBy) {
-        log.info("Creating subject: {} with code: {}", subjectDTO.getSubjectName(),
-                subjectDTO.getSubjectCode());
+    public ApiResponse createSubject(SubjectDTO dto, String createdBy) {
 
-        if (subjectRepository.findBySubjectCode(subjectDTO.getSubjectCode()).isPresent()) {
-            log.warn("Duplicate subject code: {}", subjectDTO.getSubjectCode());
-            throw new DuplicateResourceException("Subject code already exists");
+        if (dto == null) {
+            throw new IllegalArgumentException("Subject payload is required");
         }
 
-        SubjectEntity subject = modelMapper.map(subjectDTO, SubjectEntity.class);
-        subject.setCreatedBy(createdBy);
-        subject.setUpdatedBy(createdBy);
+        if (dto.getSubjectName() == null || dto.getSubjectName().isBlank()) {
+            throw new IllegalArgumentException("Subject name is required");
+        }
 
-        SubjectEntity savedSubject = subjectRepository.save(subject);
-        log.info("Subject created with ID: {}", savedSubject.getId());
+        if (dto.getDepartmentId() == null || dto.getDepartmentId().isBlank()) {
+            throw new IllegalArgumentException("Department ID is required");
+        }
 
-        return modelMapper.map(savedSubject, SubjectDTO.class);
-    }
+        if (dto.getDepartmentCode() == null || dto.getDepartmentCode().isBlank()) {
+            throw new IllegalArgumentException("Department code is required");
+        }
 
-    /**
-     * Get subject by ID
-     */
-    @Transactional(readOnly = true)
-    public SubjectDTO getSubjectById(Long id) {
-        log.debug("Fetching subject with ID: {}", id);
-        SubjectEntity subject = subjectRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Subject not found with ID: " + id));
-        return modelMapper.map(subject, SubjectDTO.class);
+        if (dto.getCourseId() == null || dto.getCourseId().isBlank()) {
+            throw new IllegalArgumentException("Course ID is required");
+        }
+
+        if (dto.getCourseCode() == null || dto.getCourseCode().isBlank()) {
+            throw new IllegalArgumentException("Course code is required");
+        }
+
+        if (dto.getCourseName() == null || dto.getCourseName().isBlank()) {
+            throw new IllegalArgumentException("Course name is required");
+        }
+
+        if (dto.getCredits() == null) {
+            throw new IllegalArgumentException("Credits are required");
+        }
+
+        if (dto.getSemester() == null) {
+            throw new IllegalArgumentException("Semester is required");
+        }
+
+        log.info("Creating subject {}", dto.getSubjectName());
+
+        String generatedCode = generateSubjectCode(dto.getDepartmentId(), dto.getSubjectName());
+
+        if (subjectRepository.findBySubjectCode(generatedCode).isPresent()) {
+            throw new DuplicateResourceException("Subject already exists");
+        }
+
+        SubjectEntity entity = new SubjectEntity();
+        entity.setSubjectCode(generatedCode);
+        entity.setSubjectName(dto.getSubjectName().trim());
+        entity.setCourseId(dto.getCourseId().trim());
+        entity.setCourseCode(dto.getCourseCode().trim());
+        entity.setCourseName(dto.getCourseName().trim());
+        entity.setDepartmentId(dto.getDepartmentId().trim());
+        entity.setDepartmentCode(dto.getDepartmentCode().trim());
+        entity.setCredits(dto.getCredits());
+        entity.setSemester(dto.getSemester());
+        entity.setDescription(dto.getDescription());
+        entity.setCourseObjectives(dto.getCourseObjectives());
+        entity.setOutcomes(dto.getOutcomes());
+        entity.setFacultyId(dto.getFacultyId());
+        entity.setFacultyName(dto.getFacultyName());
+        entity.setStudentUniversityId(dto.getStudentUniversityId());
+        entity.setCreatedBy(createdBy);
+        entity.setUpdatedBy(createdBy);
+        entity.setActive(true);
+
+        SubjectEntity saved = subjectRepository.save(entity);
+
+        return new ApiResponse(
+                "Subject created",
+                201,
+                modelMapper.map(saved, SubjectDTO.class),
+                LocalDateTime.now()
+        );
     }
 
     /**
      * Get subject by code
      */
     @Transactional(readOnly = true)
-    public SubjectDTO getSubjectByCode(String code) {
-        log.debug("Fetching subject with code: {}", code);
-        SubjectEntity subject = subjectRepository.findBySubjectCode(code)
-                .orElseThrow(() -> new ResourceNotFoundException("Subject not found with code: " + code));
-        return modelMapper.map(subject, SubjectDTO.class);
-    }
+    public ApiResponse getSubjectByCode(String code) {
 
+        SubjectEntity subject = subjectRepository.findBySubjectCode(code)
+                .orElseThrow(() -> new ResourceNotFoundException("Subject not found: " + code));
+
+        return new ApiResponse(
+                "Subject fetched",
+                200,
+                modelMapper.map(subject, SubjectDTO.class),
+                LocalDateTime.now()
+        );
+    }
+    public ApiResponse getSubjectById(Long id) {
+
+        log.debug("Fetching subject {}", id);
+
+        SubjectEntity subject = subjectRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Subject not found"));
+
+        return new ApiResponse(
+                "Subject fetched",
+                200,
+                modelMapper.map(subject, SubjectDTO.class),
+                LocalDateTime.now()
+        );
+    }
     /**
      * Get all subjects by course
      */
     @Transactional(readOnly = true)
-    public List<SubjectDTO> getSubjectsByCourse(String courseId) {
-        log.debug("Fetching subjects for course: {}", courseId);
-        return subjectRepository.findByCourseId(courseId)
+    public ApiResponse getSubjectsByCourse(String courseCode) {
+
+        List<SubjectDTO> list = subjectRepository.findByCourseId(courseCode)
                 .stream()
                 .map(subject -> modelMapper.map(subject, SubjectDTO.class))
-                .collect(Collectors.toList());
+                .toList();
+
+        return new ApiResponse(
+                "Subjects fetched",
+                200,
+                list,
+                LocalDateTime.now()
+        );
     }
 
     /**
@@ -122,89 +195,141 @@ public class SubjectService {
      * Get all active subjects
      */
     @Transactional(readOnly = true)
-    public List<SubjectDTO> getAllSubjects() {
-        log.debug("Fetching all active subjects");
-        return subjectRepository.findAllActive()
+    public ApiResponse getAllSubjects() {
+
+        log.debug("Fetching all subjects");
+
+        List<SubjectDTO> list = subjectRepository.findAllActive()
                 .stream()
-                .map(subject -> modelMapper.map(subject, SubjectDTO.class))
-                .collect(Collectors.toList());
+                .map(s -> modelMapper.map(s, SubjectDTO.class))
+                .toList();
+
+        return new ApiResponse(
+                "Subjects fetched",
+                200,
+                list,
+                LocalDateTime.now()
+        );
     }
 
     /**
      * Update subject
      */
-    public SubjectDTO updateSubject(Long id, SubjectDTO subjectDTO, String updatedBy) {
-        log.info("Updating subject with ID: {}", id);
+    public SubjectDTO updateSubject(String subjectCode, SubjectDTO subjectDTO, String updatedBy) {
 
-        SubjectEntity subject = subjectRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Subject not found with ID: " + id));
+        SubjectEntity subject = subjectRepository.findBySubjectCode(subjectCode)
+                .orElseThrow(() -> new ResourceNotFoundException("Subject not found: " + subjectCode));
 
-        if (subjectDTO.getSubjectName() != null) {
+        if (subjectDTO.getSubjectName() != null)
             subject.setSubjectName(subjectDTO.getSubjectName());
-        }
-        if (subjectDTO.getDescription() != null) {
+
+        if (subjectDTO.getDescription() != null)
             subject.setDescription(subjectDTO.getDescription());
-        }
-        if (subjectDTO.getFacultyId() != null) {
+
+        if (subjectDTO.getFacultyId() != null)
             subject.setFacultyId(subjectDTO.getFacultyId());
-        }
-        if (subjectDTO.getFacultyName() != null) {
+
+        if (subjectDTO.getFacultyName() != null)
             subject.setFacultyName(subjectDTO.getFacultyName());
-        }
-        if (subjectDTO.getCredits() != null) {
+
+        if (subjectDTO.getCredits() != null)
             subject.setCredits(subjectDTO.getCredits());
-        }
 
         subject.setUpdatedBy(updatedBy);
         subject.setUpdatedAt(LocalDateTime.now());
 
-        SubjectEntity updatedSubject = subjectRepository.save(subject);
-        log.info("Subject updated successfully with ID: {}", updatedSubject.getId());
-
-        return modelMapper.map(updatedSubject, SubjectDTO.class);
+        return modelMapper.map(subjectRepository.save(subject), SubjectDTO.class);
     }
 
     /**
      * Delete subject (soft delete)
      */
-    public void deleteSubject(Long id, String deletedBy) {
-        log.info("Deleting subject with ID: {}", id);
+    public ApiResponse deleteSubject(String subjectCode, String deletedBy) {
 
-        SubjectEntity subject = subjectRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Subject not found with ID: " + id));
+        SubjectEntity subject = subjectRepository.findBySubjectCode(subjectCode)
+                .orElseThrow(() -> new ResourceNotFoundException("Subject not found: " + subjectCode));
 
         subject.setActive(false);
         subject.setUpdatedBy(deletedBy);
         subject.setUpdatedAt(LocalDateTime.now());
+
         subjectRepository.save(subject);
 
-        log.info("Subject marked as inactive with ID: {}", id);
+        return new ApiResponse(
+                "Subject deleted",
+                200,
+                null,
+                LocalDateTime.now()
+        );
     }
-
     /**
      * Assign faculty to subject
      */
-    public void assignFacultyToSubject(Long subjectId, String facultyId, String facultyName) {
-        log.info("Assigning faculty {} to subject {}", facultyId, subjectId);
+    public ApiResponse assignFacultyToSubject(String subjectCode, String facultyId, String facultyName) {
 
-        SubjectEntity subject = subjectRepository.findById(subjectId).orElse(null);
-        if (subject != null) {
-            subject.setFacultyId(facultyId);
-            subject.setFacultyName(facultyName);
-            subject.setUpdatedAt(LocalDateTime.now());
-            subjectRepository.save(subject);
-        }
+        SubjectEntity subject = subjectRepository.findBySubjectCode(subjectCode)
+                .orElseThrow(() -> new ResourceNotFoundException("Subject not found: " + subjectCode));
+
+        subject.setFacultyId(facultyId);
+        subject.setFacultyName(facultyName);
+        subject.setUpdatedAt(LocalDateTime.now());
+
+        subjectRepository.save(subject);
+
+        return new ApiResponse(
+                "Faculty assigned successfully",
+                200,
+                null,
+                LocalDateTime.now()
+        );
     }
 
     /**
      * Update student enrollment count
      */
-    public void updateStudentCount(Long subjectId, Integer count) {
-        log.debug("Updating student count for subject: {}", subjectId);
-        SubjectEntity subject = subjectRepository.findById(subjectId).orElse(null);
+    public void updateStudentCount(String subjectCode, Integer count) {
+        log.debug("Updating student count for subject: {}", subjectCode);
+
+        SubjectEntity subject = subjectRepository.findBySubjectCode(subjectCode).orElse(null);
+
         if (subject != null) {
             subject.setTotalStudentsEnrolled(count);
             subjectRepository.save(subject);
         }
+    }
+    private String generateSubjectCode(String departmentId, String subjectName) {
+
+        String cleanDept = departmentId.trim().replaceAll("\\s+", "");
+        String cleanName = subjectName.trim().replaceAll("\\s+", "");
+
+        String deptPrefix = cleanDept.length() >= 3
+                ? cleanDept.substring(0, 3).toUpperCase()
+                : cleanDept.toUpperCase();
+
+        String subPrefix = cleanName.length() >= 3
+                ? cleanName.substring(0, 3).toUpperCase()
+                : cleanName.toUpperCase();
+
+        String prefix = deptPrefix + subPrefix;
+
+        long count = subjectRepository.countByPrefix(prefix) + 1;
+        String number = String.format("%05d", count);
+
+        return prefix + number;
+    }
+
+    public ApiResponse getSubjectsByStudentUniversityId(String universityId) {
+        log.debug("Fetching subjects for student universityId: {}", universityId);
+        List<SubjectDTO> list = subjectRepository.findByStudentUniversityId(universityId)
+                .stream()
+                .map(subject -> modelMapper.map(subject, SubjectDTO.class))
+                .toList();
+
+        return new ApiResponse(
+                "Subjects fetched",
+                200,
+                list,
+                LocalDateTime.now()
+        );
     }
 }

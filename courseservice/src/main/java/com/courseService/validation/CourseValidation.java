@@ -31,7 +31,6 @@ public class CourseValidation {
         List<String> errors = new ArrayList<>();
 
         validateName(course.getName(), errors);
-        validateCode(course.getCode(), errors);
 
         return errors;
     }

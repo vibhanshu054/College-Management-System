@@ -3,18 +3,19 @@ package com.subject_Service.repository;
 
 
 
+import com.subject_Service.dto.ApiResponse;
 import com.subject_Service.entity.SubjectEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
 @Repository
 public interface SubjectRepository extends JpaRepository<SubjectEntity, Long> {
 
-    Optional<SubjectEntity> findBySubjectCode(String code);
+    Optional<SubjectEntity> findBySubjectCode(String subjectCode);
 
     @Query("SELECT s FROM SubjectEntity s WHERE s.courseId = ?1 AND s.active = true")
     List<SubjectEntity> findByCourseId(String courseId);
@@ -33,4 +34,12 @@ public interface SubjectRepository extends JpaRepository<SubjectEntity, Long> {
 
     @Query("SELECT COUNT(s) FROM SubjectEntity s WHERE s.courseId = ?1")
     long countByCourseId(String courseId);
+
+    @Query("SELECT COUNT(s) FROM SubjectEntity s")
+    long countAllSubjects();
+
+    @Query("SELECT COUNT(s) FROM SubjectEntity s WHERE s.subjectCode LIKE CONCAT(?1, '%')")
+    long countByPrefix(String prefix);
+
+    List<SubjectEntity> findByStudentUniversityId(String universityId);
 }

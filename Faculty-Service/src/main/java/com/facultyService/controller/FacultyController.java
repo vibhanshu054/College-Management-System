@@ -1,10 +1,8 @@
 package com.facultyService.controller;
 
-
-
+import com.facultyService.dto.ApiResponse;
 import com.facultyService.dto.FacultyDTO;
 import com.facultyService.service.FacultyService;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,93 +15,170 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/faculty")
 @RequiredArgsConstructor
-@Tag(name = "Faculty Management", description = "APIs for Faculty Profile and Management")
+@Tag(name = "Faculty Management", description = "Faculty APIs")
 public class FacultyController {
 
     private final FacultyService facultyService;
 
-    // ============ PROFILE ENDPOINTS ============
+    // ================= PROFILE =================
 
     @PostMapping
-    @Operation(summary = "Create new faculty", description = "Create faculty profile with all required fields")
-    public ResponseEntity<FacultyDTO> createFaculty(@RequestBody FacultyDTO facultyDTO) {
+    public ResponseEntity<ApiResponse> createFaculty(@RequestBody FacultyDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(facultyService.createFaculty(facultyDTO));
+                .body(facultyService.createFaculty(dto));
     }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Get faculty by ID", description = "Retrieve faculty profile - READ ONLY")
-    public ResponseEntity<FacultyDTO> getFaculty(@PathVariable Long id) {
-        return ResponseEntity.ok(facultyService.getFaculty(id));
+    @GetMapping("/{facultyUniversityId}")
+    public ResponseEntity<ApiResponse> getFaculty(@PathVariable String facultyUniversityId) {
+        return ResponseEntity.ok(facultyService.getFaculty(facultyUniversityId));
     }
 
-    @GetMapping("/university-id/{universityId}")
-    @Operation(summary = "Get faculty by University ID", description = "Retrieve faculty profile using 12-digit university ID")
-    public ResponseEntity<FacultyDTO> getFacultyByUniversityId(@PathVariable String universityId) {
-        return ResponseEntity.ok(facultyService.getFacultyByUniversityId(universityId));
+    @GetMapping("/university-id/{facultyUniversityId}")
+    public ResponseEntity<ApiResponse> getFacultyByFacultyUniversityId(@PathVariable String facultyUniversityId) {
+        return ResponseEntity.ok(facultyService.getFacultyByFacultyUniversityId(facultyUniversityId));
     }
 
     @GetMapping
-    @Operation(summary = "Get all faculty", description = "Retrieve all faculty with filters")
-    public ResponseEntity<List<FacultyDTO>> getAllFaculty(
+    public ResponseEntity<ApiResponse> getAllFaculty(
             @RequestParam(required = false) String department,
             @RequestParam(required = false) String subRole) {
+
         return ResponseEntity.ok(facultyService.getAllFaculty(department, subRole));
     }
 
-    @PutMapping("/{id}")
-    @Operation(summary = "Update faculty profile", description = "Update faculty information (not university ID)")
-    public ResponseEntity<FacultyDTO> updateFaculty(@PathVariable Long id, @RequestBody FacultyDTO facultyDTO) {
-        return ResponseEntity.ok(facultyService.updateFaculty(id, facultyDTO));
+    @PutMapping("/{facultyUniversityId}")
+    public ResponseEntity<ApiResponse> updateFaculty(@PathVariable String facultyUniversityId,
+                                                     @RequestBody FacultyDTO dto) {
+        return ResponseEntity.ok(facultyService.updateFaculty(facultyUniversityId, dto));
     }
 
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete faculty", description = "Remove faculty from system (cascade operations)")
-    public ResponseEntity<Map<String, String>> deleteFaculty(@PathVariable Long id) {
-        facultyService.deleteFaculty(id);
-        return ResponseEntity.ok(Map.of("message", "Faculty deleted successfully"));
+    @DeleteMapping("/{facultyUniversityId}")
+    public ResponseEntity<ApiResponse> deleteFaculty(@PathVariable String facultyUniversityId) {
+        return ResponseEntity.ok(facultyService.deleteFaculty(facultyUniversityId));
     }
 
-    // ============ DASHBOARD ENDPOINTS ============
+    // ================= BOOKS =================
 
-    @GetMapping("/{id}/dashboard")
-    @Operation(summary = "Get faculty dashboard", description = "Get profile, books issued/returned, today's schedule")
-    public ResponseEntity<Map<String, Object>> getFacultyDashboard(@PathVariable Long id) {
-        return ResponseEntity.ok(facultyService.getFacultyDashboard(id));
+    @PutMapping("/books/update")
+    public ResponseEntity<ApiResponse> updateBookStatsByFacultyUniversityId(
+            @RequestParam String facultyUniversityId,
+            @RequestParam int issued,
+            @RequestParam int returned) {
+
+        return ResponseEntity.ok(
+                facultyService.updateBookStatsByFacultyUniversityId(facultyUniversityId, issued, returned)
+        );
     }
 
-    @GetMapping("/{id}/attendance")
-    @Operation(summary = "Get faculty attendance calendar", description = "Retrieve attendance record - READ ONLY")
-    public ResponseEntity<String> getAttendanceCalendar(@PathVariable Long id) {
-        return ResponseEntity.ok(facultyService.getAttendanceCalendar(id));
+    // ================= DASHBOARD =================
+
+    @GetMapping("/{facultyUniversityId}/dashboard")
+    public ResponseEntity<ApiResponse> getDashboard(@PathVariable String facultyUniversityId) {
+        return ResponseEntity.ok(facultyService.getDashboard(facultyUniversityId));
     }
 
-    @GetMapping("/{id}/schedule")
-    @Operation(summary = "Get faculty schedule", description = "Retrieve faculty schedule (if HOD)")
-    public ResponseEntity<String> getSchedule(@PathVariable Long id) {
-        return ResponseEntity.ok(facultyService.getSchedule(id));
+    @GetMapping("/{facultyUniversityId}/lectures")
+    public ResponseEntity<ApiResponse> getLectures(@PathVariable String facultyUniversityId) {
+        return ResponseEntity.ok(facultyService.getAttendanceById(facultyUniversityId));
     }
 
-    // ============ HOD SPECIFIC ENDPOINTS ============
-
-    @PostMapping("/{id}/schedule")
-    @Operation(summary = "Update faculty schedule", description = "Update schedule (HOD only)")
-    public ResponseEntity<Map<String, String>> updateSchedule(
-            @PathVariable Long id,
-            @RequestBody Map<String, Object> scheduleData) {
-        facultyService.updateSchedule(id, scheduleData);
-        return ResponseEntity.ok(Map.of("message", "Schedule updated successfully"));
+    @GetMapping("/{facultyUniversityId}/attendance-summary")
+    public ResponseEntity<ApiResponse> getAttendance(@PathVariable String facultyUniversityId) {
+        return ResponseEntity.ok(facultyService.getAttendanceById(facultyUniversityId));
     }
 
-    @GetMapping("/department/{department}/all")
-    @Operation(summary = "Get all faculty in department", description = "Retrieve all faculty members in specific department")
-    public ResponseEntity<List<FacultyDTO>> getFacultyByDepartment(@PathVariable String department) {
-        return ResponseEntity.ok(facultyService.getFacultyByDepartment(department));
+    // ================= COURSES =================
+
+    @GetMapping("/{facultyUniversityId}/courses")
+    public ResponseEntity<ApiResponse> getCourses(@PathVariable String facultyUniversityId) {
+        return ResponseEntity.ok(facultyService.getCoursesById(facultyUniversityId));
     }
 
-    @GetMapping("/count")
-    @Operation(summary = "Get total faculty count", description = "Get total number of active faculty")
-    public ResponseEntity<Map<String, Integer>> getTotalFacultyCount() {
-        return ResponseEntity.ok(Map.of("totalFaculty", facultyService.getTotalFacultyCount()));
+    @GetMapping("/courses/{facultyUniversityId}")
+    public ResponseEntity<ApiResponse> getAssignedCourses(@PathVariable String facultyUniversityId) {
+        return ResponseEntity.ok(facultyService.getAssignedCourses(facultyUniversityId));
+    }
+
+    @PutMapping("/{facultyUniversityId}/assign-course")
+    public ResponseEntity<ApiResponse> assignCourse(
+            @PathVariable String facultyUniversityId,
+            @RequestBody List<Long> courseIds) {
+
+        return ResponseEntity.ok(
+                facultyService.assignCoursesById(facultyUniversityId, courseIds)
+        );
+    }
+
+    // ================= STUDENTS =================
+
+    @GetMapping("/{facultyUniversityId}/students")
+    public ResponseEntity<ApiResponse> getStudents(@PathVariable String facultyUniversityId) {
+        return ResponseEntity.ok(facultyService.getStudentsById(facultyUniversityId));
+    }
+
+    @GetMapping("/students/{facultyUniversityId}")
+    public ResponseEntity<ApiResponse> getStudentsByFacultyId(@PathVariable String facultyUniversityId) {
+        return ResponseEntity.ok(facultyService.getStudents(facultyUniversityId));
+    }
+
+    @GetMapping("/students/count/{facultyUniversityId}")
+    public ResponseEntity<ApiResponse> getTotalStudents(@PathVariable String facultyUniversityId) {
+        return ResponseEntity.ok(facultyService.getTotalStudents(facultyUniversityId));
+    }
+
+    @GetMapping("/{facultyUniversityId}/students/count")
+    public ResponseEntity<ApiResponse> getStudentCount(@PathVariable String facultyUniversityId) {
+        return ResponseEntity.ok(facultyService.getStudentCountById(facultyUniversityId));
+    }
+
+    // ================= SCHEDULE =================
+
+    @PutMapping("/{facultyUniversityId}/assign-schedule")
+    public ResponseEntity<ApiResponse> assignSchedule(
+            @PathVariable String facultyUniversityId,
+            @RequestBody Map<String, Object> schedule) {
+
+        return ResponseEntity.ok(
+                facultyService.assignScheduleById(facultyUniversityId, schedule)
+        );
+    }
+
+    @GetMapping("/{facultyUniversityId}/schedule")
+    public ResponseEntity<ApiResponse> getSchedule(@PathVariable String facultyUniversityId) {
+        return ResponseEntity.ok(facultyService.getSchedule(facultyUniversityId));
+    }
+
+    // ================= ATTENDANCE =================
+
+    @GetMapping("/{facultyUniversityId}/attendance-calendar")
+    public ResponseEntity<ApiResponse> getAttendanceCalendar(@PathVariable String facultyUniversityId) {
+        return ResponseEntity.ok(facultyService.getAttendanceCalendar(facultyUniversityId));
+    }
+
+    @PostMapping("/attendance/mark")
+    public ResponseEntity<ApiResponse> markAttendance(
+            @RequestParam String facultyUniversityId,
+            @RequestParam String status,
+            @RequestParam Long facultyId,
+            @RequestParam String courseCode) {
+
+        return ResponseEntity.ok(
+                facultyService.markAttendance(
+                        facultyUniversityId,
+                        com.student.enums.AttendanceStatus.valueOf(status),
+                        facultyId,
+                        courseCode
+                )
+        );
+    }
+
+    @PostMapping("/attendance/self")
+    public ResponseEntity<ApiResponse> markSelfAttendance(
+            @RequestParam String facultyUniversityId,
+            @RequestParam Long facultyId) {
+
+        return ResponseEntity.ok(
+                facultyService.markFacultySelfAttendance(facultyUniversityId, facultyId)
+        );
     }
 }

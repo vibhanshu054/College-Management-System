@@ -1,21 +1,25 @@
 package com.facultyService.service.impl;
 
+import com.facultyService.client.*;
+import com.facultyService.dto.ApiResponse;
 import com.facultyService.dto.FacultyDTO;
+import com.facultyService.entity.FacultyCourseMapping;
 import com.facultyService.entity.FacultyEntity;
 import com.facultyService.enums.FacultySubRole;
+import com.facultyService.repository.FacultyCourseMappingRepository;
 import com.facultyService.repository.FacultyRepository;
 import com.facultyService.service.FacultyService;
+import com.student.enums.AttendanceStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,186 +27,435 @@ import java.util.Map;
 public class FacultyServiceImpl implements FacultyService {
 
     private final FacultyRepository facultyRepository;
+    private final FacultyCourseMappingRepository mappingRepository;
     private final ModelMapper modelMapper;
+    private final UserServiceClient userServiceClient;
+    private final StudentClient studentClient;
+    private final LibraryClient libraryClient;
+    private final CourseClient courseClient;
+    private final AttendanceClient attendanceClient;
 
     @Override
-    public FacultyDTO createFaculty(FacultyDTO facultyDTO) {
-        log.info("Creating faculty with universityId: {}", facultyDTO.getUniversityId());
+    public ApiResponse createFaculty(FacultyDTO dto) {
 
-        facultyRepository.findByUniversityId(facultyDTO.getUniversityId())
-                .ifPresent(f -> {
-                    throw new ResponseStatusException(HttpStatus.CONFLICT,
-                            "Faculty already exists with universityId: " + facultyDTO.getUniversityId());
-                });
-
-        facultyRepository.findByFacultyEmail(facultyDTO.getFacultyEmail())
-                .ifPresent(f -> {
-                    throw new ResponseStatusException(HttpStatus.CONFLICT,
-                            "Faculty already exists with email: " + facultyDTO.getFacultyEmail());
-                });
-
-        FacultyEntity faculty = modelMapper.map(facultyDTO, FacultyEntity.class);
-        FacultyEntity savedFaculty = facultyRepository.save(faculty);
-
-        return modelMapper.map(savedFaculty, FacultyDTO.class);
-    }
-
-    @Override
-    public FacultyDTO getFaculty(Long id) {
-        log.info("Fetching faculty by id: {}", id);
-
-        FacultyEntity faculty = facultyRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Faculty not found with id: " + id));
-
-        return modelMapper.map(faculty, FacultyDTO.class);
-    }
-
-    @Override
-    public FacultyDTO getFacultyByUniversityId(String universityId) {
-        log.info("Fetching faculty by universityId: {}", universityId);
-
-        FacultyEntity faculty = facultyRepository.findByUniversityId(universityId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Faculty not found with universityId: " + universityId));
-
-        return modelMapper.map(faculty, FacultyDTO.class);
-    }
-
-    @Override
-    public List<FacultyDTO> getAllFaculty(String department, String subRole) {
-        log.info("Fetching all faculty with department: {} and subRole: {}", department, subRole);
-
-        List<FacultyEntity> facultyList;
-
-        if (department != null && !department.isBlank() && subRole != null && !subRole.isBlank()) {
-            FacultySubRole role = FacultySubRole.valueOf(subRole.toUpperCase());
-            facultyList = facultyRepository.findByDepartmentIgnoreCaseAndSubRole(department, role);
-        } else if (department != null && !department.isBlank()) {
-            facultyList = facultyRepository.findByDepartmentIgnoreCase(department);
-        } else if (subRole != null && !subRole.isBlank()) {
-            FacultySubRole role = FacultySubRole.valueOf(subRole.toUpperCase());
-            facultyList = facultyRepository.findBySubRole(role);
-        } else {
-            facultyList = facultyRepository.findAll();
+        if (dto.getFacultyUniversityId() == null || dto.getFacultyUniversityId().isBlank()) {
+            throw new RuntimeException("Faculty University ID is required");
         }
 
-        return modelMapper.map(facultyList, new TypeToken<List<FacultyDTO>>(){}.getType());
+        FacultyEntity entity = new FacultyEntity();
+        entity.setFacultyUniversityId(dto.getFacultyUniversityId());
+        entity.setFacultyName(dto.getFacultyName());
+        entity.setFacultyEmail(dto.getFacultyEmail());
+        entity.setFacultyPhoneNumber(dto.getFacultyPhoneNumber());
+        entity.setDepartment(dto.getDepartment());
+        entity.setSubRole(
+                dto.getSubRole() != null
+                        ? FacultySubRole.valueOf(String.valueOf(dto.getSubRole()))
+                        : FacultySubRole.TRAINEE
+        );
+        entity.setActive(true);
+
+        facultyRepository.save(entity);
+
+        return new ApiResponse(
+                "Faculty created successfully",
+                201,
+                entity,
+                LocalDateTime.now()
+        );
     }
 
     @Override
-    public FacultyDTO updateFaculty(Long id, FacultyDTO facultyDTO) {
-        log.info("Updating faculty with id: {}", id);
+    public ApiResponse getFaculty(String universityId) {
+        FacultyEntity faculty = getEntity(universityId);
 
-        FacultyEntity faculty = facultyRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Faculty not found with id: " + id));
+        return new ApiResponse(
+                "Faculty fetched",
+                200,
+                modelMapper.map(faculty, FacultyDTO.class),
+                LocalDateTime.now()
+        );
+    }
 
-        if (facultyDTO.getFacultyEmail() != null
-                && !facultyDTO.getFacultyEmail().equalsIgnoreCase(faculty.getFacultyEmail())) {
-            facultyRepository.findByFacultyEmail(facultyDTO.getFacultyEmail())
-                    .ifPresent(existing -> {
-                        throw new ResponseStatusException(HttpStatus.CONFLICT,
-                                "Faculty already exists with email: " + facultyDTO.getFacultyEmail());
-                    });
+    @Override
+    public ApiResponse getFacultyByFacultyUniversityId(String universityId) {
+
+        if (universityId == null || universityId.isBlank()) {
+            throw new IllegalArgumentException("UniversityId required");
         }
 
-        modelMapper.map(facultyDTO, faculty);
-        faculty.setId(id);
-        faculty.setUniversityId(faculty.getUniversityId());
+        FacultyEntity faculty = facultyRepository.findByFacultyUniversityId(universityId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Faculty not found"));
 
-        FacultyEntity updatedFaculty = facultyRepository.save(faculty);
-        return modelMapper.map(updatedFaculty, FacultyDTO.class);
+        return new ApiResponse(
+                "Faculty fetched",
+                200,
+                modelMapper.map(faculty, FacultyDTO.class),
+                LocalDateTime.now()
+        );
     }
 
     @Override
-    public void deleteFaculty(Long id) {
-        log.info("Deleting faculty with id: {}", id);
+    public ApiResponse getAllFaculty(String department, String subRole) {
 
-        FacultyEntity faculty = facultyRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Faculty not found with id: " + id));
+        List<FacultyEntity> list = facultyRepository.findAll();
 
+        if (department != null && !department.isBlank()) {
+            list = list.stream()
+                    .filter(f -> department.equalsIgnoreCase(f.getDepartment()))
+                    .toList();
+        }
+
+        if (subRole != null && !subRole.isBlank()) {
+            list = list.stream()
+                    .filter(f -> f.getSubRole() != null && subRole.equalsIgnoreCase(f.getSubRole().name()))
+                    .toList();
+        }
+
+        return new ApiResponse(
+                "Faculty list fetched",
+                200,
+                list.stream().map(f -> modelMapper.map(f, FacultyDTO.class)).toList(),
+                LocalDateTime.now()
+        );
+    }
+
+    @Override
+    public ApiResponse updateFaculty(String universityId, FacultyDTO dto) {
+
+        FacultyEntity faculty = getEntity(universityId);
+        modelMapper.map(dto, faculty);
+        faculty.setUpdatedAt(LocalDateTime.now());
+        facultyRepository.save(faculty);
+
+        return new ApiResponse("Faculty updated", 200, null, LocalDateTime.now());
+    }
+
+    @Override
+    public ApiResponse deleteFaculty(String universityId) {
+
+        log.info("Deleting faculty {}", universityId);
+
+        FacultyEntity faculty = getEntity(universityId);
+
+        try { studentClient.removeFacultyFromStudents(universityId); } catch (Exception e) { log.warn("Student fail"); }
+        try { courseClient.removeFacultyCourses(universityId); } catch (Exception e) { log.warn("Course fail"); }
+        try { libraryClient.removeFacultyRecords(universityId); } catch (Exception e) { log.warn("Library fail"); }
+        try { userServiceClient.deactivateUser(universityId); } catch (Exception e) { log.warn("User fail"); }
+
+        mappingRepository.deleteAll(mappingRepository.findByFacultyUniversityId(universityId));
         facultyRepository.delete(faculty);
+
+        return new ApiResponse("Faculty deleted", 200, null, LocalDateTime.now());
     }
 
     @Override
-    public Map<String, Object> getFacultyDashboard(Long id) {
-        log.info("Fetching dashboard for faculty id: {}", id);
+    public ApiResponse getDashboard(String universityId) {
 
-        FacultyEntity faculty = facultyRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Faculty not found with id: " + id));
+        FacultyEntity faculty = getEntity(universityId);
+        String uid = faculty.getFacultyUniversityId();
 
-        Map<String, Object> dashboard = new HashMap<>();
-        dashboard.put("faculty", modelMapper.map(faculty, FacultyDTO.class));
-        dashboard.put("booksIssued", faculty.getBooksIssued() != null ? faculty.getBooksIssued() : 0);
-        dashboard.put("booksReturned", faculty.getBooksReturned() != null ? faculty.getBooksReturned() : 0);
-        dashboard.put("todaySchedule", faculty.getScheduleData() != null ? faculty.getScheduleData() : "No schedule available");
-        dashboard.put("attendancePercentage", faculty.getAttendancePercentage() != null ? faculty.getAttendancePercentage() : 0.0f);
+        Map<String, Object> res = new HashMap<>();
+        res.put("faculty", modelMapper.map(faculty, FacultyDTO.class));
+        res.put("students",
+                Optional.ofNullable(studentClient.getStudentsByFacultyUniversityId(uid))
+                        .orElse(new ApiResponse("Students fetched", 200, new ArrayList<>(), LocalDateTime.now())));
+        res.put("courses", getAssignedCourses(uid).getData());
+        res.put("attendance", getAttendance(uid).getData());
 
-        return dashboard;
+        return new ApiResponse("Dashboard fetched", 200, res, LocalDateTime.now());
     }
 
     @Override
-    public String getAttendanceCalendar(Long id) {
-        log.info("Fetching attendance calendar for faculty id: {}", id);
-
-        FacultyEntity faculty = facultyRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Faculty not found with id: " + id));
-
-        return faculty.getAttendanceCalendar() != null ? faculty.getAttendanceCalendar() : "No attendance data available";
+    public ApiResponse getFacultyDashboard(String universityId) {
+        log.info("Fetching faculty dashboard for {}", universityId);
+        return getDashboard(universityId);
     }
 
     @Override
-    public String getSchedule(Long id) {
-        log.info("Fetching schedule for faculty id: {}", id);
+    public ApiResponse getCoursesById(String universityId) {
 
-        FacultyEntity faculty = facultyRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Faculty not found with id: " + id));
+        log.info("Fetching courses for faculty {}", universityId);
 
-        return faculty.getScheduleData() != null ? faculty.getScheduleData() : "No schedule assigned";
+        List<Map<String, Object>> courses =
+                (List<Map<String, Object>>) getAssignedCourses(getEntity(universityId).getFacultyUniversityId()).getData();
+
+        return new ApiResponse(
+                "Courses fetched",
+                200,
+                courses,
+                LocalDateTime.now()
+        );
     }
 
     @Override
-    public void updateSchedule(Long id, Map<String, Object> scheduleData) {
-        log.info("Updating schedule for faculty id: {}", id);
+    public ApiResponse assignCoursesById(String universityId, List<Long> courseIds) {
 
-        FacultyEntity faculty = facultyRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Faculty not found with id: " + id));
+        if (courseIds == null || courseIds.isEmpty()) {
+            throw new IllegalArgumentException("Course list required");
+        }
 
-        Object schedule = scheduleData.get("schedule");
-        faculty.setScheduleData(schedule != null ? schedule.toString() : null);
+        log.info("Assigning courses {} to faculty {}", courseIds, universityId);
+
+        courseClient.assignCoursesToFaculty(universityId, courseIds);
+
+        for (Long courseId : courseIds) {
+            String courseCode = String.valueOf(courseId);
+
+            if (mappingRepository.existsByFacultyUniversityIdAndCourseCode(universityId, courseCode)) {
+                continue;
+            }
+
+            FacultyCourseMapping mapping = new FacultyCourseMapping();
+            mapping.setFacultyUniversityId(universityId);
+            mapping.setCourseCode(courseCode);
+            mapping.setCourseName(null);
+
+            mappingRepository.save(mapping);
+        }
+
+        return new ApiResponse("Courses assigned", 200, null, LocalDateTime.now());
+    }
+
+    @Override
+    public ApiResponse assignCourses(String universityId, List<Long> courseIds) {
+
+        log.info("Assigning courses to faculty {}", universityId);
+
+        if (universityId == null || universityId.isBlank() || courseIds == null || courseIds.isEmpty()) {
+            throw new IllegalArgumentException("Invalid request");
+        }
+
+        for (Long courseId : courseIds) {
+            String courseCode = String.valueOf(courseId);
+
+            if (mappingRepository.existsByFacultyUniversityIdAndCourseCode(universityId, courseCode)) {
+                throw new IllegalArgumentException("Duplicate course");
+            }
+
+            FacultyCourseMapping mapping = new FacultyCourseMapping();
+            mapping.setFacultyUniversityId(universityId);
+            mapping.setCourseCode(courseCode);
+            mapping.setCourseName(null);
+
+            mappingRepository.save(mapping);
+        }
+
+        courseClient.assignCoursesToFaculty(universityId, courseIds);
+
+        return new ApiResponse("Courses assigned", 200, null, LocalDateTime.now());
+    }
+
+    @Override
+    public ApiResponse getAssignedCourses(String universityId) {
+        List<FacultyCourseMapping> mappings = mappingRepository.findByFacultyUniversityId(universityId);
+
+        List<Map<String, Object>> result = mappings.stream()
+                .map(m -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("courseCode", m.getCourseCode());
+                    map.put("courseName", m.getCourseName());
+                    return map;
+                })
+                .toList();
+
+        return new ApiResponse("Courses fetched", 200, result, LocalDateTime.now());
+    }
+
+    @Override
+    public ApiResponse getStudentsById(String universityId) {
+
+        ApiResponse response;
+
+        try {
+            response = studentClient.getStudentsByFacultyUniversityId(universityId);
+        } catch (Exception e) {
+            log.error("Student service failed, returning empty list");
+            response = new ApiResponse("Fallback students", 200, new ArrayList<>(), LocalDateTime.now());
+        }
+
+        List<?> students = response.getData() != null ? (List<?>) response.getData() : new ArrayList<>();
+
+        return new ApiResponse("Students fetched", 200, students, LocalDateTime.now());
+    }
+
+    @Override
+    public ApiResponse getStudents(String universityId) {
+
+        log.info("Fetching students for faculty {}", universityId);
+
+        if (universityId == null || universityId.isBlank()) {
+            throw new IllegalArgumentException("universityId required");
+        }
+
+        ApiResponse response = studentClient.getStudentsByFacultyUniversityId(universityId);
+        List<?> students = response.getData() != null ? (List<?>) response.getData() : new ArrayList<>();
+
+        return new ApiResponse("Students fetched", 200, students, LocalDateTime.now());
+    }
+
+    @Override
+    public ApiResponse getTotalStudents(String universityId) {
+
+        ApiResponse response = getStudents(universityId);
+        List<?> list = response.getData() != null ? (List<?>) response.getData() : new ArrayList<>();
+
+        return new ApiResponse("Total students", 200, Map.of("count", list.size()), LocalDateTime.now());
+    }
+
+    @Override
+    public ApiResponse getStudentCountById(String universityId) {
+        return getTotalStudents(universityId);
+    }
+
+    @Override
+    public ApiResponse getAttendanceById(String universityId) {
+        return new ApiResponse("Attendance fetched", 200, getAttendance(universityId), LocalDateTime.now());
+    }
+
+    @Override
+    public ApiResponse updateBookStatsByFacultyUniversityId(String facultyUniversityId, int issued, int returned) {
+
+        FacultyEntity faculty = getEntity(facultyUniversityId);
+
+        if (faculty.getBooksIssued() + issued - returned < 0) {
+            throw new IllegalArgumentException("Invalid book operation");
+        }
+        if (issued < 0 || returned < 0) {
+            throw new IllegalArgumentException("Invalid values");
+        }
+
+        faculty.setBooksIssued(faculty.getBooksIssued() + issued);
+        faculty.setBooksReturned(faculty.getBooksReturned() + returned);
 
         facultyRepository.save(faculty);
+
+        return new ApiResponse("Book stats updated", 200, null, LocalDateTime.now());
     }
 
     @Override
-    public List<FacultyDTO> getFacultyByDepartment(String department) {
-        log.info("Fetching faculty by department: {}", department);
+    public ApiResponse getAttendance(String universityId) {
 
-        return facultyRepository.findByDepartmentIgnoreCase(department)
-                .stream()
-                .map(faculty -> modelMapper.map(faculty, FacultyDTO.class))
-                .toList();
-    }
+        log.info("Fetching attendance for faculty {}", universityId);
 
-    @Override
-    public Integer getTotalFacultyCount() {
-        log.info("Fetching total active faculty count");
-        Integer count = facultyRepository.countByActiveTrue();
-        return count != null ? count : 0;
-    }
-
-    private FacultySubRole parseSubRole(String subRole) {
-        try {
-            return FacultySubRole.valueOf(subRole.trim().toUpperCase());
-        } catch (IllegalArgumentException ex) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Invalid faculty subRole: " + subRole);
+        if (universityId == null || universityId.isBlank()) {
+            throw new IllegalArgumentException("universityId required");
         }
+
+        List<Map<String, Object>> list =
+                attendanceClient.getFacultyAttendance(
+                        universityId,
+                        LocalDate.now().minusDays(30).toString(),
+                        LocalDate.now().toString());
+
+        long present = list.stream()
+                .filter(a -> "PRESENT".equalsIgnoreCase(String.valueOf(a.get("status"))))
+                .count();
+
+        double percentage = list.isEmpty() ? 0 : (present * 100.0) / list.size();
+
+        Map<String, Object> data = Map.of(
+                "percentage", percentage,
+                "present", present,
+                "absent", list.size() - present
+        );
+
+        return new ApiResponse("Attendance fetched", 200, data, LocalDateTime.now());
+    }
+
+    @Override
+    public ApiResponse assignScheduleById(String universityId, Map<String, Object> schedule) {
+        return assignSchedule(getEntity(universityId).getFacultyUniversityId(), schedule);
+    }
+
+    @Override
+    public ApiResponse assignSchedule(String universityId, Map<String, Object> schedule) {
+
+        log.info("Assigning schedule for faculty {}", universityId);
+
+        FacultyEntity faculty = facultyRepository.findByFacultyUniversityId(universityId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Faculty not found"));
+
+        Map<String, Object> existing =
+                Optional.ofNullable(faculty.getScheduleData()).orElse(new HashMap<>());
+
+        existing.putAll(schedule);
+
+        faculty.setScheduleData(existing);
+        facultyRepository.save(faculty);
+
+        return new ApiResponse("Schedule updated", 200, null, LocalDateTime.now());
+    }
+
+    @Override
+    public ApiResponse markAttendance(String universityId,
+                                      AttendanceStatus status,
+                                      Long facultyId,
+                                      String courseCode) {
+
+        log.info("Delegating attendance to STUDENT-SERVICE | studentId: {}", universityId);
+
+        if (status == null || universityId == null || courseCode == null) {
+            throw new IllegalArgumentException("Invalid attendance request");
+        }
+
+        try {
+            ApiResponse response = studentClient.markAttendance(
+                    universityId,
+                    status.name(),
+                    facultyId,
+                    courseCode
+            );
+
+            log.info("Attendance marked via student-service");
+            return response;
+
+        } catch (Exception e) {
+            log.error("Feign call failed for attendance", e);
+            throw new RuntimeException("Attendance service unavailable");
+        }
+    }
+
+    @Override
+    public ApiResponse markFacultySelfAttendance(String universityId, Long facultyId) {
+
+        log.info("Delegating faculty self attendance");
+
+        try {
+            return studentClient.markAttendance(universityId, "PRESENT", facultyId, "SELF-ATTENDANCE");
+        } catch (Exception e) {
+            log.error("Feign failed", e);
+            throw new RuntimeException("Attendance failed");
+        }
+    }
+
+    @Override
+    public ApiResponse getSchedule(String universityId) {
+        return new ApiResponse(
+                "Schedule fetched",
+                200,
+                getEntity(universityId).getScheduleData(),
+                LocalDateTime.now()
+        );
+    }
+
+    @Override
+    public ApiResponse getAttendanceCalendar(String universityId) {
+        return new ApiResponse(
+                "Attendance calendar fetched",
+                200,
+                getEntity(universityId).getAttendanceCalendar(),
+                LocalDateTime.now()
+        );
+    }
+
+    @Override
+    public ApiResponse updateSchedule(String universityId, Map<String, Object> scheduleData) {
+        return assignScheduleById(universityId, scheduleData);
+    }
+
+    private FacultyEntity getEntity(String universityId) {
+        return facultyRepository.findByFacultyUniversityId(universityId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Faculty not found"));
     }
 }

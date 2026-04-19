@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/courses")
@@ -21,82 +22,95 @@ public class CourseController {
 
     private final CourseService service;
 
-    // CREATE
+    // ================= CREATE =================
     @PostMapping
     public ResponseEntity<ApiResponse> createCourse(@Valid @RequestBody CourseRequestDto dto) {
-        log.info("Request received to create course with name: {}", dto.getName());
 
-        Course course = service.createCourse(dto);
+        log.info("Request received to create course: {}", dto.getName());
 
-        log.info("Course created successfully with ID: {}", course.getId());
-
-        ApiResponse response = new ApiResponse(
-                "Course created successfully",
-                201,
-                LocalDateTime.now()
-        );
-
-        return ResponseEntity.status(201).body(response);
+        return ResponseEntity.status(201)
+                .body(service.createCourse(dto));
     }
 
-    // READ ALL
+    // ================= ASSIGN TO FACULTY =================
+    @PostMapping("/assign/faculty/{facultyUniversityId}")
+    public ResponseEntity<ApiResponse> assignCoursesToFacultyByCode(
+            @PathVariable String facultyUniversityId,
+            @RequestBody List<String> courseCodes) {
+
+        log.info("Assigning courses {} to faculty {}", courseCodes, facultyUniversityId);
+
+        return ResponseEntity.ok(
+                service.assignCoursesToFacultyByCode(facultyUniversityId, courseCodes)
+        );
+    }
+    // ================= GET BY FACULTY =================
+    @GetMapping("/faculty/{facultyUniversityId}")
+    public ResponseEntity<ApiResponse> getCoursesByFaculty(@PathVariable String facultyUniversityId) {
+
+        log.info("Fetching courses for faculty {}", facultyUniversityId);
+
+        return ResponseEntity.ok(
+                service.getCoursesByFaculty(facultyUniversityId)
+        );
+    }
+
+    // ================= GET ALL =================
     @GetMapping
-    public ResponseEntity<List<Course>> getAllCourses() {
-        log.info("Request received to fetch all courses");
+    public ResponseEntity<ApiResponse> getAllCourses() {
 
         List<Course> courses = service.getAllCourses();
 
-        log.info("Fetched {} courses", courses.size());
-
-        return ResponseEntity.ok(courses);
-    }
-
-    // READ BY ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Course> getCourse(@PathVariable Long id) {
-        log.info("Request received to fetch course with ID: {}", id);
-
-        Course course = service.getCourseById(id);
-
-        log.info("Course fetched successfully with ID: {}", id);
-
-        return ResponseEntity.ok(course);
-    }
-
-    // UPDATE
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse> updateCourse(@PathVariable Long id,
-                                                    @Valid @RequestBody CourseRequestDto dto) {
-        log.info("Request received to update course with ID: {}", id);
-
-        Course updated = service.updateCourse(id, dto);
-
-        log.info("Course updated successfully with ID: {}", updated.getId());
-
-        ApiResponse response = new ApiResponse(
-                "Course updated successfully",
-                200,
-                LocalDateTime.now()
+        return ResponseEntity.ok(
+                new ApiResponse(
+                        "Courses fetched",
+                        200,
+                        courses,
+                        LocalDateTime.now()
+                )
         );
+    }
+    @GetMapping("/count")   //  FIRST
+    public ResponseEntity<ApiResponse> getTotalCoursesCount() {
+        long count = service.getTotalCoursesCount();
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(
+                new ApiResponse(
+                        "Total courses count",
+                        200,
+                        Map.of("totalCourses", count),
+                        LocalDateTime.now()
+                )
+        );
+    }
+    // ================= GET BY ID =================
+
+        @GetMapping("/{id}")   // AFTER
+        public ResponseEntity<ApiResponse> getCourse(@PathVariable Long id) {
+
+        log.info("Fetching course {}", id);
+
+            return ResponseEntity.ok(service.getCourseById(id));
     }
 
-    // DELETE
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse> deleteCourse(@PathVariable Long id) {
-        log.info("Request received to delete course with ID: {}", id);
+    // ================= UPDATE =================
+    @PutMapping("/{code}")
+    public ResponseEntity<ApiResponse> updateCourse(
+            @PathVariable String code,
+            @Valid @RequestBody CourseRequestDto dto) {
 
-        service.deleteCourse(id);
+        log.info("Updating course {}", code);
 
-        log.info("Course deleted successfully with ID: {}", id);
-
-        ApiResponse response = new ApiResponse(
-                "Course deleted successfully",
-                200,
-                LocalDateTime.now()
+        return ResponseEntity.ok(service.updateCourse(code, dto)
         );
+    }
 
-        return ResponseEntity.ok(response);
+    // ================= DELETE =================
+    @DeleteMapping("/{code}")
+    public ResponseEntity<ApiResponse> deleteCourse(@PathVariable String code) {
+
+        log.info("Deleting course {}", code);
+
+        return ResponseEntity.ok(service.deleteCourse(code));
     }
 }
