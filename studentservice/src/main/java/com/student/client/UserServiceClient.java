@@ -16,20 +16,25 @@ public interface UserServiceClient {
     ResponseEntity<ApiResponse> getUserByUniversityId(@PathVariable String universityId);
 
     @PostMapping("/api/users")
-    ResponseEntity<ApiResponse> createUser(@RequestBody UserDto dto);
+    ResponseEntity<ApiResponse> createUser(
+            @RequestBody UserDto dto,
+            @RequestHeader("X-User-Name") String username,
+            @RequestHeader("X-User-Role") String role
+    );
+
 
     @PutMapping("/api/users/university/{universityId}")
     ResponseEntity<ApiResponse> updateUserByUniversityId(
             @PathVariable String universityId,
-            @RequestBody UserDto dto
-    );
-
-    @PutMapping("/api/users/university/{universityId}/password")
-    ResponseEntity<ApiResponse> updatePassword(
-            @PathVariable String universityId,
-            @RequestBody Map<String, String> password
+            @RequestBody UserDto dto,
+            @RequestHeader("X-User-Name") String username,
+            @RequestHeader("X-User-Role") String role
     );
 
     @DeleteMapping("/api/users/university/{universityId}")
-    ResponseEntity<ApiResponse> deleteUser(@PathVariable String universityId);
+    ResponseEntity<ApiResponse> deleteUser(
+            @PathVariable String universityId,
+            @RequestHeader("X-User-Name") String username,
+            @RequestHeader("X-User-Role") String role
+    );
 }

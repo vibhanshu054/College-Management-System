@@ -20,6 +20,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     Optional<UserEntity> findByUniversityId(String universityId);
     UserDto getUserByUniversityId(String universityId);
+
     Optional<UserEntity> findByUsername(String username);
 
     @Query("SELECT u FROM UserEntity u WHERE u.role = ?1 AND u.active = true")

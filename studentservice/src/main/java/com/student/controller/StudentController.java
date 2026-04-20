@@ -1,6 +1,7 @@
 package com.student.controller;
 
-import com.student.dto.*;
+import com.student.dto.ApiResponse;
+import com.student.dto.StudentDTO;
 import com.student.enums.AttendanceStatus;
 import com.student.service.StudentService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -9,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/students")
@@ -20,13 +23,15 @@ public class StudentController {
 
     @PostMapping
     public ResponseEntity<ApiResponse> createStudent(
-            @Valid @RequestBody UserDto userDto,
+            @Valid @RequestBody StudentDTO dto,
             @RequestHeader(value = "X-User-Name", required = false) String username,
             @RequestHeader(value = "X-User-Role", required = false) String role
     ) {
-        username = (username != null && !username.isBlank()) ? username : "SYSTEM";
+        username = (username != null && !username.isBlank()) ? username : "ADMIN";
+        role = (role!=null && !role.isBlank())? role:"ADMIN";
+
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(studentService.createStudent(userDto, username, role));
+                .body(studentService.createStudent(dto, username, role));
     }
 
     @PutMapping("/{universityId}/semester")
@@ -46,10 +51,10 @@ public class StudentController {
     @PutMapping("/{universityId}/subjects")
     public ResponseEntity<ApiResponse> updateSubjects(
             @PathVariable String universityId,
-            @RequestBody SubjectUpdateRequest request,
-            @RequestHeader("X-User-Role") String role
+            @RequestBody List<String> subjects,
+            @RequestHeader(value = "X-User-Role", required = false) String role
     ) {
-        return ResponseEntity.ok(studentService.updateSubjects(universityId, request.getSubjects(), role));
+        return ResponseEntity.ok(studentService.updateSubjects(universityId, subjects, role));
     }
 
     @PutMapping("/books/update/{universityId}")
@@ -84,12 +89,15 @@ public class StudentController {
     @PutMapping("/{universityId}")
     public ResponseEntity<ApiResponse> updateStudent(
             @PathVariable String universityId,
-            @RequestBody StudentUpdateRequest request,
+            @RequestBody StudentDTO studentDto,
             @RequestHeader(value = "X-User-Name", required = false) String username,
             @RequestHeader(value = "X-User-Role", required = false) String role
     ) {
         username = (username != null && !username.isBlank()) ? username : "SYSTEM";
-        return ResponseEntity.ok(studentService.updateStudent(universityId, request, username, role));
+
+        return ResponseEntity.ok(
+                studentService.updateStudent(universityId, studentDto, username, role)
+        );
     }
 
     @DeleteMapping("/{universityId}")

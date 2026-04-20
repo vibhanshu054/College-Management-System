@@ -10,10 +10,7 @@ import com.userService.dto.UserDto;
 import com.userService.entity.UserEntity;
 import com.userService.enums.FacultySubRole;
 import com.userService.enums.UserRole;
-import com.userService.exception.DuplicateResourceException;
-import com.userService.exception.ForbiddenException;
-import com.userService.exception.InvalidOperationException;
-import com.userService.exception.ResourceNotFoundException;
+import com.userService.exception.*;
 import com.userService.repository.FacultyRepository;
 import com.userService.repository.LibrarianRepository;
 import com.userService.repository.StudentRepository;
@@ -26,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.IllegalArgumentException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -391,7 +389,14 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    @Override
+    public void resetPasswordByUsername(String username, String newPassword) {
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found by username"));
 
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
 
     @Override
     @Transactional(readOnly = true, rollbackFor = Exception.class)

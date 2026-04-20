@@ -195,7 +195,7 @@ public class StudentServiceImpl implements StudentService {
                     .courseCode(saved.getCourseCode())
                     .build();
 
-            userServiceClient.createUser(userDto);
+            userServiceClient.createUser(userDto,ADMIN,ADMIN);
 
             log.info("CASCADE USER SUCCESS for {}", saved.getUniversityId());
 
@@ -272,15 +272,18 @@ public class StudentServiceImpl implements StudentService {
             students = studentRepository.findByActiveTrue();
         }
 
-        List<StudentDTO> studentDtos = students.stream()
+        List<StudentDTO> studentDto = students.stream()
                 .map(this::convertToDto)
                 .toList();
 
-        return new ApiResponse("Students fetched", 200, studentDtos, LocalDateTime.now());
+        return new ApiResponse("Students fetched", 200, studentDto, LocalDateTime.now());
     }
 
     @Override
     public ApiResponse updateStudent(String universityId, StudentDTO studentDto, String updatedBy, String role) {
+
+        log.info("UPDATE STUDENT START | universityId={}", universityId);
+
         validateAdminOrSystem(role, "Only ADMIN or SYSTEM can update");
 
         if (studentDto == null) {
@@ -290,63 +293,76 @@ public class StudentServiceImpl implements StudentService {
         StudentEntity student = studentRepository.findByUniversityId(universityId)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
 
+        // NAME
         if (studentDto.getStudentName() != null && !studentDto.getStudentName().isBlank()) {
             student.setStudentName(studentDto.getStudentName().trim());
         }
 
+        // EMAIL
         if (studentDto.getStudentEmail() != null && !studentDto.getStudentEmail().isBlank()) {
             String newEmail = studentDto.getStudentEmail().trim().toLowerCase();
+
             studentRepository.findByStudentEmail(newEmail)
                     .filter(existing -> !existing.getUniversityId().equals(student.getUniversityId()))
                     .ifPresent(existing -> {
                         throw new DuplicateStudentException("Student email already exists");
                     });
+
             student.setStudentEmail(newEmail);
         }
 
+        // PASSWORD
         if (studentDto.getPassword() != null && !studentDto.getPassword().isBlank()) {
             student.setPassword(studentDto.getPassword().trim());
         }
 
+        // PHONE
         if (studentDto.getStudentPhoneNumber() != null && !studentDto.getStudentPhoneNumber().isBlank()) {
             student.setStudentPhoneNumber(studentDto.getStudentPhoneNumber().trim());
         }
 
+        // SEMESTER
         if (studentDto.getSemester() != null && !studentDto.getSemester().isBlank()) {
             student.setSemester(studentDto.getSemester().trim());
         }
 
+        // BATCH
         if (studentDto.getBatch() != null && !studentDto.getBatch().isBlank()) {
             student.setBatch(studentDto.getBatch().trim());
         }
 
+        // DEPARTMENT
         if (studentDto.getDepartment() != null && !studentDto.getDepartment().isBlank()) {
             student.setDepartment(studentDto.getDepartment().trim());
         }
 
+        // COURSE
         if (studentDto.getCourse() != null && !studentDto.getCourse().isBlank()) {
             student.setCourse(studentDto.getCourse().trim());
         }
 
+        // COURSE CODE
         if (studentDto.getCourseCode() != null && !studentDto.getCourseCode().isBlank()) {
             student.setCourseCode(studentDto.getCourseCode().trim().toUpperCase());
         }
 
+        // FACULTY
         if (studentDto.getFacultyUniversityId() != null && !studentDto.getFacultyUniversityId().isBlank()) {
+
             ResponseEntity<ApiResponse> facultyResponse =
-                    userServiceClient.getUserByUniversityId(studentDto.getFacultyUniversityId().trim());
+                    userServiceClient.getUserByUniversityId(studentDto.getFacultyUniversityId());
 
             if (facultyResponse == null || facultyResponse.getBody() == null || facultyResponse.getBody().getData() == null) {
-                throw new ResourceNotFoundException(
-                        "Faculty not found with universityId: " + studentDto.getFacultyUniversityId()
-                );
+                throw new ResourceNotFoundException("Faculty not found");
             }
 
             UserDto facultyDto = modelMapper.map(facultyResponse.getBody().getData(), UserDto.class);
-            student.setFacultyUniversityId(studentDto.getFacultyUniversityId().trim());
+
+            student.setFacultyUniversityId(studentDto.getFacultyUniversityId());
             student.setFacultyName(facultyDto.getName());
         }
 
+        // SUBJECTS
         if (studentDto.getSubjects() != null) {
             student.setSubjects(sanitizeSubjects(studentDto.getSubjects()));
         }
@@ -354,308 +370,349 @@ public class StudentServiceImpl implements StudentService {
         student.setUpdatedBy(updatedBy);
 
         StudentEntity saved = studentRepository.save(student);
-        cascadeUpdate(saved);
 
-        return new ApiResponse("Student updated", 200, convertToDto(saved), LocalDateTime.now());
-    }
+        // CASCADE
+        cascadeUpdate(saved,ADMIN, ADMIN);
 
-    @Override
-    public ApiResponse deleteStudent(String universityId, String deletedBy, String role) {
-        validateAdminOrSystem(role, "Only ADMIN or SYSTEM can delete");
-
-        StudentEntity student = studentRepository.findByUniversityId(universityId)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
-
-        student.setActive(false);
-        student.setUpdatedBy(deletedBy);
-
-        StudentEntity saved = studentRepository.save(student);
-        cascadeDelete(saved);
-
-        return new ApiResponse("Student deleted successfully", 200, null, LocalDateTime.now());
-    }
-
-    @Override
-    public ApiResponse getStudentDashboard(String universityId) {
-        StudentEntity student = studentRepository.findByUniversityId(universityId)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
-
-        Map<String, Object> dashboard = new HashMap<>();
-        dashboard.put("profile", convertToDto(student));
-        dashboard.put("booksIssued", student.getBooksIssued());
-        dashboard.put("booksReturned", student.getBooksReturned());
-        dashboard.put("attendancePercentage", student.getAttendancePercentage());
-        dashboard.put("totalAttendanceRecords", attendanceRepository.countByStudentUniversityId(universityId));
-
-        return new ApiResponse("Dashboard fetched", 200, dashboard, LocalDateTime.now());
-    }
-
-    @Override
-    public ApiResponse markAttendance(String universityId, AttendanceStatus status, Long facultyId, String courseCode) {
-        if (universityId == null || universityId.isBlank()) {
-            throw new IllegalArgumentException("University ID is required");
-        }
-        if (status == null) {
-            throw new IllegalArgumentException("Attendance status is required");
-        }
-        if (facultyId == null) {
-            throw new IllegalArgumentException("Faculty ID is required");
-        }
-        if (courseCode == null || courseCode.isBlank()) {
-            throw new IllegalArgumentException("Course code is required");
-        }
-
-        StudentEntity student = studentRepository.findByUniversityId(universityId.trim())
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found with ID: " + universityId));
-
-        AttendanceRecord record = new AttendanceRecord();
-        record.setStudentId(student.getId());
-        record.setStudentUniversityId(student.getUniversityId());
-        record.setStudentName(student.getStudentName());
-        record.setCourseCode(courseCode.trim().toUpperCase());
-        record.setAttendanceDate(LocalDate.now());
-        record.setStatus(status);
-        record.setFacultyId(facultyId);
-        record.setCreatedAt(LocalDateTime.now());
-        record.setUpdatedAt(LocalDateTime.now());
-
-        attendanceRepository.save(record);
-        recalculateAttendancePercentage(universityId);
-
-        return new ApiResponse("Attendance marked successfully", 200, null, LocalDateTime.now());
-    }
-
-    @Override
-    public void recalculateAttendancePercentage(String universityId) {
-        StudentEntity student = studentRepository.findByUniversityId(universityId).orElse(null);
-        if (student == null) {
-            return;
-        }
-
-        long totalRecords = attendanceRepository.countByStudentUniversityId(universityId);
-        if (totalRecords == 0) {
-            student.setAttendancePercentage(0.0f);
-            studentRepository.save(student);
-            return;
-        }
-
-        long presentCount = attendanceRepository.countByStudentUniversityIdAndStatus(
-                universityId,
-                AttendanceStatus.PRESENT
+        return new ApiResponse(
+                "Student updated successfully",
+                200,
+                convertToDto(saved),
+                LocalDateTime.now()
         );
-
-        float percentage = (float) (presentCount * 100.0 / totalRecords);
-        student.setAttendancePercentage(percentage);
-        studentRepository.save(student);
     }
 
-    @Override
-    public ApiResponse getAttendanceCalendar(String universityId) {
-        List<Map<String, Object>> records = attendanceRepository
-                .findByStudentUniversityIdOrderByAttendanceDateDesc(universityId)
-                .stream()
-                .map(record -> {
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("date", record.getAttendanceDate());
-                    map.put("status", record.getStatus());
-                    map.put("courseCode", record.getCourseCode());
-                    map.put("facultyId", record.getFacultyId());
-                    return map;
-                })
-                .toList();
+        @Override
+        public ApiResponse deleteStudent (String universityId, String deletedBy, String role){
+            validateAdminOrSystem(role, "Only ADMIN or SYSTEM can delete");
 
-        return new ApiResponse("Attendance fetched", 200, records, LocalDateTime.now());
-    }
+            StudentEntity student = studentRepository.findByUniversityId(universityId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
 
-    @Override
-    public void incrementBooksIssued(String universityId) {
-        StudentEntity student = studentRepository.findByUniversityId(universityId)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found with ID: " + universityId));
+            student.setActive(false);
+            student.setUpdatedBy(deletedBy);
 
-        int currentIssued = student.getBooksIssued() == null ? 0 : student.getBooksIssued();
-        if (currentIssued >= 5) {
-            throw new IllegalArgumentException("Book limit exceeded");
+            StudentEntity saved = studentRepository.save(student);
+            cascadeDelete(saved, ADMIN, ADMIN);
+
+            return new ApiResponse("Student deleted successfully", 200, null, LocalDateTime.now());
         }
 
-        student.setBooksIssued(currentIssued + 1);
-        studentRepository.save(student);
-    }
+        @Override
+        public ApiResponse getStudentDashboard (String universityId){
+            StudentEntity student = studentRepository.findByUniversityId(universityId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
 
-    @Override
-    public void incrementBooksReturned(String universityId) {
-        StudentEntity student = studentRepository.findByUniversityId(universityId)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found with ID: " + universityId));
+            Map<String, Object> dashboard = new HashMap<>();
+            dashboard.put("profile", convertToDto(student));
+            dashboard.put("booksIssued", student.getBooksIssued());
+            dashboard.put("booksReturned", student.getBooksReturned());
+            dashboard.put("attendancePercentage", student.getAttendancePercentage());
+            dashboard.put("totalAttendanceRecords", attendanceRepository.countByStudentUniversityId(universityId));
 
-        int currentIssued = student.getBooksIssued() == null ? 0 : student.getBooksIssued();
-        int currentReturned = student.getBooksReturned() == null ? 0 : student.getBooksReturned();
-
-        if (currentIssued <= 0) {
-            throw new IllegalArgumentException("No issued books available to return");
+            return new ApiResponse("Dashboard fetched", 200, dashboard, LocalDateTime.now());
         }
 
-        student.setBooksIssued(currentIssued - 1);
-        student.setBooksReturned(currentReturned + 1);
-        studentRepository.save(student);
-    }
-
-    @Override
-    public ApiResponse getStudentsByCourse(String courseCode) {
-        List<StudentDTO> students = studentRepository.findByCourseCodeAndActiveTrue(courseCode)
-                .stream()
-                .map(this::convertToDto)
-                .toList();
-
-        return new ApiResponse("Students fetched by course", 200, students, LocalDateTime.now());
-    }
-
-    @Override
-    public ApiResponse getTotalStudentsCount() {
-        long count = studentRepository.countByActiveTrue();
-        return new ApiResponse("Total students count", 200, Map.of("totalStudents", count), LocalDateTime.now());
-    }
-
-    @Override
-    public ApiResponse getStudentsCountByCourse(String courseCode) {
-        long count = studentRepository.countByCourseCodeAndActiveTrue(courseCode);
-        return new ApiResponse("Students count by course", 200, Map.of("count", count), LocalDateTime.now());
-    }
-
-    @Override
-    public ApiResponse getStudentsByDepartment(String department) {
-        List<StudentDTO> students = studentRepository.findByDepartmentAndActiveTrue(department)
-                .stream()
-                .map(this::convertToDto)
-                .toList();
-
-        return new ApiResponse("Students fetched by department", 200, students, LocalDateTime.now());
-    }
-
-    @Override
-    public ApiResponse getStudentsCountByDepartment(String department) {
-        long count = studentRepository.countByDepartmentAndActiveTrue(department);
-        return new ApiResponse("Students count by department", 200, Map.of("count", count), LocalDateTime.now());
-    }
-
-    @Override
-    public ApiResponse getBooksStatus(String universityId) {
-        StudentEntity student = studentRepository.findByUniversityId(universityId)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found with ID: " + universityId));
-
-        Map<String, Integer> booksStatus = new HashMap<>();
-        booksStatus.put("booksIssued", student.getBooksIssued());
-        booksStatus.put("booksReturned", student.getBooksReturned());
-
-        return new ApiResponse("Books status fetched", 200, booksStatus, LocalDateTime.now());
-    }
-
-    @Override
-    public ApiResponse updateBookStats(String universityId, int issued, int returned) {
-        StudentEntity student = studentRepository.findByUniversityId(universityId)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
-
-        if (issued < 0 || returned < 0) {
-            throw new IllegalArgumentException("Issued and returned values cannot be negative");
-        }
-
-        int currentIssued = student.getBooksIssued() == null ? 0 : student.getBooksIssued();
-        int currentReturned = student.getBooksReturned() == null ? 0 : student.getBooksReturned();
-
-        int newIssued = currentIssued + issued - returned;
-        if (newIssued < 0) {
-            throw new IllegalArgumentException("Returned books cannot exceed currently issued books");
-        }
-
-        if (newIssued > 5) {
-            throw new IllegalArgumentException("Book limit exceeded");
-        }
-
-        student.setBooksIssued(newIssued);
-        student.setBooksReturned(currentReturned + returned);
-        studentRepository.save(student);
-
-        Map<String, Integer> response = new HashMap<>();
-        response.put("booksIssued", student.getBooksIssued());
-        response.put("booksReturned", student.getBooksReturned());
-
-        return new ApiResponse("Book stats updated", 200, response, LocalDateTime.now());
-    }
-
-    @Override
-    public ApiResponse updateSubjects(String universityId, List<String> subjects, String role) {
-
-        log.info("UPDATE SUBJECTS | student={}", universityId);
-
-        validateFacultyOrAdmin(role, "Only faculty/admin can assign subjects");
-
-        List<String> cleaned = sanitizeSubjects(subjects);
-
-        if (cleaned.isEmpty()) {
-            throw new IllegalArgumentException("Subjects list cannot be empty");
-        }
-
-        StudentEntity student = studentRepository.findByUniversityId(universityId)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
-
-        //  SUBJECT VALIDATION FROM SUBJECT SERVICE
-        for (String code : cleaned) {
-            ResponseEntity<ApiResponse> res = subjectServiceClient.getSubjectByCode(code);
-
-            if (res == null || res.getBody() == null|| res.getBody().getData()==null) {
-                throw new ResourceNotFoundException("Invalid subject code: " + code);
+        @Override
+        public ApiResponse markAttendance (String universityId, AttendanceStatus status, Long facultyId, String
+        courseCode){
+            if (universityId == null || universityId.isBlank()) {
+                throw new IllegalArgumentException("University ID is required");
             }
+            if (status == null) {
+                throw new IllegalArgumentException("Attendance status is required");
+            }
+            if (facultyId == null) {
+                throw new IllegalArgumentException("Faculty ID is required");
+            }
+            if (courseCode == null || courseCode.isBlank()) {
+                throw new IllegalArgumentException("Course code is required");
+            }
+            boolean exists = attendanceRepository
+                    .existsByStudentUniversityIdAndAttendanceDate(universityId, LocalDate.now());
+
+            if (exists) {
+                throw new IllegalArgumentException("Attendance already marked today");
+            }
+            StudentEntity student = studentRepository.findByUniversityId(universityId.trim())
+                    .orElseThrow(() -> new ResourceNotFoundException("Student not found with ID: " + universityId));
+
+            AttendanceRecord record = new AttendanceRecord();
+            record.setStudentId(student.getId());
+            record.setStudentUniversityId(student.getUniversityId());
+            record.setStudentName(student.getStudentName());
+            record.setCourseCode(courseCode.trim().toUpperCase());
+            record.setAttendanceDate(LocalDate.now());
+            record.setStatus(status);
+            record.setFacultyId(facultyId);
+            record.setCreatedAt(LocalDateTime.now());
+            record.setUpdatedAt(LocalDateTime.now());
+
+            attendanceRepository.save(record);
+            recalculateAttendancePercentage(universityId);
+
+            return new ApiResponse("Attendance marked successfully", 200, null, LocalDateTime.now());
         }
 
-        student.setSubjects(cleaned);
-        studentRepository.save(student);
+        @Override
+        public void recalculateAttendancePercentage(String universityId){
+            StudentEntity student = studentRepository.findByUniversityId(universityId).orElse(null);
+            if (student == null) {
+                return;
+            }
 
-        return new ApiResponse(
-                "Subjects assigned successfully",
-                200,
-                cleaned,
-                LocalDateTime.now()
-        );
-    }
+            long totalRecords = attendanceRepository.countByStudentUniversityId(universityId);
+            if (totalRecords == 0) {
+                student.setAttendancePercentage(0.0f);
+                studentRepository.save(student);
+                return;
+            }
 
-    @Override
-    public ApiResponse getStudentCountByCourse() {
-        List<CourseStudentCountProjection> data = studentRepository.getStudentCountGroupByCourse();
+            long presentCount = attendanceRepository.countByStudentUniversityIdAndStatus(
+                    universityId,
+                    AttendanceStatus.PRESENT
+            );
 
-        return new ApiResponse(
-                "Course wise student count fetched successfully",
-                200,
-                data,
-                LocalDateTime.now()
-        );
-    }
-
-    @Override
-    public ApiResponse updateSemester(String universityId, String semester, String role) {
-        validateFacultyOrAdmin(role, "Only faculty/admin can update semester");
-
-        if (semester == null || semester.isBlank()) {
-            throw new IllegalArgumentException("Semester is required");
+            float percentage = (float) (presentCount * 100.0 / totalRecords);
+            student.setAttendancePercentage(percentage);
+            studentRepository.save(student);
         }
 
-        StudentEntity student = studentRepository.findByUniversityId(universityId)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
+        @Override
+        public ApiResponse getAttendanceCalendar (String universityId){
+            List<Map<String, Object>> records = attendanceRepository
+                    .findByStudentUniversityIdOrderByAttendanceDateDesc(universityId)
+                    .stream()
+                    .map(record -> {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("date", record.getAttendanceDate());
+                        map.put("status", record.getStatus());
+                        map.put("courseCode", record.getCourseCode());
+                        map.put("facultyId", record.getFacultyId());
+                        return map;
+                    })
+                    .toList();
 
-        student.setSemester(semester.trim());
-        studentRepository.save(student);
-
-        return new ApiResponse("Semester updated", 200, convertToDto(student), LocalDateTime.now());
-    }
-
-    private void cascadeCreate(StudentEntity student) {
-        try {
-            log.info("CASCADE CREATE START for {}", student.getUniversityId());
-            log.info("CASCADE CREATE SUCCESS");
-        } catch (Exception e) {
-            log.error("CASCADE CREATE FAILED", e);
-            throw new RuntimeException("Cascade create failed");
+            return new ApiResponse("Attendance fetched", 200, records, LocalDateTime.now());
         }
-    }
 
-    private void cascadeUpdate(StudentEntity student) {
+        @Override
+        public void incrementBooksIssued(String universityId){
+            StudentEntity student = studentRepository.findByUniversityId(universityId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Student not found with ID: " + universityId));
+
+            int currentIssued = student.getBooksIssued() == null ? 0 : student.getBooksIssued();
+            if (currentIssued >= 5) {
+                throw new IllegalArgumentException("Book limit exceeded");
+            }
+
+            student.setBooksIssued(currentIssued + 1);
+            studentRepository.save(student);
+        }
+
+        @Override
+        public void incrementBooksReturned(String universityId){
+            StudentEntity student = studentRepository.findByUniversityId(universityId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Student not found with ID: " + universityId));
+
+            int currentIssued = student.getBooksIssued() == null ? 0 : student.getBooksIssued();
+            int currentReturned = student.getBooksReturned() == null ? 0 : student.getBooksReturned();
+
+            if (currentIssued <= 0) {
+                throw new IllegalArgumentException("No issued books available to return");
+            }
+
+            student.setBooksIssued(currentIssued - 1);
+            student.setBooksReturned(currentReturned + 1);
+            studentRepository.save(student);
+        }
+
+        @Override
+        public ApiResponse getStudentsByCourse (String courseCode){
+            List<StudentDTO> students = studentRepository.findByCourseCodeAndActiveTrue(courseCode)
+                    .stream()
+                    .map(this::convertToDto)
+                    .toList();
+
+            return new ApiResponse("Students fetched by course", 200, students, LocalDateTime.now());
+        }
+
+        @Override
+        public ApiResponse getTotalStudentsCount () {
+            long count = studentRepository.countByActiveTrue();
+            return new ApiResponse("Total students count", 200, Map.of("totalStudents", count), LocalDateTime.now());
+        }
+
+        @Override
+        public ApiResponse getStudentsCountByCourse(String courseCode){
+            long count = studentRepository.countByCourseCodeAndActiveTrue(courseCode);
+            return new ApiResponse("Students count by course", 200, Map.of("count", count), LocalDateTime.now());
+        }
+
+        @Override
+        public ApiResponse getStudentsByDepartment (String department){
+            List<StudentDTO> students = studentRepository.findByDepartmentAndActiveTrue(department)
+                    .stream()
+                    .map(this::convertToDto)
+                    .toList();
+
+            return new ApiResponse("Students fetched by department", 200, students, LocalDateTime.now());
+        }
+
+        @Override
+        public ApiResponse getStudentsCountByDepartment(String department){
+            long count = studentRepository.countByDepartmentAndActiveTrue(department);
+            return new ApiResponse("Students count by department", 200, Map.of("count", count), LocalDateTime.now());
+        }
+
+        @Override
+        public ApiResponse getBooksStatus (String universityId){
+            StudentEntity student = studentRepository.findByUniversityId(universityId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Student not found with ID: " + universityId));
+
+            Map<String, Integer> booksStatus = new HashMap<>();
+            booksStatus.put("booksIssued", student.getBooksIssued());
+            booksStatus.put("booksReturned", student.getBooksReturned());
+
+            return new ApiResponse("Books status fetched", 200, booksStatus, LocalDateTime.now());
+        }
+
+        @Override
+        public ApiResponse updateBookStats (String universityId,int issued, int returned){
+            StudentEntity student = studentRepository.findByUniversityId(universityId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
+
+            if (issued < 0 || returned < 0) {
+                throw new IllegalArgumentException("Issued and returned values cannot be negative");
+            }
+
+            int currentIssued = student.getBooksIssued() == null ? 0 : student.getBooksIssued();
+            int currentReturned = student.getBooksReturned() == null ? 0 : student.getBooksReturned();
+
+            int newIssued = currentIssued + issued - returned;
+            if (newIssued < 0) {
+                throw new IllegalArgumentException("Returned books cannot exceed currently issued books");
+            }
+
+            if (newIssued > 5) {
+                throw new IllegalArgumentException("Book limit exceeded");
+            }
+
+            student.setBooksIssued(newIssued);
+            student.setBooksReturned(currentReturned + returned);
+            studentRepository.save(student);
+
+            Map<String, Integer> response = new HashMap<>();
+            response.put("booksIssued", student.getBooksIssued());
+            response.put("booksReturned", student.getBooksReturned());
+
+            return new ApiResponse("Book stats updated", 200, response, LocalDateTime.now());
+        }
+
+        @Override
+        public ApiResponse updateSubjects(String universityId, List<String> subjects, String role) {
+
+            log.info("UPDATE SUBJECTS START | student={}, role={}", universityId, role);
+
+            // 🔴 ROLE CHECK
+            validateFacultyOrAdmin(role, "Only faculty/admin can assign subjects");
+
+            // 🔴 INPUT VALIDATION
+            if (universityId == null || universityId.isBlank()) {
+                throw new IllegalArgumentException("University ID is required");
+            }
+
+            if (subjects == null || subjects.isEmpty()) {
+                throw new IllegalArgumentException("Subjects list cannot be empty");
+            }
+
+            // 🔴 CLEAN SUBJECT LIST
+            List<String> cleaned = sanitizeSubjects(subjects);
+
+            if (cleaned.isEmpty()) {
+                throw new IllegalArgumentException("Valid subjects required");
+            }
+
+            log.info("Sanitized subjects: {}", cleaned);
+
+            // 🔴 FETCH STUDENT
+            StudentEntity student = studentRepository.findByUniversityId(universityId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
+
+            // 🔴 VALIDATE EACH SUBJECT FROM SUBJECT SERVICE
+            for (String code : cleaned) {
+
+                try {
+                    ResponseEntity<ApiResponse> res =
+                            subjectServiceClient.getSubjectByCode(code);
+
+                    if (res == null || res.getBody() == null || res.getBody().getData() == null) {
+                        log.error("Invalid subject from service: {}", code);
+                        throw new ResourceNotFoundException("Invalid subject code: " + code);
+                    }
+
+                } catch (Exception e) {
+                    log.error("Subject service failed for {}", code, e);
+                    throw new RuntimeException("Subject validation failed for: " + code);
+                }
+            }
+
+            // 🔴 UPDATE SUBJECTS (REPLACE MODE)
+            student.setSubjects(cleaned);
+
+            studentRepository.save(student);
+
+            log.info("Subjects updated successfully for {}", universityId);
+
+            // 🔴 RESPONSE
+            Map<String, Object> data = new HashMap<>();
+            data.put("studentId", universityId);
+            data.put("subjects", cleaned);
+            data.put("totalSubjects", cleaned.size());
+
+            return new ApiResponse(
+                    "Subjects updated successfully",
+                    200,
+                    data,
+                    LocalDateTime.now()
+            );
+        }
+
+        @Override
+        public ApiResponse getStudentCountByCourse () {
+
+            log.info("Fetching student count per course");
+
+            List<CourseStudentCountProjection> data =
+                    studentRepository.getStudentCountByCourse();
+
+            return new ApiResponse(
+                    "Course student count",
+                    200,
+                    data,
+                    LocalDateTime.now()
+            );
+        }
+
+        @Override
+        public ApiResponse updateSemester (String universityId, String semester, String role){
+            validateFacultyOrAdmin(role, "Only faculty/admin can update semester");
+
+            if (semester == null || semester.isBlank()) {
+                throw new IllegalArgumentException("Semester is required");
+            }
+
+            StudentEntity student = studentRepository.findByUniversityId(universityId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
+
+            student.setSemester(semester.trim());
+            studentRepository.save(student);
+
+            return new ApiResponse("Semester updated", 200, convertToDto(student), LocalDateTime.now());
+        }
+
+
+    private void cascadeUpdate(StudentEntity student, String username, String role) {
         try {
             UserDto userDto = UserDto.builder()
                     .email(student.getStudentEmail())
@@ -669,7 +726,12 @@ public class StudentServiceImpl implements StudentService {
                     .batch(student.getBatch())
                     .build();
 
-            userServiceClient.updateUserByUniversityId(student.getUniversityId(), userDto);
+            userServiceClient.updateUserByUniversityId(
+                    student.getUniversityId(),
+                    userDto,
+                    username,
+                    role
+            );
 
             log.info("CASCADE UPDATE SUCCESS");
 
@@ -678,11 +740,15 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
-    private void cascadeDelete(StudentEntity student) {
+    private void cascadeDelete(StudentEntity student, String username, String role) {
         try {
             log.info("CASCADE DELETE START for {}", student.getUniversityId());
 
-            userServiceClient.deleteUser(student.getUniversityId());
+            userServiceClient.deleteUser(
+                    student.getUniversityId(),
+                    username,
+                    role
+            );
 
             log.info("CASCADE DELETE SUCCESS");
 
@@ -690,4 +756,4 @@ public class StudentServiceImpl implements StudentService {
             log.error("CASCADE DELETE FAILED", e);
         }
     }
-}
+    }

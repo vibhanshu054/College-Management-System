@@ -1,5 +1,6 @@
 package com.student.repository;
 
+import com.student.dto.CourseStudentCountProjection;
 import com.student.entity.StudentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,7 +16,7 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Long> {
            GROUP BY s.course
            ORDER BY s.course
            """)
-    List<CourseStudentCountProjection> getStudentCountGroupByCourse();
+    List<CourseStudentCountProjection> getStudentCountByCourse();
     Optional<StudentEntity> findByUniversityId(String universityId);
 
     Optional<StudentEntity> findByStudentEmail(String studentEmail);

@@ -2,6 +2,7 @@ package com.student.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -23,6 +24,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class StudentEntity {
 
     @Id
@@ -31,6 +33,9 @@ public class StudentEntity {
 
     @Column(name = "university_id", unique = true, length = 12)
     private String universityId;
+
+    @Column(name = "password")
+    private String password;
 
     @Column(name = "student_name", nullable = false, length = 100)
     private String studentName;
@@ -55,9 +60,6 @@ public class StudentEntity {
 
     @Column(name = "course_code", nullable = false, length = 20)
     private String courseCode;
-
-    @Column(name = "faculty_id")
-    private String facultyId;
 
     @Column(name = "faculty_university_id")
     private String facultyUniversityId;
@@ -95,6 +97,8 @@ public class StudentEntity {
 
     @Column(name = "updated_by", length = 100)
     private String updatedBy;
+
+
 
     @PrePersist
     public void prePersist() {

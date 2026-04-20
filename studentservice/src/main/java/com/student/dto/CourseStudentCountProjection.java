@@ -1,4 +1,9 @@
 package com.student.dto;
 
-public class CourseStudentCountProjection {
+
+public interface CourseStudentCountProjection {
+
+    String getCourseCode();
+
+    Long getStudentCount();
 }

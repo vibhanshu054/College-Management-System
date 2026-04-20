@@ -2,6 +2,7 @@ package com.userService.controller;
 
 import com.userService.dto.ApiResponse;
 import com.userService.dto.LoginRequest;
+import com.userService.dto.UpdatePasswordDto;
 import com.userService.dto.UserDto;
 import com.userService.exception.ForbiddenException;
 import com.userService.services.UserService;
@@ -266,6 +267,7 @@ public class UserController {
         );
     }
 
+
     // ================= UPDATE USER =================
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse> updateUser(
@@ -324,6 +326,23 @@ public class UserController {
                         .status(HttpStatus.OK.value())
                         .message("User fetched successfully")
                         .data(user)
+                        .build()
+        );
+    }
+    @PutMapping("/internal/reset-password")
+    public ResponseEntity<ApiResponse> resetPasswordFromForgotFlow(
+            @RequestBody UpdatePasswordDto dto  //
+    ) {
+        log.info("RESET PASSWORD FROM FORGOT FLOW | username={}", dto.getUsername());
+
+        userService.resetPasswordByUsername(dto.getUsername(), dto.getNewPassword());
+
+        return ResponseEntity.ok(
+                ApiResponse.builder()
+                        .timestamp(LocalDateTime.now())
+                        .status(HttpStatus.OK.value())
+                        .message("Password reset successfully")
+                        .username(dto.getUsername())
                         .build()
         );
     }

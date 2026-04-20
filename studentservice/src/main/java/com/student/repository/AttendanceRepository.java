@@ -4,6 +4,7 @@ import com.student.entity.AttendanceRecord;
 import com.student.enums.AttendanceStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,4 +21,6 @@ public interface AttendanceRepository extends JpaRepository<AttendanceRecord, Lo
 
 
     long countByStudentUniversityIdAndStatus(String universityId, AttendanceStatus attendanceStatus);
+
+    boolean existsByStudentUniversityIdAndAttendanceDate(String universityId, LocalDate now);
 }

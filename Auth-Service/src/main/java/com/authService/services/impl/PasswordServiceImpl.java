@@ -216,6 +216,11 @@ public class PasswordServiceImpl implements PasswordService {
             throw new OtpNotVerifiedException("OTP not verified");
         }
 
+        if (request.getNewPassword() == null || request.getConfirmPassword() == null
+                || request.getNewPassword().isBlank() || request.getConfirmPassword().isBlank()) {
+            throw new PasswordMismatchException("Password fields cannot be empty");
+        }
+
         if (!request.getNewPassword().equals(request.getConfirmPassword())) {
             throw new PasswordMismatchException("Passwords do not match");
         }
@@ -229,7 +234,11 @@ public class PasswordServiceImpl implements PasswordService {
             throw new UserNotFoundException("User not found");
         }
 
-        if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
+        if (user.getId() == null) {
+            throw new UserNotFoundException("User id not found");
+        }
+
+        if (user.getPassword() != null && passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
             throw new SamePasswordException("New password cannot be same as old password");
         }
 
@@ -238,7 +247,7 @@ public class PasswordServiceImpl implements PasswordService {
         dto.setNewPassword(request.getNewPassword());
 
         restTemplate.postForObject(
-                "http://USER-SERVICE/api/users/{id}/password",
+                "http://USER-SERVICE/api/users/internal/reset-password",  // ← YE CHANGE
                 dto,
                 String.class
         );

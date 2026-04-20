@@ -27,7 +27,7 @@ public interface UserService {
     long getUserCountByRoleAndDepartment(String role, String department);
 
     UserDto getUserByEmail(String email);
-
+    void resetPasswordByUsername(String username, String newPassword);
 
     UserDto verifyCredentials(String email, String rawPassword);
 
