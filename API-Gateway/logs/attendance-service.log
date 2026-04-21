@@ -1,1 +1,4 @@
 2026-04-21T07:00:23.830+05:30  WARN 12540 --- [Attendance-Service] [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=7h56m23s474ms862µs100ns).
+2026-04-21T10:45:36.599+05:30  WARN 12540 --- [Attendance-Service] [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=3h45m15s993ms895µs).
+2026-04-21T10:45:39.001+05:30  INFO 12540 --- [Attendance-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-21T10:50:39.013+05:30  INFO 12540 --- [Attendance-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration

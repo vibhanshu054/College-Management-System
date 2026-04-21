@@ -67,6 +67,9 @@ public class BookIssueEntity {
     @Column(name = "active_issue", nullable = false)
     private Boolean activeIssue = true;
 
+    @Column(name = "active_return", nullable = false)
+    private Boolean activeReturn = true;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
     private IssueStatus status = IssueStatus.ISSUED;

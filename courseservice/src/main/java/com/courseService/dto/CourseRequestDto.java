@@ -14,5 +14,7 @@ public class CourseRequestDto {
 
     @NotBlank(message = "Course name is required")
     private String name;
+    @NotBlank(message = "CourseCode is required")
+    private String courseCode;
 
 }

@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -178,7 +179,6 @@ public class LibraryServiceImpl implements LibraryService {
         long returned = list.stream().filter(b -> b.getStatus() == IssueStatus.RETURNED).count();
 
         Map<String, Object> data = new HashMap<>();
-        data.put("total", list.size());
         data.put("issued", issued);
         data.put("returned", returned);
 
@@ -280,25 +280,60 @@ public class LibraryServiceImpl implements LibraryService {
             throw new IllegalArgumentException("Book ID is required");
         }
 
-        long activeCount = bookIssueRepository.countByUserIdAndStatus(dto.getUserId().trim(), IssueStatus.ISSUED);
+        String userId = dto.getUserId().trim();
+        String bookId = dto.getBookId().trim();
+
+        long activeCount = bookIssueRepository.countByUserIdAndStatus(userId, IssueStatus.ISSUED);
         if (activeCount >= 6) {
             throw new IllegalArgumentException("Max 6 books allowed");
         }
 
-        BookEntity book = libraryValidation.validateBookExists(dto.getBookId().trim());
+        BookEntity book = libraryValidation.validateBookExists(bookId);
+
         if (book.getAvailableCount() <= 0) {
             throw new IllegalArgumentException("Book not available");
         }
 
         BookIssueEntity issue = new BookIssueEntity();
         issue.setBookId(book.getBookId());
-        issue.setBookName(book.getBookName());
-        issue.setUserId(dto.getUserId().trim());
-        issue.setUserName(dto.getUserName());
         issue.setUserRole(dto.getUserRole());
-        issue.setUserEmail(dto.getUserEmail());
-        issue.setDepartment(dto.getDepartment());
-        issue.setCourse(dto.getCourse());
+        issue.setBookName(book.getBookName());
+        issue.setUserId(userId);
+
+        if (userId.startsWith("STU")) {
+            ResponseEntity<ApiResponse> studentResponse = studentClient.getStudentByUniversityId(userId);
+
+            if (studentResponse == null || studentResponse.getBody() == null || studentResponse.getBody().getData() == null) {
+                throw new ResourceNotFoundException("Student not found for university id: " + userId);
+            }
+
+            Map<String, Object> studentData = (Map<String, Object>) studentResponse.getBody().getData();
+
+            issue.setUserName(String.valueOf(studentData.get("studentName")));
+            issue.setUserRole("STUDENT");
+            issue.setUserEmail(String.valueOf(studentData.get("studentEmail")));
+            issue.setDepartment((String) studentData.get("department"));
+            issue.setCourse((String) studentData.get("course"));
+
+        } else if (userId.startsWith("FAC")) {
+            ResponseEntity<ApiResponse> facultyResponse = facultyClient.getFacultyByFacultyUniversityId(userId);
+
+            if (facultyResponse == null || facultyResponse.getBody() == null || facultyResponse.getBody().getData() == null) {
+                throw new ResourceNotFoundException("Faculty not found for university id: " + userId);
+            }
+
+            Map<String, Object> facultyData = (Map<String, Object>) facultyResponse.getBody().getData();
+
+            issue.setUserName(String.valueOf(facultyData.get("facultyName")));
+            issue.setUserRole("FACULTY");
+            issue.setUserEmail(String.valueOf(facultyData.get("facultyEmail")));
+            issue.setDepartment((String) facultyData.get("department"));
+            issue.setCourse(null);
+
+        } else {
+            throw new IllegalArgumentException("Invalid userId format");
+        }
+
         issue.setIssueDate(LocalDate.now());
         issue.setReturnableDate(LocalDate.now().plusDays(maxDays));
         issue.setStatus(IssueStatus.ISSUED);
@@ -388,15 +423,35 @@ public class LibraryServiceImpl implements LibraryService {
     @Override
     @Transactional(readOnly = true)
     public ApiResponse getAvailableBooksCount() {
-        int availableCopies = bookRepository.findAll()
-                .stream()
+
+        List<BookEntity> books = bookRepository.findAll();
+
+        int totalCopies = books.stream()
+                .mapToInt(BookEntity::getTotalCount)
+                .sum();
+
+        int availableCopies = books.stream()
                 .mapToInt(BookEntity::getAvailableCount)
                 .sum();
 
+        int issuedCopies = books.stream()
+                .mapToInt(BookEntity::getIssuedCount)
+                .sum();
+
+        double issuedPercentage = totalCopies == 0
+                ? 0.0
+                : (issuedCopies * 100.0) / totalCopies;
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("totalCopies", totalCopies);
+        data.put("availableCopies", availableCopies);
+        data.put("issuedCopies", issuedCopies);
+        data.put("issuedPercentage", Math.round(issuedPercentage * 100.0) / 100.0);
+
         return new ApiResponse(
-                "Available books count",
+                "Book inventory summary fetched",
                 200,
-                Map.of("availableCopies", availableCopies),
+                data,
                 LocalDateTime.now()
         );
     }
@@ -670,40 +725,44 @@ public class LibraryServiceImpl implements LibraryService {
 
         LocalDate today = LocalDate.now();
 
-        List<BookIssueEntity> issuedToday = bookIssueRepository.findByIssueDate(today);
-        List<BookIssueEntity> returnedToday = bookIssueRepository.findByReturnedDate(today);
+        List<BookIssueEntity> records = bookIssueRepository.findByIssueDateOrReturnedDate(today, today);
 
-        List<Map<String, Object>> result = new ArrayList<>();
+        List<Map<String, Object>> activityList = new ArrayList<>();
 
-        for (BookIssueEntity issue : issuedToday) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("issueId", issue.getId());
-            map.put("userId", issue.getUserId());
-            map.put("userName", issue.getUserName());
-            map.put("role", issue.getUserRole());
-            map.put("bookId", issue.getBookId());
-            map.put("bookName", issue.getBookName());
-            map.put("action", "ISSUED");
-            map.put("date", issue.getIssueDate());
-            map.put("status", issue.getStatus());
-            result.add(map);
+        for (BookIssueEntity record : records) {
+
+            if (record.getIssueDate() != null && record.getIssueDate().equals(today)) {
+                activityList.add(buildTodayActivityRow(record, "ISSUED", record.getIssueDate()));
+            }
+
+            if (record.getReturnedDate() != null && record.getReturnedDate().equals(today)) {
+                activityList.add(buildTodayActivityRow(record, "RETURNED", record.getReturnedDate()));
+            }
         }
 
-        for (BookIssueEntity issue : returnedToday) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("issueId", issue.getId());
-            map.put("userId", issue.getUserId());
-            map.put("userName", issue.getUserName());
-            map.put("role", issue.getUserRole());
-            map.put("bookId", issue.getBookId());
-            map.put("bookName", issue.getBookName());
-            map.put("action", "RETURNED");
-            map.put("date", issue.getReturnedDate());
-            map.put("status", issue.getStatus());
-            result.add(map);
-        }
+        return new ApiResponse(
+                "Today's activity fetched",
+                200,
+                activityList,
+                LocalDateTime.now()
+        );
+    }
 
-        return new ApiResponse("Today Activity", 200, result, LocalDateTime.now());
+    private Map<String, Object> buildTodayActivityRow(BookIssueEntity record, String activityType, LocalDate activityDate) {
+        Map<String, Object> row = new HashMap<>();
+        row.put("issueId", record.getId());
+        row.put("bookId", record.getBookId());
+        row.put("bookName", record.getBookName());
+        row.put("userId", record.getUserId());
+        row.put("userName", record.getUserName());
+        row.put("userRole", record.getUserRole());
+        row.put("userEmail", record.getUserEmail());
+        row.put("department", record.getDepartment());
+        row.put("course", record.getCourse());
+        row.put("activityType", activityType);
+        row.put("activityDate", activityDate);
+        row.put("status", "ISSUED".equals(activityType) ? IssueStatus.ISSUED : IssueStatus.RETURNED);
+        return row;
     }
 
     @Override

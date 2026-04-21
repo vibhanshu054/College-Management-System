@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,7 +99,8 @@ public class StudentServiceImpl implements StudentService {
 
     private StudentDTO convertToDto(StudentEntity student) {
         StudentDTO dto = modelMapper.map(student, StudentDTO.class);
-        dto.setPassword(null); // Don't return password
+        dto.setPassword(null);
+        dto.setSubjects(student.getSubjects() == null ? List.of() : List.copyOf(student.getSubjects()));
         return dto;
     }
 

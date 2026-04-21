@@ -10,12 +10,15 @@ import java.util.Optional;
 
 public interface StudentRepository extends JpaRepository<StudentEntity, Long> {
     @Query("""
-           SELECT s.course as course, COUNT(s) as totalStudents
-           FROM StudentEntity s
-           WHERE s.course IS NOT NULL AND s.course <> ''
-           GROUP BY s.course
-           ORDER BY s.course
-           """)
+       SELECT s.course AS courseName,
+              COUNT(s) AS studentCount
+       FROM StudentEntity s
+       WHERE s.active = true
+         AND s.course IS NOT NULL
+         AND s.course <> ''
+       GROUP BY s.course
+       ORDER BY COUNT(s) DESC
+       """)
     List<CourseStudentCountProjection> getStudentCountByCourse();
     Optional<StudentEntity> findByUniversityId(String universityId);
 

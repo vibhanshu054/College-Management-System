@@ -1,1 +1,10 @@
 2026-04-21T07:00:30.067+05:30  WARN 27556 --- [User-Service] [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=7h56m23s459ms11µs700ns).
+2026-04-21T10:45:42.782+05:30  WARN 27556 --- [User-Service] [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=3h45m15s940ms209µs200ns).
+2026-04-21T10:47:23.599+05:30  INFO 27556 --- [User-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-21T10:49:43.871+05:30  INFO 27556 --- [User-Service] [http-nio-8081-exec-9] c.userService.controller.UserController  : VERIFY USER | email=krishna.toss.it@gmail.com
+2026-04-21T10:49:45.115+05:30  INFO 27556 --- [User-Service] [http-nio-8081-exec-8] c.userService.controller.UserController  : GET ALL USERS | requestedBy=SYSTEM | role=ADMIN
+2026-04-21T10:49:45.432+05:30  INFO 27556 --- [User-Service] [http-nio-8081-exec-10] c.userService.controller.UserController  : GET ALL USERS | requestedBy=SYSTEM | role=ADMIN
+2026-04-21T10:50:03.090+05:30  INFO 27556 --- [User-Service] [http-nio-8081-exec-1] c.userService.controller.UserController  : GET ALL USERS | requestedBy=SYSTEM | role=ADMIN
+2026-04-21T10:50:03.265+05:30  INFO 27556 --- [User-Service] [http-nio-8081-exec-3] c.userService.controller.UserController  : GET ALL USERS | requestedBy=SYSTEM | role=ADMIN
+2026-04-21T10:50:14.612+05:30  INFO 27556 --- [User-Service] [http-nio-8081-exec-2] c.userService.controller.UserController  : VERIFY USER | email=madhuri@gmail.com
+2026-04-21T10:50:41.354+05:30  INFO 27556 --- [User-Service] [http-nio-8081-exec-5] c.userService.controller.UserController  : VERIFY USER | email=raj@college.edu

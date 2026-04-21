@@ -8,6 +8,5 @@ import java.util.List;
 public interface FacultyCourseMappingRepository extends JpaRepository<FacultyCourseMapping, Long> {
 
     List<FacultyCourseMapping> findByFacultyUniversityId(String facultyUniversityId);
-
     boolean existsByFacultyUniversityIdAndCourseCode(String facultyUniversityId, String courseCode);
 }

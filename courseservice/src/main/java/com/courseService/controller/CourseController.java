@@ -99,7 +99,7 @@ public class CourseController {
             @PathVariable String code,
             @Valid @RequestBody CourseRequestDto dto) {
 
-        log.info("Updating course {}", code);
+        log.info("Updating course code: {}", code);
 
         return ResponseEntity.ok(service.updateCourse(code, dto)
         );

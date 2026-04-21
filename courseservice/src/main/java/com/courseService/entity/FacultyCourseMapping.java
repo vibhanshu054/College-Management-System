@@ -20,5 +20,9 @@ public class FacultyCourseMapping {
 
     private String facultyUniversityId;   // universityId
 
-    private Long courseId;      // course table ka id
+    @Column(nullable = false)
+    private String courseCode;
+
+    @Column(nullable = false)
+    private String courseName;
 }

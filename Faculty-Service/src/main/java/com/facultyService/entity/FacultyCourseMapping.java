@@ -22,4 +22,5 @@ public class FacultyCourseMapping {
 
     @Column(name = "course_name")
     private String courseName;
+
 }

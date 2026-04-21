@@ -1,6 +1,7 @@
 package com.facultyService.entity;
 
 import com.facultyService.config.MapToJsonConverter;
+import com.facultyService.config.StringListJsonConverter;
 import com.facultyService.enums.FacultySubRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,9 +10,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Entity
+@org.hibernate.annotations.DynamicUpdate
 @Table(name = "faculty", indexes = {
         @Index(name = "idx_faculty_id", columnList = "universityId"),
         @Index(name = "idx_faculty_email", columnList = "facultyEmail"),
@@ -45,6 +48,10 @@ public class FacultyEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private FacultySubRole subRole;
+
+    @Column(name = "course_code", columnDefinition = "JSON")
+    @Convert(converter = StringListJsonConverter.class)
+    private List<String> courseCode;
 
     @Column(name = "total_courses")
     private Integer totalCourses = 0;

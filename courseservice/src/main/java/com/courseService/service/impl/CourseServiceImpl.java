@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -24,12 +25,10 @@ import java.util.Map;
 public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository repository;
-
     private final FacultyCourseRepository mappingRepository;
 
     // CREATE
     @Override
-
     public ApiResponse createCourse(@Valid CourseRequestDto dto) {
         log.info("Creating course {}", dto.getName());
 
@@ -39,13 +38,14 @@ public class CourseServiceImpl implements CourseService {
 
         String code = generateCourseCode(dto.getName());
 
-        if (repository.existsByCodeOrName(code, dto.getName().trim())) {
+        // Fix: Use actual entity field names - courseCode, courseName
+        if (repository.existsByCourseCodeOrCourseName(code, dto.getName().trim())) {
             throw new IllegalArgumentException("Course already exists");
         }
 
         Course course = new Course();
-        course.setName(dto.getName().trim());
-        course.setCode(code);
+        course.setCourseName(dto.getName().trim());
+        course.setCourseCode(code);
 
         Course saved = repository.save(course);
 
@@ -53,6 +53,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional
     public ApiResponse assignCoursesToFacultyByCode(String facultyUniversityId, List<String> courseCodes) {
 
         if (facultyUniversityId == null || facultyUniversityId.isBlank()) {
@@ -67,21 +68,26 @@ public class CourseServiceImpl implements CourseService {
         int skipped = 0;
 
         for (String code : courseCodes) {
+            String trimmedCode = code.trim();
 
-            Course course = repository.findByCode(code.trim())
-                    .orElseThrow(() -> new ResourceNotFoundException("Course not found: " + code));
 
-            // ✅ correct duplicate check
-            if (mappingRepository.existsByFacultyUniversityIdAndCourseId(
-                    facultyUniversityId, course.getId())) {
+            Course course = repository.findByCourseCode(trimmedCode)
+                    .orElseThrow(() -> new ResourceNotFoundException("Course not found: " + trimmedCode));
+
+
+            boolean alreadyAssigned = mappingRepository.findByFacultyUniversityId(facultyUniversityId)
+                    .stream()
+                    .anyMatch(mapping -> mapping.getCourseCode().equals(course.getCourseCode()));
+
+            if (alreadyAssigned) {
                 skipped++;
                 continue;
             }
 
-            // ✅ correct mapping
             FacultyCourseMapping mapping = FacultyCourseMapping.builder()
                     .facultyUniversityId(facultyUniversityId)
-                    .courseId(course.getId())
+                    .courseCode(course.getCourseCode())  // Fix: Use courseCode not courseId
+                    .courseName(course.getCourseName())  // Fix: Use courseName not courseId
                     .build();
 
             mappingRepository.save(mapping);
@@ -103,24 +109,20 @@ public class CourseServiceImpl implements CourseService {
             throw new IllegalArgumentException("Invalid request");
         }
 
-        // TODO: call STUDENT-SERVICE (Feign Client)
-        // Example: Student student = studentClient.getStudentByUniversityId(universityId);
-
         for (String code : courseCodes) {
-
-            Course course = repository.findByCode(code)
+            // Fix: Use courseCode
+            repository.findByCourseCode(code.trim())
                     .orElseThrow(() -> new ResourceNotFoundException("Course not found: " + code));
-
-            // 👉 yaha tu student-course mapping save karega (alag table hona chahiye)
         }
 
         return new ApiResponse(
-                "Courses assigned to student",
+                "Courses validated for student. Mapping implementation pending",
                 200,
-                null,
+                Map.of("studentId", universityId, "courseCodes", courseCodes),
                 LocalDateTime.now()
         );
     }
+
     // READ ALL
     @Override
     public List<Course> getAllCourses() {
@@ -130,7 +132,6 @@ public class CourseServiceImpl implements CourseService {
     // READ BY ID
     @Override
     public ApiResponse getCourseById(Long id) {
-
         if (id == null) {
             throw new IllegalArgumentException("Course id required");
         }
@@ -142,27 +143,29 @@ public class CourseServiceImpl implements CourseService {
                 "Course fetched",
                 200,
                 course,
-                java.time.LocalDateTime.now()
+                LocalDateTime.now()
         );
     }
 
     // UPDATE
     @Override
-
+    @Transactional
     public ApiResponse updateCourse(String code, CourseRequestDto dto) {
 
         if (dto == null || dto.getName() == null || dto.getName().isBlank()) {
             throw new IllegalArgumentException("Course name is required");
         }
 
-        Course existing = repository.findByCode(code)
+        // Fix: Use courseCode field name
+        Course existing = repository.findByCourseCode(code)
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found"));
 
-        if (repository.existsByNameAndIdNot(dto.getName().trim(), existing.getId())) {
+        // Fix: Use courseName field name
+        if (repository.existsByCourseNameAndIdNot(dto.getName().trim(), existing.getId())) {
             throw new IllegalArgumentException("Duplicate course name");
         }
 
-        existing.setName(dto.getName().trim());
+        existing.setCourseName(dto.getName().trim());
 
         return new ApiResponse(
                 "Course updated",
@@ -174,16 +177,19 @@ public class CourseServiceImpl implements CourseService {
 
     // DELETE
     @Override
+    @Transactional
     public ApiResponse deleteCourse(String code) {
 
-        Course course = repository.findByCode(code)
+        // Fix: Use courseCode
+        Course course = repository.findByCourseCode(code)
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found"));
 
-        // delete mappings by courseId
-        mappingRepository.deleteAll(
-                mappingRepository.findByCourseId(course.getId())
-        );
+        // Fix 3: Delete mappings by courseCode (courseId doesn't exist)
+        List<FacultyCourseMapping> mappingsToDelete = mappingRepository.findAll().stream()
+                .filter(mapping -> mapping.getCourseCode().equals(course.getCourseCode()))
+                .toList();
 
+        mappingRepository.deleteAll(mappingsToDelete);
         repository.delete(course);
 
         return new ApiResponse("Course deleted", 200, null, LocalDateTime.now());
@@ -193,32 +199,27 @@ public class CourseServiceImpl implements CourseService {
     public long getTotalCoursesCount() {
         return repository.count();
     }
+
     @Override
     public ApiResponse getCoursesByFaculty(String facultyUniversityId) {
 
         if (facultyUniversityId == null || facultyUniversityId.isBlank()) {
-            throw new IllegalArgumentException("Faculty facultyUniversityId is required");
+            throw new IllegalArgumentException("Faculty universityId is required");
         }
 
-        List<FacultyCourseMapping> mappings =
-                mappingRepository.findByFacultyUniversityId(facultyUniversityId);
+        List<FacultyCourseMapping> mappings = mappingRepository.findByFacultyUniversityId(facultyUniversityId);
 
         if (mappings.isEmpty()) {
             throw new ResourceNotFoundException("No courses assigned to this faculty");
         }
 
+        // Fix 4: No course lookup needed, mapping has courseName/courseCode
         List<Map<String, Object>> result = mappings.stream()
                 .map(m -> {
-                    Course course = repository.findById(m.getCourseId())
-                            .orElseThrow(() -> new ResourceNotFoundException(
-                                    "Course not found for id: " + m.getCourseId()
-                            ));
-
                     Map<String, Object> map = new HashMap<>();
-                    map.put("courseId", course.getId());
-                    map.put("courseName", course.getName());
-                    map.put("courseCode", course.getCode());
-
+                    map.put("courseId", null); // courseId doesn't exist
+                    map.put("courseName", m.getCourseName());  // Fix: Use mapping data
+                    map.put("courseCode", m.getCourseCode());  // Fix: Use mapping data
                     return map;
                 })
                 .toList();
@@ -230,17 +231,17 @@ public class CourseServiceImpl implements CourseService {
                 LocalDateTime.now()
         );
     }
+
     private String generateCourseCode(String courseName) {
         String cleanedName = courseName.replaceAll("\\s+", "").toUpperCase();
         String prefix = cleanedName.substring(0, Math.min(3, cleanedName.length()));
 
+        // Fix 5: Use courseCode field name
         long count = repository.findAll().stream()
-                .filter(c -> c.getCode() != null && c.getCode().startsWith(prefix))
+                .filter(c -> c.getCourseCode() != null && c.getCourseCode().startsWith(prefix))
                 .count();
 
         int nextNumber = (int) count + 1;
-
         return prefix + String.format("%03d", nextNumber);
     }
-
 }

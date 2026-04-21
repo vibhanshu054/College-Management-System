@@ -1,1 +1,2 @@
 2026-04-21T10:45:15.307+05:30  WARN 12784 --- [Department-Service] [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=11h41m8s961ms298µs100ns).
+2026-04-21T10:48:11.108+05:30  INFO 12784 --- [Department-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration

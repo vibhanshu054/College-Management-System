@@ -14,7 +14,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
@@ -72,7 +74,7 @@ public class FacultyServiceImpl implements FacultyService {
         return new ApiResponse(
                 "Faculty fetched",
                 200,
-                modelMapper.map(faculty, FacultyDTO.class),
+                convertToDto(faculty),
                 LocalDateTime.now()
         );
     }
@@ -90,7 +92,7 @@ public class FacultyServiceImpl implements FacultyService {
         return new ApiResponse(
                 "Faculty fetched",
                 200,
-                modelMapper.map(faculty, FacultyDTO.class),
+                convertToDto(faculty),
                 LocalDateTime.now()
         );
     }
@@ -108,14 +110,19 @@ public class FacultyServiceImpl implements FacultyService {
 
         if (subRole != null && !subRole.isBlank()) {
             list = list.stream()
-                    .filter(f -> f.getSubRole() != null && subRole.equalsIgnoreCase(f.getSubRole().name()))
+                    .filter(f -> f.getSubRole() != null &&
+                            subRole.equalsIgnoreCase(f.getSubRole().name()))
                     .toList();
         }
+
+        List<FacultyDTO> result = list.stream()
+                .map(this::convertToDto)
+                .toList();
 
         return new ApiResponse(
                 "Faculty list fetched",
                 200,
-                list.stream().map(f -> modelMapper.map(f, FacultyDTO.class)).toList(),
+                result,
                 LocalDateTime.now()
         );
     }
@@ -124,11 +131,29 @@ public class FacultyServiceImpl implements FacultyService {
     public ApiResponse updateFaculty(String universityId, FacultyDTO dto) {
 
         FacultyEntity faculty = getEntity(universityId);
-        modelMapper.map(dto, faculty);
-        faculty.setUpdatedAt(LocalDateTime.now());
+
+        if (dto.getFacultyName() != null && !dto.getFacultyName().isBlank()) {
+            faculty.setFacultyName(dto.getFacultyName());
+        }
+        if (dto.getFacultyEmail() != null && !dto.getFacultyEmail().isBlank()) {
+            faculty.setFacultyEmail(dto.getFacultyEmail());
+        }
+        if (dto.getFacultyPhoneNumber() != null && !dto.getFacultyPhoneNumber().isBlank()) {
+            faculty.setFacultyPhoneNumber(dto.getFacultyPhoneNumber());
+        }
+        if (dto.getDepartment() != null && !dto.getDepartment().isBlank()) {
+            faculty.setDepartment(dto.getDepartment());
+        }
+        if (dto.getSubRole() != null) {
+            faculty.setSubRole(dto.getSubRole());
+        }
+        if (dto.getActive() != null) {
+            faculty.setActive(dto.getActive());
+        }
+
         facultyRepository.save(faculty);
 
-        return new ApiResponse("Faculty updated", 200, null, LocalDateTime.now());
+        return new ApiResponse("Faculty updated", 200, convertToDto(faculty), LocalDateTime.now());
     }
 
     @Override
@@ -156,7 +181,7 @@ public class FacultyServiceImpl implements FacultyService {
         String uid = faculty.getFacultyUniversityId();
 
         Map<String, Object> res = new HashMap<>();
-        res.put("faculty", modelMapper.map(faculty, FacultyDTO.class));
+        res.put("faculty", convertToDto(faculty));
         res.put("students",
                 Optional.ofNullable(studentClient.getStudentsByFacultyUniversityId(uid))
                         .orElse(new ApiResponse("Students fetched", 200, new ArrayList<>(), LocalDateTime.now())));
@@ -189,63 +214,190 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
-    public ApiResponse assignCoursesById(String universityId, List<Long> courseIds) {
+    @Transactional
+    public ApiResponse assignCoursesByCourseCode(String facultyUniversityId, List<String> courseCodes) {
 
-        if (courseIds == null || courseIds.isEmpty()) {
-            throw new IllegalArgumentException("Course list required");
-        }
+        log.info("START assignCoursesByCourseCode | facultyUniversityId={} | incomingCourseCodes={}",
+                facultyUniversityId, courseCodes);
 
-        log.info("Assigning courses {} to faculty {}", courseIds, universityId);
-
-        courseClient.assignCoursesToFaculty(universityId, courseIds);
-
-        for (Long courseId : courseIds) {
-            String courseCode = String.valueOf(courseId);
-
-            if (mappingRepository.existsByFacultyUniversityIdAndCourseCode(universityId, courseCode)) {
-                continue;
+        try {
+            if (facultyUniversityId == null || facultyUniversityId.isBlank()) {
+                log.error("Validation failed: facultyUniversityId is null or blank");
+                throw new IllegalArgumentException("Faculty universityId is required");
             }
 
-            FacultyCourseMapping mapping = new FacultyCourseMapping();
-            mapping.setFacultyUniversityId(universityId);
-            mapping.setCourseCode(courseCode);
-            mapping.setCourseName(null);
-
-            mappingRepository.save(mapping);
-        }
-
-        return new ApiResponse("Courses assigned", 200, null, LocalDateTime.now());
-    }
-
-    @Override
-    public ApiResponse assignCourses(String universityId, List<Long> courseIds) {
-
-        log.info("Assigning courses to faculty {}", universityId);
-
-        if (universityId == null || universityId.isBlank() || courseIds == null || courseIds.isEmpty()) {
-            throw new IllegalArgumentException("Invalid request");
-        }
-
-        for (Long courseId : courseIds) {
-            String courseCode = String.valueOf(courseId);
-
-            if (mappingRepository.existsByFacultyUniversityIdAndCourseCode(universityId, courseCode)) {
-                throw new IllegalArgumentException("Duplicate course");
+            if (courseCodes == null || courseCodes.isEmpty()) {
+                log.error("Validation failed: courseCodes is null or empty for faculty={}", facultyUniversityId);
+                throw new IllegalArgumentException("Course list required");
             }
 
-            FacultyCourseMapping mapping = new FacultyCourseMapping();
-            mapping.setFacultyUniversityId(universityId);
-            mapping.setCourseCode(courseCode);
-            mapping.setCourseName(null);
+            List<String> normalizedCodes = courseCodes.stream()
+                    .filter(code -> code != null && !code.isBlank())
+                    .map(String::trim)
+                    .distinct()
+                    .toList();
 
-            mappingRepository.save(mapping);
+            log.info("Normalized course codes for faculty {} => {}", facultyUniversityId, normalizedCodes);
+
+            if (normalizedCodes.isEmpty()) {
+                log.error("Validation failed: no valid course codes after normalization for faculty={}", facultyUniversityId);
+                throw new IllegalArgumentException("Valid course codes required");
+            }
+
+            FacultyEntity faculty = getEntity(facultyUniversityId);
+            log.info("Faculty found | id={} | universityId={} | name={} | currentTotalCourses={} | currentCourseCodes={}",
+                    faculty.getId(),
+                    faculty.getFacultyUniversityId(),
+                    faculty.getFacultyName(),
+                    faculty.getTotalCourses(),
+                    faculty.getCourseCode());
+
+            log.info("Fetching all courses from course service for faculty={}", facultyUniversityId);
+
+            ResponseEntity<ApiResponse> courseResponseEntity = courseClient.getAllCourses();
+            ApiResponse courseResponse = courseResponseEntity.getBody();
+
+            log.info("Course service HTTP status={}", courseResponseEntity.getStatusCode());
+
+            if (courseResponse == null) {
+                log.error("Course service returned null body for faculty={}", facultyUniversityId);
+                throw new RuntimeException("Course service returned empty response");
+            }
+
+            List<Map<String, Object>> allCourses =
+                    courseResponse.getData() != null
+                            ? (List<Map<String, Object>>) courseResponse.getData()
+                            : new ArrayList<>();
+
+            log.info("Course service raw response message={} | status={}",
+                    courseResponse.getMessage(),
+                    courseResponse.getStatus());
+
+            log.info("Course service returned {} courses for validation", allCourses.size());
+
+            int assigned = 0;
+            int skipped = 0;
+
+            for (String code : normalizedCodes) {
+                log.info("Processing courseCode={} for faculty={}", code, facultyUniversityId);
+
+                boolean alreadyExists = mappingRepository
+                        .existsByFacultyUniversityIdAndCourseCode(facultyUniversityId, code);
+
+                if (alreadyExists) {
+                    skipped++;
+                    log.warn("Skipping duplicate mapping | facultyUniversityId={} | courseCode={}",
+                            facultyUniversityId, code);
+                    continue;
+                }
+
+                Map<String, Object> matchedCourse = allCourses.stream()
+                        .filter(course -> code.equalsIgnoreCase(String.valueOf(course.get("courseCode"))))
+                        .findFirst()
+                        .orElseThrow(() -> {
+                            log.error("Course not found in course-service response | facultyUniversityId={} | courseCode={}",
+                                    facultyUniversityId, code);
+                            return new IllegalArgumentException("Course not found: " + code);
+                        });
+
+                log.info("Matched course | facultyUniversityId={} | courseCode={} | courseName={}",
+                        facultyUniversityId,
+                        matchedCourse.get("courseCode"),
+                        matchedCourse.get("name") != null ? matchedCourse.get("name") : matchedCourse.get("courseName"));
+
+                FacultyCourseMapping mapping = new FacultyCourseMapping();
+                mapping.setFacultyUniversityId(facultyUniversityId);
+                mapping.setCourseCode(code);
+                mapping.setCourseName(
+                        String.valueOf(
+                                matchedCourse.get("name") != null
+                                        ? matchedCourse.get("name")
+                                        : matchedCourse.get("courseName")
+                        )
+                );
+
+                FacultyCourseMapping savedMapping = mappingRepository.save(mapping);
+
+                log.info("Mapping saved successfully | mappingId={} | facultyUniversityId={} | courseCode={} | courseName={}",
+                        savedMapping.getId(),
+                        savedMapping.getFacultyUniversityId(),
+                        savedMapping.getCourseCode(),
+                        savedMapping.getCourseName());
+
+                assigned++;
+            }
+
+            log.info("Calling course service to assign courses | facultyUniversityId={} | courseCodes={}",
+                    facultyUniversityId, normalizedCodes);
+
+            ResponseEntity<ApiResponse> assignResponseEntity =
+                    courseClient.assignCoursesToFacultyByCode(facultyUniversityId, normalizedCodes);
+
+            ApiResponse assignResponse = assignResponseEntity.getBody();
+
+            log.info("Course assignment service HTTP status={}", assignResponseEntity.getStatusCode());
+
+            if (assignResponse == null) {
+                log.error("Course assignment response body is null for faculty={}", facultyUniversityId);
+                throw new RuntimeException("Course assignment failed: empty response");
+            }
+
+            log.info("Course assignment completed successfully for faculty={} | message={}",
+                    facultyUniversityId, assignResponse.getMessage());
+
+            log.info("Fetching saved mappings from DB for faculty={}", facultyUniversityId);
+            List<FacultyCourseMapping> facultyMappings =
+                    mappingRepository.findByFacultyUniversityId(facultyUniversityId);
+
+            log.info("Total mappings found in DB for faculty {} => {}", facultyUniversityId, facultyMappings.size());
+
+            List<String> assignedCourseCodes = facultyMappings.stream()
+                    .map(FacultyCourseMapping::getCourseCode)
+                    .filter(Objects::nonNull)
+                    .distinct()
+                    .toList();
+
+            log.info("Final assigned course codes from DB for faculty {} => {}", facultyUniversityId, assignedCourseCodes);
+
+            faculty.setCourseCode(assignedCourseCodes);
+            faculty.setTotalCourses(assignedCourseCodes.size());
+
+            log.info("Updating faculty entity | facultyUniversityId={} | totalCourses={} | courseCodes={}",
+                    facultyUniversityId,
+                    assignedCourseCodes.size(),
+                    assignedCourseCodes);
+
+            FacultyEntity updatedFaculty = facultyRepository.save(faculty);
+
+            log.info("Faculty updated successfully | facultyUniversityId={} | dbTotalCourses={} | dbCourseCodes={}",
+                    updatedFaculty.getFacultyUniversityId(),
+                    updatedFaculty.getTotalCourses(),
+                    updatedFaculty.getCourseCode());
+
+            Map<String, Object> responseData = Map.of(
+                    "facultyUniversityId", facultyUniversityId,
+                    "courseCodes", assignedCourseCodes,
+                    "totalCourses", assignedCourseCodes.size(),
+                    "assigned", assigned,
+                    "skipped", skipped
+            );
+
+            log.info("END assignCoursesByCourseCode SUCCESS | facultyUniversityId={} | response={}",
+                    facultyUniversityId, responseData);
+
+            return new ApiResponse(
+                    "Courses assigned successfully",
+                    200,
+                    responseData,
+                    LocalDateTime.now()
+            );
+
+        } catch (Exception e) {
+            log.error("END assignCoursesByCourseCode FAILED | facultyUniversityId={} | incomingCourseCodes={} | error={}",
+                    facultyUniversityId, courseCodes, e.getMessage(), e);
+            throw e;
         }
-
-        courseClient.assignCoursesToFaculty(universityId, courseIds);
-
-        return new ApiResponse("Courses assigned", 200, null, LocalDateTime.now());
     }
-
     @Override
     public ApiResponse getAssignedCourses(String universityId) {
         List<FacultyCourseMapping> mappings = mappingRepository.findByFacultyUniversityId(universityId);
@@ -457,5 +609,23 @@ public class FacultyServiceImpl implements FacultyService {
     private FacultyEntity getEntity(String universityId) {
         return facultyRepository.findByFacultyUniversityId(universityId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Faculty not found"));
+    }
+    private FacultyDTO convertToDto(FacultyEntity entity) {
+        FacultyDTO dto = modelMapper.map(entity, FacultyDTO.class);
+
+        List<FacultyCourseMapping> mappings =
+                mappingRepository.findByFacultyUniversityId(entity.getFacultyUniversityId());
+
+        List<String> courseCodes = mappings.stream()
+                .map(FacultyCourseMapping::getCourseCode)
+                .filter(Objects::nonNull)
+                .distinct()
+                .toList();
+
+        dto.setCourseCode(courseCodes);
+        dto.setTotalCourse(courseCodes.size());
+        dto.setPassword(null);
+
+        return dto;
     }
 }

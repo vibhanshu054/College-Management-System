@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 public interface CourseRepository extends JpaRepository<Course, Long> {
 
-    boolean existsByCodeOrName(String code, String name);
+    Optional<Course> findByCourseCode(String code);
 
-    boolean existsByNameAndIdNot(String name, Long id);
+    boolean existsByCourseNameAndIdNot(String trim, Long id);
 
-    Optional<Course> findByCode(String code);
+    boolean existsByCourseCodeOrCourseName(String code, String trim);
 }

@@ -2,9 +2,13 @@ package com.facultyService.dto;
 
 import com.facultyService.enums.FacultySubRole;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Setter
@@ -23,7 +27,8 @@ public class FacultyDTO {
     private String facultyPhoneNumber;
     private String department;
     private FacultySubRole subRole;
-
+    private List<String> courseCode;
+    private Integer totalCourse;
     private Float attendancePercentage;
     private Integer booksIssued;
     private Integer booksReturned;

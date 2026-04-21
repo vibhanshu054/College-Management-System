@@ -18,6 +18,7 @@ public interface BookIssueRepository extends JpaRepository<BookIssueEntity, Long
     List<BookIssueEntity> findByIssueDate(LocalDate issueDate);
 
     List<BookIssueEntity> findByReturnedDate(LocalDate returnedDate);
+    List<BookIssueEntity> findByIssueDateOrReturnedDate(LocalDate issueDate, LocalDate returnedDate);
 
     List<BookIssueEntity> findByReturnedDateIsNullAndReturnableDateBefore(LocalDate date);
 

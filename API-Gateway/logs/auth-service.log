@@ -1,1 +1,31 @@
 2026-04-21T10:45:16.771+05:30  INFO 19956 --- [Auth-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-21T10:45:33.177+05:30  WARN 19956 --- [Auth-Service] [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=11h2m49s354ms625µs800ns).
+2026-04-21T10:49:43.829+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-8] c.authService.controller.AuthController  : Login API called for krishna.toss.it@gmail.com
+2026-04-21T10:49:43.830+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-8] c.a.services.impl.AuthServiceImpl        : Authenticating user krishna.toss.it@gmail.com
+2026-04-21T10:49:45.079+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-10] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-21T10:49:45.080+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-1] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-21T10:49:45.151+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-5] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-21T10:49:45.152+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-4] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-21T10:49:45.155+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-7] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-21T10:49:45.416+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-3] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-21T10:50:03.069+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-6] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-21T10:50:03.069+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-9] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-21T10:50:03.155+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-2] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-21T10:50:03.155+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-8] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-21T10:50:03.159+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-10] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-21T10:50:03.247+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-1] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-21T10:50:14.573+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-5] c.authService.controller.AuthController  : Login API called for madhuri@gmail.com
+2026-04-21T10:50:14.574+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-5] c.a.services.impl.AuthServiceImpl        : Authenticating user madhuri@gmail.com
+2026-04-21T10:50:14.641+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-4] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-21T10:50:15.251+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-7] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-21T10:50:15.251+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-3] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-21T10:50:15.253+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-6] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-21T10:50:17.143+05:30  INFO 19956 --- [Auth-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-21T10:50:26.593+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-9] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-21T10:50:28.835+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-2] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-21T10:50:41.326+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-8] c.authService.controller.AuthController  : Login API called for raj@college.edu
+2026-04-21T10:50:41.326+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-8] c.a.services.impl.AuthServiceImpl        : Authenticating user raj@college.edu
+2026-04-21T10:50:41.823+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-10] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-21T10:50:41.826+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-1] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-21T10:50:47.544+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-4] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-21T10:51:02.276+05:30  INFO 19956 --- [Auth-Service] [http-nio-8083-exec-5] c.a.services.impl.AuthServiceImpl        : Validating token

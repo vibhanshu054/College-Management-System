@@ -14,7 +14,7 @@ import java.util.Map;
 public interface FacultyClient {
 
     @GetMapping("/api/faculty/university-id/{facultyUniversityId}")
-    ResponseEntity<ApiResponse> getFacultyByFacultyUniversityId(@PathVariable String facultyUniversityId);
+    public ResponseEntity<ApiResponse> getFacultyByFacultyUniversityId(@PathVariable String facultyUniversityId);
 
     @PutMapping("/api/faculty/books/update")
      ResponseEntity<ApiResponse> updateBookStatsByFacultyUniversityId (@RequestParam String facultyUniversityId,

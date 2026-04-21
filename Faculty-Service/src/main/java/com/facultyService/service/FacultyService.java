@@ -44,9 +44,8 @@ public interface FacultyService {
 
     ApiResponse getCoursesById(String universityId);
 
-    ApiResponse assignCourses(String facultyId, List<Long> courseIds);
 
-    ApiResponse assignCoursesById(String universityId, List<Long> courseIds);
+    ApiResponse assignCoursesByCourseCode(String facultyUniversityId, List<String> courseCode);
 
 
     // ================= STUDENTS =================
@@ -72,4 +71,6 @@ public interface FacultyService {
     ApiResponse updateBookStatsByFacultyUniversityId(String facultyUniversityId, int issued, int returned);
 
     ApiResponse getFacultyByFacultyUniversityId(String facultyUniversityId);
+
+
 }

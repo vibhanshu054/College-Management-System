@@ -3,7 +3,7 @@ package com.student.dto;
 
 public interface CourseStudentCountProjection {
 
-    String getCourseCode();
+    String getCourseName();
 
     Long getStudentCount();
 }

@@ -102,10 +102,10 @@ public class FacultyController {
     @PutMapping("/{facultyUniversityId}/assign-course")
     public ResponseEntity<ApiResponse> assignCourse(
             @PathVariable String facultyUniversityId,
-            @RequestBody List<Long> courseIds) {
+            @RequestBody List<String> courseCodes) {
 
         return ResponseEntity.ok(
-                facultyService.assignCoursesById(facultyUniversityId, courseIds)
+                facultyService.assignCoursesByCourseCode(facultyUniversityId, courseCodes)
         );
     }
 

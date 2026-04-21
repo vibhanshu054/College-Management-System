@@ -9,7 +9,5 @@ public interface FacultyCourseRepository extends JpaRepository<FacultyCourseMapp
 
     List<FacultyCourseMapping> findByFacultyUniversityId(String facultyUniversityId);
 
-    List<FacultyCourseMapping> findByCourseId(Long courseId);
-
-    boolean existsByFacultyUniversityIdAndCourseId(String facultyUniversityId, Long courseId);
+    boolean existsByFacultyUniversityIdAndCourseCode(String facultyUniversityId, String courseCode);
 }

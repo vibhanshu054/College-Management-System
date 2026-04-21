@@ -20,10 +20,11 @@ public class Course {
     @NotBlank(message = "Course name is required")
     @Column(nullable = false, unique = true)
     @Size(min = 3, max = 100, message = "Course name must be between 3 and 100 characters")
-    private String name;
+    private String courseName;
 
     @NotBlank(message = "Course code is required")
     @Column(nullable = false, unique = true)
     @Pattern(regexp = "^[A-Z]{2,5}\\d{3,6}$", message = "Course code must be like 'CS101' or 'MATH2001'")
-    private String code;
+    private String courseCode;
+
 }
