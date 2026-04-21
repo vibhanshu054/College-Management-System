@@ -32182,3 +32182,6 @@ Caused by: feign.FeignException$InternalServerError: [500] during [POST] to [htt
 2026-04-21 17:57:17 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776773887051
 2026-04-21 17:57:17 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
 2026-04-21 17:57:17 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-21 17:57:27 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776773887051
+2026-04-21 17:57:27 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-21 17:57:27 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
