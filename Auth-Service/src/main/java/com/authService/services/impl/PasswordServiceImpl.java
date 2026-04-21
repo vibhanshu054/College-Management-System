@@ -245,19 +245,26 @@ public class PasswordServiceImpl implements PasswordService {
         UpdatePasswordDto dto = new UpdatePasswordDto();
         dto.setUsername(user.getUsername());
         dto.setNewPassword(request.getNewPassword());
-
+        try{
+        log.info(" Calling User-Service to reset password for: {}", user.getUsername());
         restTemplate.postForObject(
-                "http://USER-SERVICE/api/users/internal/reset-password",  // ← YE CHANGE
+                "http://USER-SERVICE/api/users/internal/reset-password",
                 dto,
                 String.class
-        );
+        );} catch (Exception e) {
+            log.error(" Failed to reset password in User-Service: {}", e.getMessage());
+            throw new RuntimeException("Failed to update password: " + e.getMessage());
+        }
+
 
         token.setUsed(true);
         tokenRepo.save(token);
-
         otp.setExpiryTime(LocalDateTime.now());
         otpRepo.save(otp);
 
+        otp.setExpiryTime(LocalDateTime.now());
+        otpRepo.save(otp);
+        log.info(" Password reset completed for: {}", user.getEmail());
         return ApiResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(200)

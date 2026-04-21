@@ -33,12 +33,13 @@ public class DashboardServiceImpl implements DashboardService {
             long totalStudents = extractCount(
                     studentServiceClient.getTotalStudentsCount().getBody().getData(),
                     "totalStudents"
+
             );
 
-            long totalCourses = extractCount(
-                    courseServiceClient.getTotalCoursesCount().getBody().getData(),
-                    "totalCourses"
-            );
+            ResponseEntity<ApiResponse> courseResponse = courseServiceClient.getTotalCoursesCount();
+            long  totalCourses = (courseResponse != null && courseResponse.getBody() != null)
+                    ? extractCount(courseResponse.getBody().getData(), "totalCourses")
+                    : 0;
 
             long totalDepartments = extractCount(
                     departmentServiceClient.getTotalDepartmentsCount().getBody().getData(),

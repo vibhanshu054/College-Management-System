@@ -1,34 +1,34 @@
 package com.userService.client;
 
-
-
 import com.userService.dto.StudentDTO;
+import com.userService.exception.ServiceUnavailableException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-/**
- * Fallback implementation for StudentServiceClient
- */
 @Component
 @Slf4j
 public class StudentServiceClientFallback implements StudentServiceClient {
 
     @Override
-    public ResponseEntity<StudentDTO> createStudentFromUser(StudentDTO dto) {
-        log.error("Student-Service DOWN (CREATE)");
-        throw new RuntimeException("Student service unavailable");
+    public ResponseEntity<StudentDTO> createStudentFromUser(StudentDTO studentDTO) {
+        String errorMsg = "Student-Service is unavailable. Please try again later.";
+        log.error("Feign Fallback (CREATE): {} for student email: {}", errorMsg,
+                studentDTO != null ? studentDTO.getStudentEmail() : "unknown");
+        throw new ServiceUnavailableException(errorMsg + " [CREATE_STUDENT]");
     }
 
     @Override
     public ResponseEntity<Void> deleteStudent(String universityId) {
-        log.error("Student-Service DOWN (DELETE)");
-        throw new RuntimeException("Student service unavailable");
+        String errorMsg = "Student-Service is unavailable for deletion.";
+        log.error("Feign Fallback (DELETE): {} for ID: {}", errorMsg, universityId);
+        throw new ServiceUnavailableException(errorMsg + " [DELETE_STUDENT]");
     }
 
     @Override
     public ResponseEntity<StudentDTO> updateStudent(String universityId, StudentDTO dto) {
-        log.error("Student-Service DOWN (UPDATE)");
-        throw new RuntimeException("Student service unavailable");
+        String errorMsg = "Student-Service is unavailable for update.";
+        log.error("Feign Fallback (UPDATE): {} for ID: {}", errorMsg, universityId);
+        throw new ServiceUnavailableException(errorMsg + " [UPDATE_STUDENT]");
     }
 }

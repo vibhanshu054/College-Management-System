@@ -49,13 +49,6 @@ public class StudentServiceImpl implements StudentService {
             throw new ForbiddenException(message);
         }
     }
-
-    private void validateFacultyOrAdmin(String role, String message) {
-        if (!FACULTY.equalsIgnoreCase(role) && !ADMIN.equalsIgnoreCase(role)) {
-            throw new ForbiddenException(message);
-        }
-    }
-
     private void validateStudentDtoForCreate(StudentDTO dto) {
         if (dto == null) {
             throw new IllegalArgumentException("Student data is required");
@@ -65,9 +58,6 @@ public class StudentServiceImpl implements StudentService {
         }
         if (dto.getStudentEmail() == null || dto.getStudentEmail().isBlank()) {
             throw new IllegalArgumentException("Student email is required");
-        }
-        if (dto.getPassword() == null || dto.getPassword().isBlank()) {
-            throw new IllegalArgumentException("Password is required");
         }
         if (dto.getStudentPhoneNumber() == null || dto.getStudentPhoneNumber().isBlank()) {
             throw new IllegalArgumentException("Student phone number is required");
@@ -87,8 +77,11 @@ public class StudentServiceImpl implements StudentService {
         if (dto.getCourseCode() == null || dto.getCourseCode().isBlank()) {
             throw new IllegalArgumentException("Course code is required");
         }
-        if (dto.getFacultyUniversityId() == null || dto.getFacultyUniversityId().isBlank()) {
-            throw new IllegalArgumentException("Faculty universityId is required");
+        //  REMOVED: Faculty validation - NOT required for direct create
+    }
+    private void validateFacultyOrAdmin(String role, String message) {
+        if (!FACULTY.equalsIgnoreCase(role) && !ADMIN.equalsIgnoreCase(role)) {
+            throw new ForbiddenException(message);
         }
     }
 
@@ -96,7 +89,6 @@ public class StudentServiceImpl implements StudentService {
         if (subjects == null) {
             return List.of();
         }
-
         return subjects.stream()
                 .filter(subject -> subject != null && !subject.isBlank())
                 .map(String::trim)
@@ -106,7 +98,7 @@ public class StudentServiceImpl implements StudentService {
 
     private StudentDTO convertToDto(StudentEntity student) {
         StudentDTO dto = modelMapper.map(student, StudentDTO.class);
-        dto.setPassword(null);
+        dto.setPassword(null); // Don't return password
         return dto;
     }
 
@@ -126,43 +118,34 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public ApiResponse createStudent(StudentDTO dto, String createdBy, String role) {
-
-        log.info("CREATE STUDENT START | email={}", dto.getStudentEmail());
+        log.info(" CREATE STUDENT START | email={}, role={}", dto.getStudentEmail(), role);
 
         validateAdminOrSystem(role, "Only ADMIN or SYSTEM can create student");
         validateStudentDtoForCreate(dto);
 
         String email = dto.getStudentEmail().trim().toLowerCase();
 
+        // Check duplicate email
         if (studentRepository.findByStudentEmail(email).isPresent()) {
+            log.warn("⚠ Student already exists: {}", email);
             throw new DuplicateStudentException("Student already exists with email: " + email);
         }
 
-        //  FACULTY VALIDATION (IMPORTANT FIX)
-        ResponseEntity<ApiResponse> facultyRes =
-                userServiceClient.getUserByUniversityId(dto.getFacultyUniversityId());
+        // Step 1: Create Student Entity First
+        log.info(" Step 1: Creating student in Student-Service database");
 
-        if (facultyRes == null || facultyRes.getBody() == null || facultyRes.getBody().getData() == null) {
-            throw new ResourceNotFoundException(
-                    "Faculty not found with universityId: " + dto.getFacultyUniversityId()
-            );
-        }
-
-        UserDto faculty = modelMapper.map(facultyRes.getBody().getData(), UserDto.class);
-
-        //  ENTITY BUILD
         StudentEntity student = StudentEntity.builder()
                 .studentName(dto.getStudentName().trim())
                 .studentEmail(email)
-                .password(dto.getPassword()) //  RAW password (as per your requirement)
+                .password(dto.getPassword() != null ? dto.getPassword() : "DefaultPass@123")
                 .studentPhoneNumber(dto.getStudentPhoneNumber().trim())
                 .semester(dto.getSemester().trim())
                 .batch(dto.getBatch().trim())
                 .department(dto.getDepartment().trim())
                 .course(dto.getCourse().trim())
                 .courseCode(dto.getCourseCode().trim().toUpperCase())
-                .facultyUniversityId(dto.getFacultyUniversityId().trim())
-                .facultyName(faculty.getName())
+                .facultyUniversityId(dto.getFacultyUniversityId())
+                .facultyName(dto.getFacultyName())
                 .subjects(sanitizeSubjects(dto.getSubjects()))
                 .createdBy(createdBy)
                 .updatedBy(createdBy)
@@ -173,44 +156,86 @@ public class StudentServiceImpl implements StudentService {
                 .build();
 
         StudentEntity saved = studentRepository.save(student);
+        log.info(" Student saved to DB with id: {}", saved.getId());
 
-        //  AUTO UNIVERSITY ID
+        // Step 2: Generate University ID
         String universityId = "STU" + String.format("%06d", saved.getId());
         saved.setUniversityId(universityId);
         saved = studentRepository.save(saved);
+        log.info(" University ID generated: {}", universityId);
 
-        //  CASCADE TO USER SERVICE
+        // Step 3: CASCADE TO USER-SERVICE  IMPORTANT
+        log.info(" Step 2: Cascading to User-Service");
         try {
-            UserDto userDto = UserDto.builder()
-                    .email(saved.getStudentEmail())
-                    .username(saved.getStudentName())
-                    .name(saved.getStudentName())
-                    .password(saved.getPassword())
-                    .role("STUDENT")
-                    .department(saved.getDepartment())
-                    .phoneNumber(saved.getStudentPhoneNumber())
-                    .universityId(saved.getUniversityId())
-                    .semester(saved.getSemester())
-                    .batch(saved.getBatch())
-                    .courseCode(saved.getCourseCode())
-                    .build();
-
-            userServiceClient.createUser(userDto,ADMIN,ADMIN);
-
-            log.info("CASCADE USER SUCCESS for {}", saved.getUniversityId());
-
+            cascadeToUserService(saved, createdBy);
+            log.info(" Cascade to User-Service completed successfully");
         } catch (Exception e) {
-            log.error("CASCADE USER FAILED", e);
-            throw new RuntimeException("User service sync failed");
+            log.error(" CASCADE FAILED - Rolling back student creation", e);
+            // Delete student if cascade fails
+            studentRepository.deleteById(saved.getId());
+            throw new RuntimeException("Failed to create user account: " + e.getMessage(), e);
         }
 
+        log.info(" CREATE STUDENT COMPLETED | universityId={}", universityId);
+
         return new ApiResponse(
-                "Student created successfully",
+                "Student created successfully with User account",
                 201,
                 convertToDto(saved),
                 LocalDateTime.now()
         );
     }
+
+    private void cascadeToUserService(StudentEntity student, String createdBy) {
+        log.info("Starting cascade to User-Service for student: {}", student.getUniversityId());
+
+        try {
+            // Build UserDto from Student
+            UserDto userDto = UserDto.builder()
+                    .email(student.getStudentEmail())
+                    .username(student.getStudentName())
+                    .name(student.getStudentName())
+                    .password(student.getPassword())
+                    .role("STUDENT")
+                    .department(student.getDepartment())
+                    .phoneNumber(student.getStudentPhoneNumber())
+                    .universityId(student.getUniversityId()) //  Same ID as student
+                    .semester(student.getSemester())
+                    .batch(student.getBatch())
+                    .courseCode(student.getCourseCode())
+                    .build();
+
+            log.info("Calling User-Service to create user: {} | universityId: {}",
+                    userDto.getEmail(), userDto.getUniversityId());
+
+            // Call User-Service
+            ResponseEntity<ApiResponse> response = userServiceClient.createUser(userDto, createdBy, SYSTEM);
+
+            if (response == null) {
+                log.error(" User-Service returned null response");
+                throw new RuntimeException("User-Service returned null response");
+            }
+
+            if (!response.getStatusCode().is2xxSuccessful()) {
+                log.error(" User-Service returned error status: {}", response.getStatusCode());
+                throw new RuntimeException("User-Service error: " + response.getStatusCode());
+            }
+
+            if (response.getBody() == null) {
+                log.error(" User-Service response body is null");
+                throw new RuntimeException("User-Service response body is null");
+            }
+
+            log.info(" User created in User-Service successfully");
+            log.info(" User ID: {}, Email: {}, Role: STUDENT",
+                    response.getBody());
+
+        } catch (Exception e) {
+            log.error(" CASCADE FAILED - Error: {}", e.getMessage(), e);
+            throw new RuntimeException("User account creation failed: " + e.getMessage(), e);
+        }
+    }
+
 
     @Override
     public ApiResponse getStudent(Long id) {

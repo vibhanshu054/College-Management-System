@@ -36,6 +36,19 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
+    @ExceptionHandler(ServiceUnavailableException.class)
+    public ResponseEntity<ApiResponse> handleServiceUnavailable(
+            ServiceUnavailableException ex, WebRequest request) {
+        log.error("Service unavailable: {}", ex.getMessage());
+
+        return buildResponse(
+                HttpStatus.SERVICE_UNAVAILABLE,
+                "SERVICE_UNAVAILABLE",
+                ex.getMessage(),
+                ex.getMessage(),
+                request
+        );
+    }
 
     /**
      * Handle Duplicate Resource Exception
