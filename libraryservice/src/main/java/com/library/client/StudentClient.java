@@ -23,5 +23,5 @@ public interface StudentClient {
             @RequestParam int returned
     );
     @GetMapping("api/students/university-id/{universityId}")
-    public ResponseEntity<ApiResponse> getStudentByUniversityId(@PathVariable String universityId);
+    ResponseEntity<ApiResponse> getStudentByUniversityId(@PathVariable String universityId);
 }

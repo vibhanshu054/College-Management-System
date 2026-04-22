@@ -90,11 +90,14 @@ public class StudentServiceImpl implements StudentService {
         if (subjects == null) {
             return List.of();
         }
-        return subjects.stream()
-                .filter(subject -> subject != null && !subject.isBlank())
-                .map(String::trim)
-                .distinct()
-                .toList();
+
+        return new ArrayList<>(
+                subjects.stream()
+                        .filter(subject -> subject != null && !subject.isBlank())
+                        .map(String::trim)
+                        .map(String::toUpperCase)
+                        .collect(java.util.stream.Collectors.toCollection(java.util.LinkedHashSet::new))
+        );
     }
 
     private StudentDTO convertToDto(StudentEntity student) {
@@ -636,74 +639,71 @@ public class StudentServiceImpl implements StudentService {
             return new ApiResponse("Book stats updated", 200, response, LocalDateTime.now());
         }
 
-        @Override
-        public ApiResponse updateSubjects(String universityId, List<String> subjects, String role) {
+    @Override
+    public ApiResponse updateSubjects(String universityId, List<String> subjects, String role) {
 
-            log.info("UPDATE SUBJECTS START | student={}, role={}", universityId, role);
+        log.info("UPDATE SUBJECTS START | student={}, role={}", universityId, role);
 
-            // 🔴 ROLE CHECK
-            validateFacultyOrAdmin(role, "Only faculty/admin can assign subjects");
+        validateFacultyOrAdmin(role, "Only faculty/admin can assign subjects");
 
-            // 🔴 INPUT VALIDATION
-            if (universityId == null || universityId.isBlank()) {
-                throw new IllegalArgumentException("University ID is required");
-            }
-
-            if (subjects == null || subjects.isEmpty()) {
-                throw new IllegalArgumentException("Subjects list cannot be empty");
-            }
-
-            // 🔴 CLEAN SUBJECT LIST
-            List<String> cleaned = sanitizeSubjects(subjects);
-
-            if (cleaned.isEmpty()) {
-                throw new IllegalArgumentException("Valid subjects required");
-            }
-
-            log.info("Sanitized subjects: {}", cleaned);
-
-            // 🔴 FETCH STUDENT
-            StudentEntity student = studentRepository.findByUniversityId(universityId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
-
-            // 🔴 VALIDATE EACH SUBJECT FROM SUBJECT SERVICE
-            for (String code : cleaned) {
-
-                try {
-                    ResponseEntity<ApiResponse> res =
-                            subjectServiceClient.getSubjectByCode(code);
-
-                    if (res == null || res.getBody() == null || res.getBody().getData() == null) {
-                        log.error("Invalid subject from service: {}", code);
-                        throw new ResourceNotFoundException("Invalid subject code: " + code);
-                    }
-
-                } catch (Exception e) {
-                    log.error("Subject service failed for {}", code, e);
-                    throw new RuntimeException("Subject validation failed for: " + code);
-                }
-            }
-
-            // 🔴 UPDATE SUBJECTS (REPLACE MODE)
-            student.setSubjects(cleaned);
-
-            studentRepository.save(student);
-
-            log.info("Subjects updated successfully for {}", universityId);
-
-            // 🔴 RESPONSE
-            Map<String, Object> data = new HashMap<>();
-            data.put("studentId", universityId);
-            data.put("subjects", cleaned);
-            data.put("totalSubjects", cleaned.size());
-
-            return new ApiResponse(
-                    "Subjects updated successfully",
-                    200,
-                    data,
-                    LocalDateTime.now()
-            );
+        if (universityId == null || universityId.isBlank()) {
+            throw new IllegalArgumentException("University ID is required");
         }
+
+        if (subjects == null || subjects.isEmpty()) {
+            throw new IllegalArgumentException("Subjects list cannot be empty");
+        }
+
+        List<String> cleaned = sanitizeSubjects(subjects);
+
+        if (cleaned.isEmpty()) {
+            throw new IllegalArgumentException("Valid subjects required");
+        }
+
+        StudentEntity student = studentRepository.findByUniversityId(universityId)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
+
+        for (String code : cleaned) {
+            try {
+                ResponseEntity<ApiResponse> res = subjectServiceClient.getSubjectByCode(code);
+
+                if (res == null || res.getBody() == null || res.getBody().getData() == null) {
+                    throw new ResourceNotFoundException("Invalid subject code: " + code);
+                }
+            } catch (ResourceNotFoundException e) {
+                throw e;
+            } catch (Exception e) {
+                log.error("Subject service failed for {}", code, e);
+                throw new RuntimeException("Subject validation failed for: " + code, e);
+            }
+        }
+
+        List<String> existingSubjects = student.getSubjects() == null
+                ? new ArrayList<>()
+                : student.getSubjects().stream()
+                .filter(s -> s != null && !s.isBlank())
+                .map(String::trim)
+                .map(String::toUpperCase)
+                .toList();
+
+        java.util.LinkedHashSet<String> mergedSubjects = new java.util.LinkedHashSet<>(existingSubjects);
+        mergedSubjects.addAll(cleaned);
+
+        student.setSubjects(new ArrayList<>(mergedSubjects));
+        studentRepository.save(student);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("studentId", universityId);
+        data.put("subjects", student.getSubjects());
+        data.put("totalSubjects", student.getSubjects().size());
+
+        return new ApiResponse(
+                "Subjects updated successfully",
+                200,
+                data,
+                LocalDateTime.now()
+        );
+    }
 
         @Override
         public ApiResponse getStudentCountByCourse () {

@@ -346,6 +346,11 @@ public class LibraryServiceImpl implements LibraryService {
         bookRepository.save(book);
         BookIssueEntity saved = bookIssueRepository.save(issue);
 
+        if (userId.startsWith("STU")) {
+            studentClient.updateStudentBooks(userId, 1, 0);
+        } else if (userId.startsWith("FAC")) {
+            facultyClient.updateBookStatsByFacultyUniversityId(userId, 1, 0);
+        }
         return new ApiResponse("Book issued successfully", 201, saved, LocalDateTime.now());
     }
 
@@ -372,6 +377,14 @@ public class LibraryServiceImpl implements LibraryService {
 
         bookRepository.save(book);
         BookIssueEntity updated = bookIssueRepository.save(issue);
+
+        String userId = issue.getUserId();
+
+        if (userId != null && userId.startsWith("STU")) {
+            studentClient.updateStudentBooks(userId, 0, 1);
+        } else if (userId != null && userId.startsWith("FAC")) {
+            facultyClient.updateBookStatsByFacultyUniversityId(userId, 0, 1);
+        }
 
         return new ApiResponse("Book returned successfully", 200, updated, LocalDateTime.now());
     }

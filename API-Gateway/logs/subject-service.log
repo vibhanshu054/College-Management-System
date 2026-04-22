@@ -1,130 +1,70 @@
-2026-04-21T10:45:28.828+05:30  WARN 12876 --- [Subject-Service] [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=11h41m9s384ms782µs700ns).
-2026-04-21T10:47:34.974+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T10:52:34.975+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T10:57:35.008+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T11:02:35.025+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T11:07:35.027+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T11:12:35.048+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T11:17:35.055+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T11:22:35.057+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T11:27:35.058+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T11:32:35.060+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T11:37:35.071+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T11:42:35.073+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T11:43:13.111+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-6] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T11:47:35.078+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T11:52:35.085+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T11:57:35.089+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T11:59:37.598+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-1] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T12:02:35.091+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T12:04:36.854+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-9] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 1240 ms
-2026-04-21T12:06:57.026+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-3] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T12:07:35.093+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T12:08:49.201+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-4] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T12:08:55.545+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-5] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T12:12:35.094+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T12:16:04.268+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-7] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T12:17:35.096+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T12:17:46.621+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-8] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T12:18:36.317+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-9] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T12:19:50.814+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-3] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T12:21:23.643+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-4] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T12:21:56.418+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-5] c.s.controller.SubjectController         : Get subject by code: string
-2026-04-21T12:21:56.511+05:30  WARN 12876 --- [Subject-Service] [http-nio-8089-exec-5] c.s.exception.GlobalExceptionHandler     : Resource not found: Subject not found: string
-2026-04-21T12:22:35.098+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T12:23:28.678+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-1] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T12:24:20.200+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-8] c.s.controller.SubjectController         : Get subject by code: 1M200001
-2026-04-21T12:27:35.099+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T12:29:19.112+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-3] c.s.controller.SubjectController         : Get subject by code: [   "1M200001" ]
-2026-04-21T12:29:19.131+05:30  WARN 12876 --- [Subject-Service] [http-nio-8089-exec-3] c.s.exception.GlobalExceptionHandler     : Resource not found: Subject not found: [   "1M200001" ]
-2026-04-21T12:29:35.392+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-10] c.s.controller.SubjectController         : Get subject by code: 1M200001
-2026-04-21T12:29:51.587+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-4] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T12:32:35.102+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T12:37:35.116+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T12:38:18.064+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-7] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T12:42:35.123+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T12:47:35.125+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T12:52:35.126+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T12:57:35.127+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T13:02:08.354+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-8] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T13:02:35.129+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T13:07:35.136+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T13:12:35.166+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T13:17:35.167+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T13:22:35.171+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T13:22:58.067+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-2] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T13:27:35.174+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T13:32:35.176+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T13:37:35.177+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T13:42:35.185+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T13:47:35.186+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T13:52:35.190+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T13:57:35.204+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T14:02:35.207+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T14:07:35.209+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T14:12:35.225+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T14:17:35.227+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T14:22:35.228+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T14:27:35.230+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T14:32:35.244+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T14:37:35.252+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T14:42:35.266+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T14:45:00.200+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-10] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T14:45:21.850+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-4] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T14:45:59.265+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-5] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T14:46:08.286+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-6] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T14:47:18.033+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-1] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T14:47:35.271+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T14:52:35.273+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T14:53:11.236+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-9] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T14:55:02.878+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-3] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T14:57:35.274+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T15:02:35.277+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T15:02:52.168+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-4] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T15:07:35.278+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T15:12:35.280+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T15:17:35.292+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T15:22:35.299+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T15:27:35.301+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T15:29:01.289+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-6] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T15:32:35.302+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T15:37:35.303+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T15:41:45.965+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-1] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T15:42:35.305+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T15:47:35.318+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T15:52:35.320+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T15:57:35.322+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T16:01:51.768+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-9] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T16:02:35.323+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T16:07:35.325+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T16:12:35.329+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T16:17:35.333+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T16:22:35.348+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T16:27:35.356+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T16:32:35.363+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T16:35:31.248+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-3] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T16:37:35.373+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T16:42:35.386+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T16:47:35.401+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T16:52:35.402+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T16:57:35.412+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T17:02:35.425+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T17:07:35.428+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T17:12:35.430+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T17:15:08.402+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-4] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T17:17:35.444+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T17:19:33.901+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-6] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T17:22:35.454+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T17:23:45.547+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-1] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T17:26:24.760+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-9] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T17:26:36.507+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-2] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T17:27:35.455+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T17:28:21.172+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-10] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T17:28:31.799+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-4] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T17:32:35.471+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T17:37:35.481+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T17:37:51.510+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-6] c.s.controller.SubjectController         : Get all subjects request
-2026-04-21T17:42:35.484+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T17:47:35.496+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T17:52:35.500+05:30  INFO 12876 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
-2026-04-21T17:52:45.060+05:30  INFO 12876 --- [Subject-Service] [http-nio-8089-exec-1] c.s.controller.SubjectController         : Get all subjects request
+2026-04-22T10:53:02.948+05:30  INFO 10504 --- [Subject-Service] [main] c.s.SubjectServiceApplication            : Starting SubjectServiceApplication using Java 24.0.2 with PID 10504 (C:\Task\Microservise Project\College Management System\Subject-Service\target\classes started by hp in C:\Task\Microservise Project\College Management System\API-Gateway)
+2026-04-22T10:53:02.963+05:30  INFO 10504 --- [Subject-Service] [main] c.s.SubjectServiceApplication            : No active profile set, falling back to 1 default profile: "default"
+2026-04-22T10:53:05.912+05:30  INFO 10504 --- [Subject-Service] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-04-22T10:53:06.320+05:30  INFO 10504 --- [Subject-Service] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 371 ms. Found 1 JPA repository interface.
+2026-04-22T10:53:06.965+05:30  INFO 10504 --- [Subject-Service] [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=c4ff7cae-ef65-3ac7-864a-38de0972b9f5
+2026-04-22T10:53:08.566+05:30  INFO 10504 --- [Subject-Service] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8089 (http)
+2026-04-22T10:53:08.654+05:30  INFO 10504 --- [Subject-Service] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-04-22T10:53:08.655+05:30  INFO 10504 --- [Subject-Service] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.53]
+2026-04-22T10:53:08.830+05:30  INFO 10504 --- [Subject-Service] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-04-22T10:53:08.831+05:30  INFO 10504 --- [Subject-Service] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 5719 ms
+2026-04-22T10:53:09.477+05:30  INFO 10504 --- [Subject-Service] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-04-22T10:53:09.647+05:30  INFO 10504 --- [Subject-Service] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.45.Final
+2026-04-22T10:53:09.752+05:30  INFO 10504 --- [Subject-Service] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-04-22T10:53:10.329+05:30  INFO 10504 --- [Subject-Service] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-04-22T10:53:10.379+05:30  INFO 10504 --- [Subject-Service] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-04-22T10:53:10.997+05:30  INFO 10504 --- [Subject-Service] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@35744f8
+2026-04-22T10:53:11.000+05:30  INFO 10504 --- [Subject-Service] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-04-22T10:53:11.088+05:30  WARN 10504 --- [Subject-Service] [main] org.hibernate.orm.deprecation            : HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-22T10:53:11.090+05:30  WARN 10504 --- [Subject-Service] [main] org.hibernate.orm.deprecation            : HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2026-04-22T10:53:11.120+05:30  INFO 10504 --- [Subject-Service] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-04-22T10:53:12.522+05:30  INFO 10504 --- [Subject-Service] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-22T10:53:12.665+05:30  INFO 10504 --- [Subject-Service] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-04-22T10:53:13.169+05:30  INFO 10504 --- [Subject-Service] [main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-04-22T10:53:15.093+05:30  WARN 10504 --- [Subject-Service] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-04-22T10:53:15.808+05:30  WARN 10504 --- [Subject-Service] [main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: bb23af0a-ecab-4a4b-815c-f38077c4c705
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-04-22T10:53:15.833+05:30  INFO 10504 --- [Subject-Service] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-04-22T10:53:17.471+05:30  INFO 10504 --- [Subject-Service] [main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-04-22T10:53:17.584+05:30  WARN 10504 --- [Subject-Service] [main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-04-22T10:53:17.742+05:30  INFO 10504 --- [Subject-Service] [main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-04-22T10:53:17.801+05:30  INFO 10504 --- [Subject-Service] [main] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
+2026-04-22T10:53:17.809+05:30  INFO 10504 --- [Subject-Service] [main] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-22T10:53:17.826+05:30  INFO 10504 --- [Subject-Service] [main] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2026-04-22T10:53:17.826+05:30  INFO 10504 --- [Subject-Service] [main] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2026-04-22T10:53:17.827+05:30  INFO 10504 --- [Subject-Service] [main] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2026-04-22T10:53:17.827+05:30  INFO 10504 --- [Subject-Service] [main] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2026-04-22T10:53:17.827+05:30  INFO 10504 --- [Subject-Service] [main] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2026-04-22T10:53:17.827+05:30  INFO 10504 --- [Subject-Service] [main] com.netflix.discovery.DiscoveryClient    : Application version is -1: true
+2026-04-22T10:53:17.827+05:30  INFO 10504 --- [Subject-Service] [main] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2026-04-22T10:53:18.482+05:30  INFO 10504 --- [Subject-Service] [main] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2026-04-22T10:53:18.485+05:30  INFO 10504 --- [Subject-Service] [main] com.netflix.discovery.DiscoveryClient    : Starting heartbeat executor: renew interval is: 30
+2026-04-22T10:53:18.488+05:30  INFO 10504 --- [Subject-Service] [main] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
+2026-04-22T10:53:18.491+05:30  INFO 10504 --- [Subject-Service] [main] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1776835398490 with initial instances count: 0
+2026-04-22T10:53:18.498+05:30  INFO 10504 --- [Subject-Service] [main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application SUBJECT-SERVICE with eureka with status UP
+2026-04-22T10:53:18.500+05:30  INFO 10504 --- [Subject-Service] [main] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1776835398500, current=UP, previous=STARTING]
+2026-04-22T10:53:18.503+05:30  INFO 10504 --- [Subject-Service] [DiscoveryClient-InstanceInfoReplicator-%d] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_SUBJECT-SERVICE/Vivan-laptop:Subject-Service:8089: registering service...
+2026-04-22T10:53:18.558+05:30  INFO 10504 --- [Subject-Service] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8089 (http) with context path '/'
+2026-04-22T10:53:18.560+05:30  INFO 10504 --- [Subject-Service] [main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8089
+2026-04-22T10:53:18.590+05:30  INFO 10504 --- [Subject-Service] [main] c.s.SubjectServiceApplication            : Started SubjectServiceApplication in 17.09 seconds (process running for 18.768)
+2026-04-22T10:53:18.599+05:30  INFO 10504 --- [Subject-Service] [DiscoveryClient-InstanceInfoReplicator-%d] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_SUBJECT-SERVICE/Vivan-laptop:Subject-Service:8089 - registration status: 204
+2026-04-22T10:53:18.600+05:30  WARN 10504 --- [Subject-Service] [main] o.s.core.events.SpringDocAppInitializer  : SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'
+2026-04-22T10:53:48.486+05:30  INFO 10504 --- [Subject-Service] [DiscoveryClient-CacheRefreshExecutor-%d] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2026-04-22T10:53:48.488+05:30  INFO 10504 --- [Subject-Service] [DiscoveryClient-CacheRefreshExecutor-%d] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2026-04-22T10:53:48.488+05:30  INFO 10504 --- [Subject-Service] [DiscoveryClient-CacheRefreshExecutor-%d] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2026-04-22T10:53:48.488+05:30  INFO 10504 --- [Subject-Service] [DiscoveryClient-CacheRefreshExecutor-%d] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2026-04-22T10:53:48.488+05:30  INFO 10504 --- [Subject-Service] [DiscoveryClient-CacheRefreshExecutor-%d] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2026-04-22T10:53:48.489+05:30  INFO 10504 --- [Subject-Service] [DiscoveryClient-CacheRefreshExecutor-%d] com.netflix.discovery.DiscoveryClient    : Application version is -1: false
+2026-04-22T10:53:48.489+05:30  INFO 10504 --- [Subject-Service] [DiscoveryClient-CacheRefreshExecutor-%d] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2026-04-22T10:53:48.540+05:30  INFO 10504 --- [Subject-Service] [DiscoveryClient-CacheRefreshExecutor-%d] com.netflix.discovery.DiscoveryClient    : The response status is 200
