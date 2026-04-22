@@ -285,3 +285,6 @@ This generated password is for development use only. Your security configuration
 2026-04-22 11:01:37 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
 2026-04-22 11:01:37 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
 2026-04-22 11:01:37 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:01:47 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:01:47 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:01:47 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK

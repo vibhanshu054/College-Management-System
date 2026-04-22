@@ -77,3 +77,4 @@ This generated password is for development use only. Your security configuration
 2026-04-22T10:53:39.603+05:30  INFO 4528 --- [User-Service] [DiscoveryClient-CacheRefreshExecutor-%d] com.netflix.discovery.DiscoveryClient    : Application version is -1: false
 2026-04-22T10:53:39.603+05:30  INFO 4528 --- [User-Service] [DiscoveryClient-CacheRefreshExecutor-%d] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
 2026-04-22T10:53:39.650+05:30  INFO 4528 --- [User-Service] [DiscoveryClient-CacheRefreshExecutor-%d] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2026-04-22T10:58:08.858+05:30  INFO 4528 --- [User-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
