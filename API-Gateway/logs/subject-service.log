@@ -69,3 +69,12 @@ This generated password is for development use only. Your security configuration
 2026-04-22T10:53:48.489+05:30  INFO 10504 --- [Subject-Service] [DiscoveryClient-CacheRefreshExecutor-%d] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
 2026-04-22T10:53:48.540+05:30  INFO 10504 --- [Subject-Service] [DiscoveryClient-CacheRefreshExecutor-%d] com.netflix.discovery.DiscoveryClient    : The response status is 200
 2026-04-22T10:58:17.834+05:30  INFO 10504 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-22T11:03:17.850+05:30  INFO 10504 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-22T11:05:46.128+05:30  INFO 10504 --- [Subject-Service] [http-nio-8089-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-04-22T11:05:46.129+05:30  INFO 10504 --- [Subject-Service] [http-nio-8089-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-04-22T11:05:46.131+05:30  INFO 10504 --- [Subject-Service] [http-nio-8089-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-04-22T11:05:46.204+05:30  INFO 10504 --- [Subject-Service] [http-nio-8089-exec-1] c.s.controller.SubjectController         : Get all subjects request
+2026-04-22T11:06:32.417+05:30  INFO 10504 --- [Subject-Service] [http-nio-8089-exec-3] c.s.controller.SubjectController         : Get all subjects request
+2026-04-22T11:06:53.468+05:30  INFO 10504 --- [Subject-Service] [http-nio-8089-exec-2] c.s.controller.SubjectController         : Get all subjects request
+2026-04-22T11:07:36.423+05:30  INFO 10504 --- [Subject-Service] [http-nio-8089-exec-4] c.s.controller.SubjectController         : Get all subjects request
+2026-04-22T11:08:17.866+05:30  INFO 10504 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration

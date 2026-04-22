@@ -288,3 +288,854 @@ This generated password is for development use only. Your security configuration
 2026-04-22 11:01:47 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
 2026-04-22 11:01:47 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
 2026-04-22 11:01:47 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:01:57 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:01:57 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:01:57 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:02:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-22 11:02:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:02:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:02:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-22 11:02:07 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:02:07 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:02:07 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:02:17 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:02:17 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:02:17 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:02:27 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:02:27 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:02:27 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:02:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-22 11:02:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:02:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:02:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-22 11:02:37 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:02:37 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:02:37 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:02:47 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:02:47 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:02:47 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:02:57 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:02:57 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:02:57 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:03:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-22 11:03:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:03:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:03:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-22 11:03:07 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:03:07 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:03:07 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:03:17 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:03:17 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:03:17 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:03:27 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:03:27 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:03:27 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:03:34 [AsyncResolver-bootstrap-executor-%d] INFO  c.n.d.s.r.aws.ConfigClusterResolver - Resolving eureka endpoints via configuration
+2026-04-22 11:03:35 [http-nio-8086-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-04-22 11:03:35 [http-nio-8086-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-04-22 11:03:35 [http-nio-8086-exec-2] DEBUG o.s.web.servlet.DispatcherServlet - Detected StandardServletMultipartResolver
+2026-04-22 11:03:35 [http-nio-8086-exec-2] DEBUG o.s.web.servlet.DispatcherServlet - Detected AcceptHeaderLocaleResolver
+2026-04-22 11:03:35 [http-nio-8086-exec-2] DEBUG o.s.web.servlet.DispatcherServlet - Detected FixedThemeResolver
+2026-04-22 11:03:35 [http-nio-8086-exec-2] DEBUG o.s.web.servlet.DispatcherServlet - Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@4a105d1b
+2026-04-22 11:03:35 [http-nio-8086-exec-2] DEBUG o.s.web.servlet.DispatcherServlet - Detected org.springframework.web.servlet.support.SessionFlashMapManager@3dbdc1f6
+2026-04-22 11:03:35 [http-nio-8086-exec-2] DEBUG o.s.web.servlet.DispatcherServlet - enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2026-04-22 11:03:35 [http-nio-8086-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 4 ms
+2026-04-22 11:03:35 [http-nio-8086-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/students/faculty/FAC000006
+2026-04-22 11:03:35 [http-nio-8086-exec-2] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-04-22 11:03:35 [http-nio-8086-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/students/faculty/FAC000006
+2026-04-22 11:03:35 [http-nio-8086-exec-2] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/students/faculty/FAC000006", parameters={}
+2026-04-22 11:03:35 [http-nio-8086-exec-2] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.student.controller.StudentController#getStudentsByFacultyUniversityId(String)
+2026-04-22 11:03:35 [http-nio-8086-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        se1_0.id,
+        se1_0.active,
+        se1_0.attendance_calendar,
+        se1_0.attendance_percentage,
+        se1_0.batch,
+        se1_0.books_issued,
+        se1_0.books_returned,
+        se1_0.course,
+        se1_0.course_code,
+        se1_0.created_at,
+        se1_0.created_by,
+        se1_0.department,
+        se1_0.faculty_name,
+        se1_0.faculty_university_id,
+        se1_0.password,
+        se1_0.semester,
+        se1_0.student_email,
+        se1_0.student_name,
+        se1_0.student_phone_number,
+        se1_0.subjects,
+        se1_0.university_id,
+        se1_0.updated_at,
+        se1_0.updated_by 
+    from
+        students se1_0 
+    where
+        se1_0.faculty_university_id=?
+2026-04-22 11:03:35 [http-nio-8086-exec-2] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/yaml]
+2026-04-22 11:03:35 [http-nio-8086-exec-2] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [com.student.dto.ApiResponse@6c6aba24]
+2026-04-22 11:03:35 [http-nio-8086-exec-2] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-04-22 11:03:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-22 11:03:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:03:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:03:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-22 11:03:37 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:03:37 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:03:37 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:03:47 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:03:47 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:03:47 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:03:49 [http-nio-8086-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/students/faculty/FAC000006
+2026-04-22 11:03:49 [http-nio-8086-exec-1] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-04-22 11:03:49 [http-nio-8086-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/students/faculty/FAC000006
+2026-04-22 11:03:49 [http-nio-8086-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/students/faculty/FAC000006", parameters={}
+2026-04-22 11:03:49 [http-nio-8086-exec-1] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.student.controller.StudentController#getStudentsByFacultyUniversityId(String)
+2026-04-22 11:03:49 [http-nio-8086-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        se1_0.id,
+        se1_0.active,
+        se1_0.attendance_calendar,
+        se1_0.attendance_percentage,
+        se1_0.batch,
+        se1_0.books_issued,
+        se1_0.books_returned,
+        se1_0.course,
+        se1_0.course_code,
+        se1_0.created_at,
+        se1_0.created_by,
+        se1_0.department,
+        se1_0.faculty_name,
+        se1_0.faculty_university_id,
+        se1_0.password,
+        se1_0.semester,
+        se1_0.student_email,
+        se1_0.student_name,
+        se1_0.student_phone_number,
+        se1_0.subjects,
+        se1_0.university_id,
+        se1_0.updated_at,
+        se1_0.updated_by 
+    from
+        students se1_0 
+    where
+        se1_0.faculty_university_id=?
+2026-04-22 11:03:49 [http-nio-8086-exec-1] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/yaml]
+2026-04-22 11:03:49 [http-nio-8086-exec-1] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [com.student.dto.ApiResponse@76bed990]
+2026-04-22 11:03:49 [http-nio-8086-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-04-22 11:03:57 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:03:57 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:03:57 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:04:02 [http-nio-8086-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/students/faculty/FAC000006
+2026-04-22 11:04:02 [http-nio-8086-exec-3] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-04-22 11:04:02 [http-nio-8086-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/students/faculty/FAC000006
+2026-04-22 11:04:02 [http-nio-8086-exec-3] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/students/faculty/FAC000006", parameters={}
+2026-04-22 11:04:02 [http-nio-8086-exec-3] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.student.controller.StudentController#getStudentsByFacultyUniversityId(String)
+2026-04-22 11:04:02 [http-nio-8086-exec-3] DEBUG org.hibernate.SQL - 
+    select
+        se1_0.id,
+        se1_0.active,
+        se1_0.attendance_calendar,
+        se1_0.attendance_percentage,
+        se1_0.batch,
+        se1_0.books_issued,
+        se1_0.books_returned,
+        se1_0.course,
+        se1_0.course_code,
+        se1_0.created_at,
+        se1_0.created_by,
+        se1_0.department,
+        se1_0.faculty_name,
+        se1_0.faculty_university_id,
+        se1_0.password,
+        se1_0.semester,
+        se1_0.student_email,
+        se1_0.student_name,
+        se1_0.student_phone_number,
+        se1_0.subjects,
+        se1_0.university_id,
+        se1_0.updated_at,
+        se1_0.updated_by 
+    from
+        students se1_0 
+    where
+        se1_0.faculty_university_id=?
+2026-04-22 11:04:02 [http-nio-8086-exec-3] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/yaml]
+2026-04-22 11:04:02 [http-nio-8086-exec-3] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [com.student.dto.ApiResponse@23505cb6]
+2026-04-22 11:04:02 [http-nio-8086-exec-3] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-04-22 11:04:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-22 11:04:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:04:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:04:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-22 11:04:07 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:04:07 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:04:07 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:04:17 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:04:17 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:04:17 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:04:27 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:04:27 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:04:27 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:04:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-22 11:04:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:04:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:04:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-22 11:04:37 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:04:37 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:04:37 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:04:47 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:04:47 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:04:47 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:04:57 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:04:57 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:04:57 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:05:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-22 11:05:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:05:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:05:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-22 11:05:07 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:05:07 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:05:07 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:05:17 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:05:17 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:05:17 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:05:18 [http-nio-8086-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/students/courses/student-count
+2026-04-22 11:05:18 [http-nio-8086-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/students
+2026-04-22 11:05:18 [http-nio-8086-exec-6] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-04-22 11:05:18 [http-nio-8086-exec-5] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-04-22 11:05:18 [http-nio-8086-exec-6] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/students/courses/student-count
+2026-04-22 11:05:18 [http-nio-8086-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/students
+2026-04-22 11:05:18 [http-nio-8086-exec-6] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/students/courses/student-count", parameters={}
+2026-04-22 11:05:18 [http-nio-8086-exec-5] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/students", parameters={}
+2026-04-22 11:05:18 [http-nio-8086-exec-6] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.student.controller.StudentController#getStudentCountByCourse()
+2026-04-22 11:05:18 [http-nio-8086-exec-5] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.student.controller.StudentController#getAllStudents(String, String, String, String)
+2026-04-22 11:05:18 [http-nio-8086-exec-6] INFO  c.s.service.impl.StudentServiceImpl - Fetching student count per course
+2026-04-22 11:05:18 [http-nio-8086-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        se1_0.id,
+        se1_0.active,
+        se1_0.attendance_calendar,
+        se1_0.attendance_percentage,
+        se1_0.batch,
+        se1_0.books_issued,
+        se1_0.books_returned,
+        se1_0.course,
+        se1_0.course_code,
+        se1_0.created_at,
+        se1_0.created_by,
+        se1_0.department,
+        se1_0.faculty_name,
+        se1_0.faculty_university_id,
+        se1_0.password,
+        se1_0.semester,
+        se1_0.student_email,
+        se1_0.student_name,
+        se1_0.student_phone_number,
+        se1_0.subjects,
+        se1_0.university_id,
+        se1_0.updated_at,
+        se1_0.updated_by 
+    from
+        students se1_0 
+    where
+        se1_0.active
+2026-04-22 11:05:18 [http-nio-8086-exec-5] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/yaml]
+2026-04-22 11:05:18 [http-nio-8086-exec-5] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [com.student.dto.ApiResponse@55b45d66]
+2026-04-22 11:05:18 [http-nio-8086-exec-5] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-04-22 11:05:18 [http-nio-8086-exec-6] DEBUG org.hibernate.SQL - 
+    select
+        se1_0.course,
+        count(se1_0.id) 
+    from
+        students se1_0 
+    where
+        se1_0.active=1 
+        and se1_0.course is not null 
+        and se1_0.course<>'' 
+    group by
+        se1_0.course 
+    order by
+        count(se1_0.id) desc
+2026-04-22 11:05:18 [http-nio-8086-exec-6] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json, application/yaml]
+2026-04-22 11:05:18 [http-nio-8086-exec-6] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [com.student.dto.ApiResponse@10a54020]
+2026-04-22 11:05:18 [http-nio-8086-exec-6] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-04-22 11:05:27 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:05:27 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:05:27 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:05:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-22 11:05:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:05:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:05:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-22 11:05:37 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:05:37 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:05:37 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:05:47 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:05:47 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:05:47 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:05:48 [http-nio-8086-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/students
+2026-04-22 11:05:48 [http-nio-8086-exec-7] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-04-22 11:05:48 [http-nio-8086-exec-7] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/students
+2026-04-22 11:05:48 [http-nio-8086-exec-7] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/students", parameters={}
+2026-04-22 11:05:48 [http-nio-8086-exec-7] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.student.controller.StudentController#getAllStudents(String, String, String, String)
+2026-04-22 11:05:48 [http-nio-8086-exec-7] DEBUG org.hibernate.SQL - 
+    select
+        se1_0.id,
+        se1_0.active,
+        se1_0.attendance_calendar,
+        se1_0.attendance_percentage,
+        se1_0.batch,
+        se1_0.books_issued,
+        se1_0.books_returned,
+        se1_0.course,
+        se1_0.course_code,
+        se1_0.created_at,
+        se1_0.created_by,
+        se1_0.department,
+        se1_0.faculty_name,
+        se1_0.faculty_university_id,
+        se1_0.password,
+        se1_0.semester,
+        se1_0.student_email,
+        se1_0.student_name,
+        se1_0.student_phone_number,
+        se1_0.subjects,
+        se1_0.university_id,
+        se1_0.updated_at,
+        se1_0.updated_by 
+    from
+        students se1_0 
+    where
+        se1_0.active
+2026-04-22 11:05:48 [http-nio-8086-exec-7] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/yaml]
+2026-04-22 11:05:48 [http-nio-8086-exec-7] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [com.student.dto.ApiResponse@3069174d]
+2026-04-22 11:05:48 [http-nio-8086-exec-7] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-04-22 11:05:57 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:05:57 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:05:57 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:06:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-22 11:06:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:06:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:06:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-22 11:06:07 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:06:07 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:06:07 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:06:17 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:06:17 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:06:17 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:06:21 [http-nio-8086-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/students
+2026-04-22 11:06:21 [http-nio-8086-exec-9] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-04-22 11:06:21 [http-nio-8086-exec-9] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/students
+2026-04-22 11:06:21 [http-nio-8086-exec-9] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/students", parameters={}
+2026-04-22 11:06:21 [http-nio-8086-exec-9] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.student.controller.StudentController#getAllStudents(String, String, String, String)
+2026-04-22 11:06:21 [http-nio-8086-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/students/courses/student-count
+2026-04-22 11:06:21 [http-nio-8086-exec-10] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-04-22 11:06:21 [http-nio-8086-exec-10] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/students/courses/student-count
+2026-04-22 11:06:21 [http-nio-8086-exec-10] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/students/courses/student-count", parameters={}
+2026-04-22 11:06:21 [http-nio-8086-exec-10] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.student.controller.StudentController#getStudentCountByCourse()
+2026-04-22 11:06:21 [http-nio-8086-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        se1_0.id,
+        se1_0.active,
+        se1_0.attendance_calendar,
+        se1_0.attendance_percentage,
+        se1_0.batch,
+        se1_0.books_issued,
+        se1_0.books_returned,
+        se1_0.course,
+        se1_0.course_code,
+        se1_0.created_at,
+        se1_0.created_by,
+        se1_0.department,
+        se1_0.faculty_name,
+        se1_0.faculty_university_id,
+        se1_0.password,
+        se1_0.semester,
+        se1_0.student_email,
+        se1_0.student_name,
+        se1_0.student_phone_number,
+        se1_0.subjects,
+        se1_0.university_id,
+        se1_0.updated_at,
+        se1_0.updated_by 
+    from
+        students se1_0 
+    where
+        se1_0.active
+2026-04-22 11:06:21 [http-nio-8086-exec-10] INFO  c.s.service.impl.StudentServiceImpl - Fetching student count per course
+2026-04-22 11:06:21 [http-nio-8086-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        se1_0.course,
+        count(se1_0.id) 
+    from
+        students se1_0 
+    where
+        se1_0.active=1 
+        and se1_0.course is not null 
+        and se1_0.course<>'' 
+    group by
+        se1_0.course 
+    order by
+        count(se1_0.id) desc
+2026-04-22 11:06:21 [http-nio-8086-exec-10] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json, application/yaml]
+2026-04-22 11:06:21 [http-nio-8086-exec-10] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [com.student.dto.ApiResponse@18287571]
+2026-04-22 11:06:21 [http-nio-8086-exec-10] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-04-22 11:06:21 [http-nio-8086-exec-9] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/yaml]
+2026-04-22 11:06:21 [http-nio-8086-exec-9] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [com.student.dto.ApiResponse@4afab9c]
+2026-04-22 11:06:21 [http-nio-8086-exec-9] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-04-22 11:06:27 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:06:27 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:06:27 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:06:33 [http-nio-8086-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/students
+2026-04-22 11:06:33 [http-nio-8086-exec-2] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-04-22 11:06:33 [http-nio-8086-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/students
+2026-04-22 11:06:33 [http-nio-8086-exec-2] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/students", parameters={}
+2026-04-22 11:06:33 [http-nio-8086-exec-2] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.student.controller.StudentController#getAllStudents(String, String, String, String)
+2026-04-22 11:06:33 [http-nio-8086-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        se1_0.id,
+        se1_0.active,
+        se1_0.attendance_calendar,
+        se1_0.attendance_percentage,
+        se1_0.batch,
+        se1_0.books_issued,
+        se1_0.books_returned,
+        se1_0.course,
+        se1_0.course_code,
+        se1_0.created_at,
+        se1_0.created_by,
+        se1_0.department,
+        se1_0.faculty_name,
+        se1_0.faculty_university_id,
+        se1_0.password,
+        se1_0.semester,
+        se1_0.student_email,
+        se1_0.student_name,
+        se1_0.student_phone_number,
+        se1_0.subjects,
+        se1_0.university_id,
+        se1_0.updated_at,
+        se1_0.updated_by 
+    from
+        students se1_0 
+    where
+        se1_0.active
+2026-04-22 11:06:33 [http-nio-8086-exec-2] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/yaml]
+2026-04-22 11:06:33 [http-nio-8086-exec-2] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [com.student.dto.ApiResponse@3396d40b]
+2026-04-22 11:06:33 [http-nio-8086-exec-2] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-04-22 11:06:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-22 11:06:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:06:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:06:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-22 11:06:37 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:06:37 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:06:37 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:06:38 [http-nio-8086-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/students
+2026-04-22 11:06:38 [http-nio-8086-exec-1] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-04-22 11:06:38 [http-nio-8086-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/students
+2026-04-22 11:06:38 [http-nio-8086-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/students", parameters={}
+2026-04-22 11:06:38 [http-nio-8086-exec-1] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.student.controller.StudentController#getAllStudents(String, String, String, String)
+2026-04-22 11:06:38 [http-nio-8086-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        se1_0.id,
+        se1_0.active,
+        se1_0.attendance_calendar,
+        se1_0.attendance_percentage,
+        se1_0.batch,
+        se1_0.books_issued,
+        se1_0.books_returned,
+        se1_0.course,
+        se1_0.course_code,
+        se1_0.created_at,
+        se1_0.created_by,
+        se1_0.department,
+        se1_0.faculty_name,
+        se1_0.faculty_university_id,
+        se1_0.password,
+        se1_0.semester,
+        se1_0.student_email,
+        se1_0.student_name,
+        se1_0.student_phone_number,
+        se1_0.subjects,
+        se1_0.university_id,
+        se1_0.updated_at,
+        se1_0.updated_by 
+    from
+        students se1_0 
+    where
+        se1_0.active
+2026-04-22 11:06:38 [http-nio-8086-exec-1] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/yaml]
+2026-04-22 11:06:38 [http-nio-8086-exec-1] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [com.student.dto.ApiResponse@2f35d0ac]
+2026-04-22 11:06:38 [http-nio-8086-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-04-22 11:06:38 [http-nio-8086-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/students/courses/student-count
+2026-04-22 11:06:38 [http-nio-8086-exec-3] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-04-22 11:06:38 [http-nio-8086-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/students/courses/student-count
+2026-04-22 11:06:38 [http-nio-8086-exec-3] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/students/courses/student-count", parameters={}
+2026-04-22 11:06:38 [http-nio-8086-exec-3] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.student.controller.StudentController#getStudentCountByCourse()
+2026-04-22 11:06:38 [http-nio-8086-exec-3] INFO  c.s.service.impl.StudentServiceImpl - Fetching student count per course
+2026-04-22 11:06:38 [http-nio-8086-exec-3] DEBUG org.hibernate.SQL - 
+    select
+        se1_0.course,
+        count(se1_0.id) 
+    from
+        students se1_0 
+    where
+        se1_0.active=1 
+        and se1_0.course is not null 
+        and se1_0.course<>'' 
+    group by
+        se1_0.course 
+    order by
+        count(se1_0.id) desc
+2026-04-22 11:06:38 [http-nio-8086-exec-3] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json, application/yaml]
+2026-04-22 11:06:38 [http-nio-8086-exec-3] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [com.student.dto.ApiResponse@332b820e]
+2026-04-22 11:06:38 [http-nio-8086-exec-3] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-04-22 11:06:40 [http-nio-8086-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/students/courses/student-count
+2026-04-22 11:06:40 [http-nio-8086-exec-4] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-04-22 11:06:40 [http-nio-8086-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/students/courses/student-count
+2026-04-22 11:06:40 [http-nio-8086-exec-4] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/students/courses/student-count", parameters={}
+2026-04-22 11:06:40 [http-nio-8086-exec-4] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.student.controller.StudentController#getStudentCountByCourse()
+2026-04-22 11:06:40 [http-nio-8086-exec-4] INFO  c.s.service.impl.StudentServiceImpl - Fetching student count per course
+2026-04-22 11:06:40 [http-nio-8086-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        se1_0.course,
+        count(se1_0.id) 
+    from
+        students se1_0 
+    where
+        se1_0.active=1 
+        and se1_0.course is not null 
+        and se1_0.course<>'' 
+    group by
+        se1_0.course 
+    order by
+        count(se1_0.id) desc
+2026-04-22 11:06:40 [http-nio-8086-exec-4] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json, application/yaml]
+2026-04-22 11:06:40 [http-nio-8086-exec-4] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [com.student.dto.ApiResponse@5639abb9]
+2026-04-22 11:06:40 [http-nio-8086-exec-4] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-04-22 11:06:40 [http-nio-8086-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/students
+2026-04-22 11:06:40 [http-nio-8086-exec-5] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-04-22 11:06:40 [http-nio-8086-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/students
+2026-04-22 11:06:40 [http-nio-8086-exec-5] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/students", parameters={}
+2026-04-22 11:06:40 [http-nio-8086-exec-5] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.student.controller.StudentController#getAllStudents(String, String, String, String)
+2026-04-22 11:06:40 [http-nio-8086-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        se1_0.id,
+        se1_0.active,
+        se1_0.attendance_calendar,
+        se1_0.attendance_percentage,
+        se1_0.batch,
+        se1_0.books_issued,
+        se1_0.books_returned,
+        se1_0.course,
+        se1_0.course_code,
+        se1_0.created_at,
+        se1_0.created_by,
+        se1_0.department,
+        se1_0.faculty_name,
+        se1_0.faculty_university_id,
+        se1_0.password,
+        se1_0.semester,
+        se1_0.student_email,
+        se1_0.student_name,
+        se1_0.student_phone_number,
+        se1_0.subjects,
+        se1_0.university_id,
+        se1_0.updated_at,
+        se1_0.updated_by 
+    from
+        students se1_0 
+    where
+        se1_0.active
+2026-04-22 11:06:40 [http-nio-8086-exec-5] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/yaml]
+2026-04-22 11:06:40 [http-nio-8086-exec-5] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [com.student.dto.ApiResponse@397d9ed8]
+2026-04-22 11:06:40 [http-nio-8086-exec-5] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-04-22 11:06:47 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:06:47 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:06:47 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:06:56 [http-nio-8086-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/students
+2026-04-22 11:06:56 [http-nio-8086-exec-6] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-04-22 11:06:56 [http-nio-8086-exec-6] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/students
+2026-04-22 11:06:56 [http-nio-8086-exec-6] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/students", parameters={}
+2026-04-22 11:06:56 [http-nio-8086-exec-6] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.student.controller.StudentController#getAllStudents(String, String, String, String)
+2026-04-22 11:06:56 [http-nio-8086-exec-6] DEBUG org.hibernate.SQL - 
+    select
+        se1_0.id,
+        se1_0.active,
+        se1_0.attendance_calendar,
+        se1_0.attendance_percentage,
+        se1_0.batch,
+        se1_0.books_issued,
+        se1_0.books_returned,
+        se1_0.course,
+        se1_0.course_code,
+        se1_0.created_at,
+        se1_0.created_by,
+        se1_0.department,
+        se1_0.faculty_name,
+        se1_0.faculty_university_id,
+        se1_0.password,
+        se1_0.semester,
+        se1_0.student_email,
+        se1_0.student_name,
+        se1_0.student_phone_number,
+        se1_0.subjects,
+        se1_0.university_id,
+        se1_0.updated_at,
+        se1_0.updated_by 
+    from
+        students se1_0 
+    where
+        se1_0.active
+2026-04-22 11:06:56 [http-nio-8086-exec-6] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/yaml]
+2026-04-22 11:06:56 [http-nio-8086-exec-6] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [com.student.dto.ApiResponse@339b868c]
+2026-04-22 11:06:56 [http-nio-8086-exec-6] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-04-22 11:06:57 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:06:57 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:06:57 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:07:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-22 11:07:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:07:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:07:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-22 11:07:07 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:07:07 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:07:07 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:07:17 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:07:17 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:07:17 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:07:25 [http-nio-8086-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/students/courses/student-count
+2026-04-22 11:07:25 [http-nio-8086-exec-7] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-04-22 11:07:25 [http-nio-8086-exec-7] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/students/courses/student-count
+2026-04-22 11:07:25 [http-nio-8086-exec-7] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/students/courses/student-count", parameters={}
+2026-04-22 11:07:25 [http-nio-8086-exec-7] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.student.controller.StudentController#getStudentCountByCourse()
+2026-04-22 11:07:25 [http-nio-8086-exec-7] INFO  c.s.service.impl.StudentServiceImpl - Fetching student count per course
+2026-04-22 11:07:25 [http-nio-8086-exec-7] DEBUG org.hibernate.SQL - 
+    select
+        se1_0.course,
+        count(se1_0.id) 
+    from
+        students se1_0 
+    where
+        se1_0.active=1 
+        and se1_0.course is not null 
+        and se1_0.course<>'' 
+    group by
+        se1_0.course 
+    order by
+        count(se1_0.id) desc
+2026-04-22 11:07:25 [http-nio-8086-exec-7] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json, application/yaml]
+2026-04-22 11:07:25 [http-nio-8086-exec-7] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [com.student.dto.ApiResponse@28c28e2d]
+2026-04-22 11:07:25 [http-nio-8086-exec-7] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-04-22 11:07:25 [http-nio-8086-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/students
+2026-04-22 11:07:25 [http-nio-8086-exec-8] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-04-22 11:07:25 [http-nio-8086-exec-8] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/students
+2026-04-22 11:07:25 [http-nio-8086-exec-8] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/students", parameters={}
+2026-04-22 11:07:25 [http-nio-8086-exec-8] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.student.controller.StudentController#getAllStudents(String, String, String, String)
+2026-04-22 11:07:25 [http-nio-8086-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        se1_0.id,
+        se1_0.active,
+        se1_0.attendance_calendar,
+        se1_0.attendance_percentage,
+        se1_0.batch,
+        se1_0.books_issued,
+        se1_0.books_returned,
+        se1_0.course,
+        se1_0.course_code,
+        se1_0.created_at,
+        se1_0.created_by,
+        se1_0.department,
+        se1_0.faculty_name,
+        se1_0.faculty_university_id,
+        se1_0.password,
+        se1_0.semester,
+        se1_0.student_email,
+        se1_0.student_name,
+        se1_0.student_phone_number,
+        se1_0.subjects,
+        se1_0.university_id,
+        se1_0.updated_at,
+        se1_0.updated_by 
+    from
+        students se1_0 
+    where
+        se1_0.active
+2026-04-22 11:07:25 [http-nio-8086-exec-8] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/yaml]
+2026-04-22 11:07:25 [http-nio-8086-exec-8] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [com.student.dto.ApiResponse@1b5b7509]
+2026-04-22 11:07:25 [http-nio-8086-exec-8] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-04-22 11:07:27 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:07:27 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:07:27 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:07:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-22 11:07:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:07:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:07:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-22 11:07:37 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:07:37 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:07:37 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:07:38 [http-nio-8086-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/students
+2026-04-22 11:07:38 [http-nio-8086-exec-10] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-04-22 11:07:38 [http-nio-8086-exec-10] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/students
+2026-04-22 11:07:38 [http-nio-8086-exec-10] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/students", parameters={}
+2026-04-22 11:07:38 [http-nio-8086-exec-10] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.student.controller.StudentController#getAllStudents(String, String, String, String)
+2026-04-22 11:07:38 [http-nio-8086-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        se1_0.id,
+        se1_0.active,
+        se1_0.attendance_calendar,
+        se1_0.attendance_percentage,
+        se1_0.batch,
+        se1_0.books_issued,
+        se1_0.books_returned,
+        se1_0.course,
+        se1_0.course_code,
+        se1_0.created_at,
+        se1_0.created_by,
+        se1_0.department,
+        se1_0.faculty_name,
+        se1_0.faculty_university_id,
+        se1_0.password,
+        se1_0.semester,
+        se1_0.student_email,
+        se1_0.student_name,
+        se1_0.student_phone_number,
+        se1_0.subjects,
+        se1_0.university_id,
+        se1_0.updated_at,
+        se1_0.updated_by 
+    from
+        students se1_0 
+    where
+        se1_0.active
+2026-04-22 11:07:38 [http-nio-8086-exec-10] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/yaml]
+2026-04-22 11:07:38 [http-nio-8086-exec-10] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [com.student.dto.ApiResponse@20d191c9]
+2026-04-22 11:07:38 [http-nio-8086-exec-10] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-04-22 11:07:47 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:07:47 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:07:47 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:07:57 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:07:57 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:07:57 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:08:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-22 11:08:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:08:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:08:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-22 11:08:07 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:08:07 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:08:07 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:08:17 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:08:17 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:08:17 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:08:27 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:08:27 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:08:27 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:08:28 [http-nio-8086-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/students/courses/student-count
+2026-04-22 11:08:28 [http-nio-8086-exec-2] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-04-22 11:08:28 [http-nio-8086-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/students/courses/student-count
+2026-04-22 11:08:28 [http-nio-8086-exec-2] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/students/courses/student-count", parameters={}
+2026-04-22 11:08:28 [http-nio-8086-exec-2] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.student.controller.StudentController#getStudentCountByCourse()
+2026-04-22 11:08:28 [http-nio-8086-exec-2] INFO  c.s.service.impl.StudentServiceImpl - Fetching student count per course
+2026-04-22 11:08:28 [http-nio-8086-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        se1_0.course,
+        count(se1_0.id) 
+    from
+        students se1_0 
+    where
+        se1_0.active=1 
+        and se1_0.course is not null 
+        and se1_0.course<>'' 
+    group by
+        se1_0.course 
+    order by
+        count(se1_0.id) desc
+2026-04-22 11:08:28 [http-nio-8086-exec-2] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json, application/yaml]
+2026-04-22 11:08:28 [http-nio-8086-exec-2] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [com.student.dto.ApiResponse@101c0a37]
+2026-04-22 11:08:28 [http-nio-8086-exec-2] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-04-22 11:08:28 [http-nio-8086-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/students
+2026-04-22 11:08:28 [http-nio-8086-exec-1] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-04-22 11:08:28 [http-nio-8086-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/students
+2026-04-22 11:08:28 [http-nio-8086-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/students", parameters={}
+2026-04-22 11:08:28 [http-nio-8086-exec-1] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.student.controller.StudentController#getAllStudents(String, String, String, String)
+2026-04-22 11:08:28 [http-nio-8086-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        se1_0.id,
+        se1_0.active,
+        se1_0.attendance_calendar,
+        se1_0.attendance_percentage,
+        se1_0.batch,
+        se1_0.books_issued,
+        se1_0.books_returned,
+        se1_0.course,
+        se1_0.course_code,
+        se1_0.created_at,
+        se1_0.created_by,
+        se1_0.department,
+        se1_0.faculty_name,
+        se1_0.faculty_university_id,
+        se1_0.password,
+        se1_0.semester,
+        se1_0.student_email,
+        se1_0.student_name,
+        se1_0.student_phone_number,
+        se1_0.subjects,
+        se1_0.university_id,
+        se1_0.updated_at,
+        se1_0.updated_by 
+    from
+        students se1_0 
+    where
+        se1_0.active
+2026-04-22 11:08:28 [http-nio-8086-exec-1] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/yaml]
+2026-04-22 11:08:28 [http-nio-8086-exec-1] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [com.student.dto.ApiResponse@559ca40b]
+2026-04-22 11:08:28 [http-nio-8086-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-04-22 11:08:34 [AsyncResolver-bootstrap-executor-%d] INFO  c.n.d.s.r.aws.ConfigClusterResolver - Resolving eureka endpoints via configuration
+2026-04-22 11:08:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-22 11:08:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:08:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:08:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-22 11:08:37 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:08:37 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:08:37 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:08:47 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:08:47 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:08:48 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:08:58 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:08:58 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:08:58 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:09:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-22 11:09:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:09:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:09:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-22 11:09:08 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:09:08 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:09:08 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:09:18 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:09:18 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:09:18 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:09:28 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:09:28 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:09:28 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:09:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-22 11:09:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:09:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:09:36 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-22 11:09:38 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:09:38 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:09:38 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:09:48 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:09:48 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:09:48 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:09:58 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:09:58 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:09:58 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:10:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-22 11:10:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:10:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:10:06 [DiscoveryClient-CacheRefreshExecutor-%d] DEBUG o.s.web.client.RestTemplate - Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-22 11:10:08 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:10:08 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:10:08 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2026-04-22 11:10:18 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - HTTP PUT http://localhost:8761/eureka/apps/STUDENT-SERVICE/Student-Service:8086?status=UP&lastDirtyTimestamp=1776835416022
+2026-04-22 11:10:18 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Accept=[application/json, application/yaml, application/*+json]
+2026-04-22 11:10:18 [DiscoveryClient-HeartbeatExecutor-%d] DEBUG o.s.web.client.RestTemplate - Response 200 OK

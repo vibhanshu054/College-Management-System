@@ -261,16 +261,17 @@ server:
 ```
 
 ### Service Ports
-- Auth Service: `8001`
-- User Service: `8002`
-- Course Service: `8003`
-- Faculty Service: `8004`
-- Student Service: `8005`
-- Library Service: `8006`
-- Department Service: `8007`
-- Attendance Service: `8008`
-- Dashboard Service: `8009`
-- Subject Service: `8010`
+- API Gateway: `8080` 
+- Auth Service: `8083`
+- User Service: `8081`
+- Course Service: `8082`
+- Faculty Service: `8087`
+- Student Service: `8086`
+- Library Service: `8084`
+- Department Service: `8088`
+- Attendance Service: `8090`
+- Dashboard Service: `8085`
+- Subject Service: `8089`
 - Eureka Server: `8761`
 
 ---

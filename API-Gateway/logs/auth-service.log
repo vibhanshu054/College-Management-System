@@ -91,3 +91,119 @@ This generated password is for development use only. Your security configuration
 2026-04-22T10:53:34.943+05:30  INFO 30464 --- [Auth-Service] [DiscoveryClient-CacheRefreshExecutor-%d] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
 2026-04-22T10:53:35.017+05:30  INFO 30464 --- [Auth-Service] [DiscoveryClient-CacheRefreshExecutor-%d] com.netflix.discovery.DiscoveryClient    : The response status is 200
 2026-04-22T10:58:03.858+05:30  INFO 30464 --- [Auth-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-22T11:03:03.862+05:30  INFO 30464 --- [Auth-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-22T11:03:31.994+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-04-22T11:03:31.994+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-04-22T11:03:31.996+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-04-22T11:03:32.095+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-1] c.authService.controller.AuthController  : Login API called for madhuri@gmail.com
+2026-04-22T11:03:32.096+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-1] c.a.services.impl.AuthServiceImpl        : Authenticating user madhuri@gmail.com
+2026-04-22T11:03:33.616+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-2] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:03:33.616+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-4] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:03:33.616+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-3] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:03:46.185+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-5] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:03:48.981+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-6] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:04:02.416+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-8] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:04:02.416+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-7] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:04:02.460+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-9] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:04:14.679+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-10] c.authService.controller.AuthController  : Logout API called for faculty
+2026-04-22T11:04:14.679+05:30  WARN 30464 --- [Auth-Service] [http-nio-8083-exec-10] c.a.services.impl.AuthServiceImpl        : BLACKLISTING TOKEN: eyJhbGciOiJIUzI1NiJ9.eyJ1bml2ZXJzaXR5SWQiOiJGQUMwMDAwMDYiLCJyb2xlIjoiRkFDVUxUWSIsImRlcGFydG1lbnQiOiJDU0UiLCJpYXQiOjE3NzY4MzYwMTMsImV4cCI6MTc3NjgzOTYxM30.nj2s-zGEzIwX-ZQlcE8O_qs-pcBeXDpqTFNhnAQIKzY
+2026-04-22T11:04:19.594+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-1] c.authService.controller.AuthController  : Login API called for library@gmail.com
+2026-04-22T11:04:19.594+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-1] c.a.services.impl.AuthServiceImpl        : Authenticating user library@gmail.com
+2026-04-22T11:04:19.933+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-3] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:04:19.933+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-4] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:04:19.951+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-2] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:04:19.973+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-5] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:04:19.975+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-7] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:04:19.975+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-6] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:04:19.995+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-8] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:04:20.011+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-9] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:04:42.884+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-10] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:04:49.144+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-1] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:04:54.080+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-3] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:04:58.249+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-4] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:05:07.199+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-2] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:05:11.761+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-6] c.authService.controller.AuthController  : Logout API called for librarian
+2026-04-22T11:05:11.761+05:30  WARN 30464 --- [Auth-Service] [http-nio-8083-exec-6] c.a.services.impl.AuthServiceImpl        : BLACKLISTING TOKEN: eyJhbGciOiJIUzI1NiJ9.eyJ1bml2ZXJzaXR5SWQiOiJMSUIwMDAwMDIiLCJyb2xlIjoiTElCUkFSSUFOIiwiZGVwYXJ0bWVudCI6IkxJQlJBUlkiLCJpYXQiOjE3NzY4MzYwNTksImV4cCI6MTc3NjgzOTY1OX0.kHVu__lGulgzBC3K06c7Y1jC90L7hFOOmifbKEuafEo
+2026-04-22T11:05:17.567+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-5] c.authService.controller.AuthController  : Login API called for krishna.toss.it@gmail.com
+2026-04-22T11:05:17.567+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-5] c.a.services.impl.AuthServiceImpl        : Authenticating user krishna.toss.it@gmail.com
+2026-04-22T11:05:18.283+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-7] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:05:18.283+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-8] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:05:18.294+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-9] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:05:18.303+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-10] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:05:18.303+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-1] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:05:18.430+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-3] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:05:32.935+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-4] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:05:39.951+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-2] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:05:43.379+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-6] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:05:43.379+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-5] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:05:45.989+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-8] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:05:48.423+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-7] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:05:50.558+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-9] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:05:52.559+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-10] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:05:54.586+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-1] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:20.200+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-4] c.authService.controller.AuthController  : Login API called for krishna.toss.it@gmail.com
+2026-04-22T11:06:20.200+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-4] c.a.services.impl.AuthServiceImpl        : Authenticating user krishna.toss.it@gmail.com
+2026-04-22T11:06:21.170+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-5] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:21.170+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-2] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:21.170+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-6] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:21.170+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-8] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:21.222+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-7] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:21.263+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-9] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:26.638+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-10] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:28.373+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-1] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:30.374+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-4] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:30.374+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-3] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:32.404+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-2] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:33.691+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-5] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:34.950+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-6] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:36.397+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-8] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:38.018+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-7] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:38.050+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-10] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:38.050+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-9] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:38.097+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-1] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:38.105+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-3] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:38.139+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-4] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:39.639+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-2] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:40.869+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-5] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:40.870+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-6] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:40.896+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-8] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:40.897+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-7] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:40.943+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-10] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:40.958+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-9] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:45.012+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-1] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:47.673+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-3] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:49.084+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-4] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:50.553+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-2] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:50.553+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-6] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:53.454+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-5] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:06:56.187+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-7] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:07:03.708+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-8] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:07:04.720+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-10] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:07:07.339+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-9] c.authService.controller.AuthController  : Logout API called for admin
+2026-04-22T11:07:07.339+05:30  WARN 30464 --- [Auth-Service] [http-nio-8083-exec-9] c.a.services.impl.AuthServiceImpl        : BLACKLISTING TOKEN: eyJhbGciOiJIUzI1NiJ9.eyJ1bml2ZXJzaXR5SWQiOiJBRE0wMDAwMDEiLCJyb2xlIjoiQURNSU4iLCJkZXBhcnRtZW50IjoiQWRtaW5pc3RyYXRpb24iLCJpYXQiOjE3NzY4MzYxODAsImV4cCI6MTc3NjgzOTc4MH0.4Y7omd7OEjaEHCuQwXYsSnKs254Sg6NtDCb2EXkf0Ug
+2026-04-22T11:07:24.543+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-1] c.authService.controller.AuthController  : Login API called for krishna.toss.it@gmail.com
+2026-04-22T11:07:24.543+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-1] c.a.services.impl.AuthServiceImpl        : Authenticating user krishna.toss.it@gmail.com
+2026-04-22T11:07:25.259+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-3] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:07:25.259+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-4] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:07:25.270+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-6] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:07:25.279+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-2] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:07:25.288+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-5] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:07:25.343+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-7] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:07:31.989+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-8] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:07:33.606+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-10] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:07:35.039+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-1] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:07:35.039+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-9] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:07:36.411+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-3] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:07:38.056+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-4] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:07:39.925+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-6] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:07:41.630+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-2] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:08:03.874+05:30  INFO 30464 --- [Auth-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-22T11:08:24.071+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-5] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:08:28.338+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-10] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:08:28.338+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-8] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:08:28.348+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-1] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:08:28.361+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-9] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:08:28.367+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-3] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:08:28.425+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-4] c.a.services.impl.AuthServiceImpl        : Validating token
+2026-04-22T11:10:13.452+05:30  INFO 30464 --- [Auth-Service] [http-nio-8083-exec-8] c.authService.controller.AuthController  : Logout API called for admin
+2026-04-22T11:10:13.453+05:30  WARN 30464 --- [Auth-Service] [http-nio-8083-exec-8] c.a.services.impl.AuthServiceImpl        : BLACKLISTING TOKEN: eyJhbGciOiJIUzI1NiJ9.eyJ1bml2ZXJzaXR5SWQiOiJBRE0wMDAwMDEiLCJyb2xlIjoiQURNSU4iLCJkZXBhcnRtZW50IjoiQWRtaW5pc3RyYXRpb24iLCJpYXQiOjE3NzY4MzYyNDUsImV4cCI6MTc3NjgzOTg0NX0.fudATre1btAJ1l4-sklGNlcdN0SXEKuvVJkM7DY5GSY

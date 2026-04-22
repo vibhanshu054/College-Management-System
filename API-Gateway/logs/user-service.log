@@ -78,3 +78,32 @@ This generated password is for development use only. Your security configuration
 2026-04-22T10:53:39.603+05:30  INFO 4528 --- [User-Service] [DiscoveryClient-CacheRefreshExecutor-%d] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
 2026-04-22T10:53:39.650+05:30  INFO 4528 --- [User-Service] [DiscoveryClient-CacheRefreshExecutor-%d] com.netflix.discovery.DiscoveryClient    : The response status is 200
 2026-04-22T10:58:08.858+05:30  INFO 4528 --- [User-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-22T11:03:08.864+05:30  INFO 4528 --- [User-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-22T11:03:32.410+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-04-22T11:03:32.411+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-04-22T11:03:32.412+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-04-22T11:03:32.504+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-1] c.userService.controller.UserController  : VERIFY USER | email=madhuri@gmail.com
+2026-04-22T11:04:19.603+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-2] c.userService.controller.UserController  : VERIFY USER | email=library@gmail.com
+2026-04-22T11:05:07.244+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-3] c.userService.controller.UserController  : GET USER | id=2 | requestedBy=SYSTEM
+2026-04-22T11:05:17.579+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-4] c.userService.controller.UserController  : VERIFY USER | email=krishna.toss.it@gmail.com
+2026-04-22T11:05:18.310+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-5] c.userService.controller.UserController  : GET ALL USERS | requestedBy=SYSTEM | role=ADMIN
+2026-04-22T11:05:18.445+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-6] c.userService.controller.UserController  : GET ALL USERS | requestedBy=SYSTEM | role=ADMIN
+2026-04-22T11:05:32.949+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-7] c.userService.controller.UserController  : GET ALL USERS | requestedBy=SYSTEM | role=ADMIN
+2026-04-22T11:06:20.213+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-9] c.userService.controller.UserController  : VERIFY USER | email=krishna.toss.it@gmail.com
+2026-04-22T11:06:21.184+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-10] c.userService.controller.UserController  : GET ALL USERS | requestedBy=SYSTEM | role=ADMIN
+2026-04-22T11:06:21.282+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-1] c.userService.controller.UserController  : GET ALL USERS | requestedBy=SYSTEM | role=ADMIN
+2026-04-22T11:06:26.653+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-2] c.userService.controller.UserController  : GET ALL USERS | requestedBy=SYSTEM | role=ADMIN
+2026-04-22T11:06:38.060+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-3] c.userService.controller.UserController  : GET ALL USERS | requestedBy=SYSTEM | role=ADMIN
+2026-04-22T11:06:38.149+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-4] c.userService.controller.UserController  : GET ALL USERS | requestedBy=SYSTEM | role=ADMIN
+2026-04-22T11:06:39.652+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-5] c.userService.controller.UserController  : GET ALL USERS | requestedBy=SYSTEM | role=ADMIN
+2026-04-22T11:06:40.882+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-6] c.userService.controller.UserController  : GET ALL USERS | requestedBy=SYSTEM | role=ADMIN
+2026-04-22T11:06:40.972+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-7] c.userService.controller.UserController  : GET ALL USERS | requestedBy=SYSTEM | role=ADMIN
+2026-04-22T11:06:45.028+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-8] c.userService.controller.UserController  : GET USER | id=1 | requestedBy=SYSTEM
+2026-04-22T11:06:47.686+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-9] c.userService.controller.UserController  : GET ALL USERS | requestedBy=SYSTEM | role=ADMIN
+2026-04-22T11:07:24.549+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-1] c.userService.controller.UserController  : VERIFY USER | email=krishna.toss.it@gmail.com
+2026-04-22T11:07:25.271+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-2] c.userService.controller.UserController  : GET ALL USERS | requestedBy=SYSTEM | role=ADMIN
+2026-04-22T11:07:25.355+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-3] c.userService.controller.UserController  : GET ALL USERS | requestedBy=SYSTEM | role=ADMIN
+2026-04-22T11:07:32.000+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-4] c.userService.controller.UserController  : GET ALL USERS | requestedBy=SYSTEM | role=ADMIN
+2026-04-22T11:08:08.873+05:30  INFO 4528 --- [User-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-22T11:08:28.349+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-6] c.userService.controller.UserController  : GET ALL USERS | requestedBy=SYSTEM | role=ADMIN
+2026-04-22T11:08:28.435+05:30  INFO 4528 --- [User-Service] [http-nio-8081-exec-7] c.userService.controller.UserController  : GET ALL USERS | requestedBy=SYSTEM | role=ADMIN

@@ -61,3 +61,12 @@ This generated password is for development use only. Your security configuration
 2026-04-22T10:53:59.975+05:30  WARN 21984 --- [Department-Service] [main] o.s.core.events.SpringDocAppInitializer  : SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'
 2026-04-22T10:53:59.980+05:30  INFO 21984 --- [Department-Service] [DiscoveryClient-InstanceInfoReplicator-%d] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_DEPARTMENT-SERVICE/Vivan-laptop:Department-Service:8088 - registration status: 204
 2026-04-22T10:58:59.279+05:30  INFO 21984 --- [Department-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-22T11:03:59.290+05:30  INFO 21984 --- [Department-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-22T11:05:43.525+05:30  INFO 21984 --- [Department-Service] [http-nio-8088-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-04-22T11:05:43.526+05:30  INFO 21984 --- [Department-Service] [http-nio-8088-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-04-22T11:05:43.528+05:30  INFO 21984 --- [Department-Service] [http-nio-8088-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-04-22T11:05:43.594+05:30  INFO 21984 --- [Department-Service] [http-nio-8088-exec-1] c.d.controller.DepartmentController      : Get all departments request
+2026-04-22T11:06:30.388+05:30  INFO 21984 --- [Department-Service] [http-nio-8088-exec-2] c.d.controller.DepartmentController      : Get all departments request
+2026-04-22T11:06:50.559+05:30  INFO 21984 --- [Department-Service] [http-nio-8088-exec-3] c.d.controller.DepartmentController      : Get all departments request
+2026-04-22T11:07:35.053+05:30  INFO 21984 --- [Department-Service] [http-nio-8088-exec-4] c.d.controller.DepartmentController      : Get all departments request
+2026-04-22T11:08:59.306+05:30  INFO 21984 --- [Department-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
