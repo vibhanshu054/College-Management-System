@@ -1,0 +1,1081 @@
+{
+  "info": {
+    "_postman_id": "college-management-system",
+    "name": "College Management System",
+    "description": "Complete API collection for the College Management System microservices. All requests go through the API Gateway at http://localhost:8080. Protected endpoints require a Bearer token in the Authorization header.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080", "type": "string" },
+    { "key": "token", "value": "", "type": "string" },
+    { "key": "universityId", "value": "STU-2024-001", "type": "string" },
+    { "key": "facultyId", "value": "FAC-2024-001", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "🔐 Auth Service",
+      "item": [
+        {
+          "name": "Login",
+          "event": [{ "listen": "test", "script": { "exec": ["if (pm.response.code === 200) { pm.collectionVariables.set('token', pm.response.json().token); }"], "type": "text/javascript" }}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"admin@college.edu\",\n  \"password\": \"Admin@1234\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api","auth","login"] },
+            "description": "Authenticates a user and returns a JWT token. The test script auto-saves the token to `{{token}}` collection variable."
+          },
+          "response": [
+            {
+              "name": "200 OK – Success",
+              "status": "OK", "code": 200,
+              "body": "{\n  \"token\": \"eyJhbGciOiJIUzI1NiJ9...\",\n  \"username\": \"admin\",\n  \"id\": 1,\n  \"universityId\": \"ADM-2024-001\",\n  \"email\": \"admin@college.edu\",\n  \"type\": \"Bearer\",\n  \"expiresIn\": 86400000,\n  \"issuedAt\": \"2024-01-15T10:00:00\",\n  \"expiresAt\": \"2024-01-16T10:00:00\",\n  \"timeStamp\": \"2024-01-15T10:00:00\"\n}"
+            },
+            {
+              "name": "401 – Wrong credentials",
+              "status": "Unauthorized", "code": 401,
+              "body": "{\n  \"status\": 401,\n  \"error\": \"Unauthorized\",\n  \"message\": \"Invalid email or password\",\n  \"timestamp\": \"2024-01-15T10:00:00\"\n}"
+            },
+            {
+              "name": "400 – Missing fields",
+              "status": "Bad Request", "code": 400,
+              "body": "{\n  \"status\": 400,\n  \"error\": \"Bad Request\",\n  \"message\": \"Email and password are required\",\n  \"timestamp\": \"2024-01-15T10:00:00\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-User-Name", "value": "admin" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/auth/logout", "host": ["{{baseUrl}}"], "path": ["api","auth","logout"] },
+            "description": "Blacklists the current JWT token. Requires the Authorization header with Bearer token and X-User-Name header."
+          },
+          "response": [
+            { "name": "200 OK – Logged out", "status": "OK", "code": 200, "body": "{\n  \"status\": 200,\n  \"message\": \"Logged out successfully\",\n  \"timestamp\": \"2024-01-15T10:00:00\"\n}" },
+            { "name": "401 – Token missing/invalid", "status": "Unauthorized", "code": 401, "body": "{\n  \"status\": 401,\n  \"message\": \"Unauthorized – missing or invalid token\"\n}" }
+          ]
+        },
+        {
+          "name": "Validate Token",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/auth/validate?token={{token}}", "host": ["{{baseUrl}}"], "path": ["api","auth","validate"], "query": [{ "key": "token", "value": "{{token}}" }] },
+            "description": "Validates whether a JWT token is still active and not blacklisted. Returns true/false."
+          },
+          "response": [
+            { "name": "200 OK – Valid", "status": "OK", "code": 200, "body": "true" },
+            { "name": "200 OK – Invalid/Expired", "status": "OK", "code": 200, "body": "false" }
+          ]
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"student@college.edu\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/auth/forgot-password", "host": ["{{baseUrl}}"], "path": ["api","auth","forgot-password"] },
+            "description": "Initiates the forgot-password flow. Sends an OTP or reset link to the registered email address."
+          },
+          "response": [
+            { "name": "200 OK", "status": "OK", "code": 200, "body": "{\n  \"status\": 200,\n  \"message\": \"Password reset instructions sent to email\"\n}" },
+            { "name": "404 – Email not found", "status": "Not Found", "code": 404, "body": "{\n  \"status\": 404,\n  \"message\": \"No user found with this email\"\n}" }
+          ]
+        },
+        {
+          "name": "Generate OTP",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/auth/generate-otp?token=RESET_TOKEN_HERE", "host": ["{{baseUrl}}"], "path": ["api","auth","generate-otp"], "query": [{ "key": "token", "value": "RESET_TOKEN_HERE" }] },
+            "description": "Generates and sends OTP for password reset flow. Requires the reset token returned from the forgot-password step."
+          },
+          "response": [
+            { "name": "200 OK", "status": "OK", "code": 200, "body": "{\n  \"status\": 200,\n  \"message\": \"OTP sent successfully\"\n}" },
+            { "name": "400 – Invalid token", "status": "Bad Request", "code": 400, "body": "{\n  \"status\": 400,\n  \"message\": \"Invalid or expired reset token\"\n}" }
+          ]
+        },
+        {
+          "name": "Verify OTP",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"token\": \"RESET_TOKEN_HERE\",\n  \"otp\": 123456\n}" },
+            "url": { "raw": "{{baseUrl}}/api/auth/verify-otp", "host": ["{{baseUrl}}"], "path": ["api","auth","verify-otp"] },
+            "description": "Verifies the OTP entered by the user for the password reset flow."
+          },
+          "response": [
+            { "name": "200 OK", "status": "OK", "code": 200, "body": "{\n  \"status\": 200,\n  \"message\": \"OTP verified successfully\"\n}" },
+            { "name": "400 – Wrong OTP", "status": "Bad Request", "code": 400, "body": "{\n  \"status\": 400,\n  \"message\": \"Invalid OTP\"\n}" },
+            { "name": "410 – OTP Expired", "status": "Gone", "code": 410, "body": "{\n  \"status\": 410,\n  \"message\": \"OTP has expired. Please request a new one.\"\n}" }
+          ]
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"token\": \"RESET_TOKEN_HERE\",\n  \"newPassword\": \"NewPass@1234\",\n  \"ConfirmPassword\": \"NewPass@1234\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/auth/reset-password", "host": ["{{baseUrl}}"], "path": ["api","auth","reset-password"] },
+            "description": "Resets the password after OTP verification. newPassword and ConfirmPassword must match."
+          },
+          "response": [
+            { "name": "200 OK", "status": "OK", "code": 200, "body": "{\n  \"status\": 200,\n  \"message\": \"Password reset successfully\"\n}" },
+            { "name": "400 – Passwords don't match", "status": "Bad Request", "code": 400, "body": "{\n  \"status\": 400,\n  \"message\": \"Passwords do not match\"\n}" },
+            { "name": "400 – Same as old", "status": "Bad Request", "code": 400, "body": "{\n  \"status\": 400,\n  \"message\": \"New password cannot be same as old password\"\n}" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "👤 User Service",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-User-Name", "value": "admin" },
+              { "key": "X-User-Role", "value": "ADMIN" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"john.doe@college.edu\",\n  \"username\": \"johndoe\",\n  \"name\": \"John Doe\",\n  \"password\": \"Pass@1234\",\n  \"role\": \"STUDENT\",\n  \"department\": \"Computer Science\",\n  \"phoneNumber\": \"9876543210\",\n  \"universityId\": \"STU-2024-001\",\n  \"semester\": \"3\",\n  \"batch\": \"2022-2026\",\n  \"courseCode\": \"BCS\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/users", "host": ["{{baseUrl}}"], "path": ["api","users"] },
+            "description": "Creates a new user. Role must be one of: ADMIN, FACULTY, LIBRARIAN, STUDENT. Faculty-only fields: facultySubRole. Student-only fields: semester, batch, courseCode."
+          },
+          "response": [
+            { "name": "201 Created", "status": "Created", "code": 201, "body": "{\n  \"status\": 201,\n  \"message\": \"User created successfully\",\n  \"username\": \"john.doe@college.edu\",\n  \"data\": {\n    \"id\": 5,\n    \"email\": \"john.doe@college.edu\",\n    \"username\": \"johndoe\",\n    \"name\": \"John Doe\",\n    \"role\": \"STUDENT\",\n    \"department\": \"Computer Science\",\n    \"phoneNumber\": \"9876543210\",\n    \"universityId\": \"STU-2024-001\",\n    \"active\": true,\n    \"createdAt\": \"2024-01-15T10:00:00\"\n  },\n  \"timestamp\": \"2024-01-15T10:00:00\"\n}" },
+            { "name": "400 – Validation error", "status": "Bad Request", "code": 400, "body": "{\n  \"status\": 400,\n  \"message\": \"Validation failed\",\n  \"errors\": {\n    \"email\": \"Email should be valid\",\n    \"password\": \"Password must be at least 8 characters\"\n  }\n}" },
+            { "name": "409 – Duplicate universityId/email", "status": "Conflict", "code": 409, "body": "{\n  \"status\": 409,\n  \"message\": \"User with this email or universityId already exists\"\n}" },
+            { "name": "403 – Not admin", "status": "Forbidden", "code": 403, "body": "{\n  \"status\": 403,\n  \"message\": \"Only ADMIN can create users\"\n}" }
+          ]
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "header": [{ "key": "X-User-Role", "value": "ADMIN" }, { "key": "X-User-Name", "value": "admin" }],
+            "url": { "raw": "{{baseUrl}}/api/users?role=STUDENT", "host": ["{{baseUrl}}"], "path": ["api","users"], "query": [{ "key": "role", "value": "STUDENT", "description": "Optional filter: ADMIN, FACULTY, LIBRARIAN, STUDENT" }] },
+            "description": "Returns all users. Optional ?role= filter. Requires ADMIN role via X-User-Role header."
+          },
+          "response": [
+            { "name": "200 OK", "status": "OK", "code": 200, "body": "{\n  \"status\": 200,\n  \"message\": \"Users fetched successfully\",\n  \"data\": [\n    { \"id\": 1, \"email\": \"...\", \"name\": \"...\", \"role\": \"STUDENT\", \"universityId\": \"STU-2024-001\", \"active\": true }\n  ]\n}" },
+            { "name": "403 – Not ADMIN", "status": "Forbidden", "code": 403, "body": "{\n  \"status\": 403,\n  \"message\": \"Only ADMIN can view all users\"\n}" }
+          ]
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "header": [{ "key": "X-User-Name", "value": "admin" }],
+            "url": { "raw": "{{baseUrl}}/api/users/1", "host": ["{{baseUrl}}"], "path": ["api","users","1"] }
+          },
+          "response": [
+            { "name": "200 OK", "status": "OK", "code": 200, "body": "{\n  \"status\": 200,\n  \"message\": \"User fetched successfully\",\n  \"data\": { \"id\": 1, \"email\": \"admin@college.edu\", \"name\": \"Admin\", \"role\": \"ADMIN\" }\n}" },
+            { "name": "404 – Not found", "status": "Not Found", "code": 404, "body": "{\n  \"status\": 404,\n  \"message\": \"User not found with id: 1\"\n}" }
+          ]
+        },
+        {
+          "name": "Get User by University ID",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "header": [{ "key": "X-User-Name", "value": "admin" }],
+            "url": { "raw": "{{baseUrl}}/api/users/university/{{universityId}}", "host": ["{{baseUrl}}"], "path": ["api","users","university","{{universityId}}"] }
+          },
+          "response": [
+            { "name": "200 OK", "status": "OK", "code": 200, "body": "{\n  \"status\": 200,\n  \"message\": \"User fetched successfully\",\n  \"data\": { \"id\": 5, \"universityId\": \"STU-2024-001\", \"email\": \"john@college.edu\" }\n}" },
+            { "name": "404 – Not found", "status": "Not Found", "code": 404, "body": "{\n  \"status\": 404,\n  \"message\": \"User not found with universityId: STU-2024-001\"\n}" }
+          ]
+        },
+        {
+          "name": "Update User by ID",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "X-User-Name", "value": "admin" }, { "key": "X-User-Role", "value": "ADMIN" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"john.new@college.edu\",\n  \"username\": \"johnnew\",\n  \"name\": \"John Updated\",\n  \"password\": \"Pass@1234\",\n  \"role\": \"STUDENT\",\n  \"department\": \"Computer Science\",\n  \"phoneNumber\": \"9876543210\",\n  \"universityId\": \"STU-2024-001\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/users/1", "host": ["{{baseUrl}}"], "path": ["api","users","1"] }
+          },
+          "response": [
+            { "name": "200 OK", "status": "OK", "code": 200, "body": "{\n  \"status\": 200,\n  \"message\": \"User updated successfully\",\n  \"data\": { ... }\n}" },
+            { "name": "404 – Not found", "status": "Not Found", "code": 404, "body": "{\n  \"status\": 404,\n  \"message\": \"User not found\"\n}" }
+          ]
+        },
+        {
+          "name": "Update Password by ID",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "X-User-Name", "value": "johndoe" }],
+            "body": { "mode": "raw", "raw": "{\n  \"oldPassword\": \"OldPass@123\",\n  \"newPassword\": \"NewPass@1234\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/users/1/password", "host": ["{{baseUrl}}"], "path": ["api","users","1","password"] }
+          },
+          "response": [
+            { "name": "200 OK", "status": "OK", "code": 200, "body": "{\n  \"status\": 200,\n  \"message\": \"Password updated successfully\"\n}" },
+            { "name": "400 – Wrong old password", "status": "Bad Request", "code": 400, "body": "{\n  \"status\": 400,\n  \"message\": \"Old password is incorrect\"\n}" }
+          ]
+        },
+        {
+          "name": "Delete User by ID",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "DELETE",
+            "header": [{ "key": "X-User-Name", "value": "admin" }, { "key": "X-User-Role", "value": "ADMIN" }],
+            "url": { "raw": "{{baseUrl}}/api/users/1", "host": ["{{baseUrl}}"], "path": ["api","users","1"] }
+          },
+          "response": [
+            { "name": "200 OK – Soft deleted", "status": "OK", "code": 200, "body": "{\n  \"status\": 200,\n  \"message\": \"User deleted successfully\",\n  \"reason\": \"Soft delete applied\"\n}" },
+            { "name": "404 – Not found", "status": "Not Found", "code": 404, "body": "{\n  \"status\": 404,\n  \"message\": \"User not found\"\n}" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "🏢 Department Service",
+      "item": [
+        {
+          "name": "Create Department",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"departmentName\": \"Computer Science\",\n  \"departmentCode\": \"CS\",\n  \"hodId\": \"FAC-2024-001\",\n  \"hodName\": \"Dr. Smith\",\n  \"description\": \"Department of Computer Science and Engineering\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/departments", "host": ["{{baseUrl}}"], "path": ["api","departments"] }
+          },
+          "response": [
+            { "name": "201 Created", "status": "Created", "code": 201, "body": "{\n  \"status\": 201,\n  \"message\": \"Department created successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"departmentName\": \"Computer Science\",\n    \"departmentCode\": \"CS\",\n    \"hodId\": \"FAC-2024-001\",\n    \"active\": true,\n    \"createdAt\": \"2024-01-15T10:00:00\"\n  }\n}" },
+            { "name": "400 – Missing required fields", "status": "Bad Request", "code": 400, "body": "{\n  \"status\": 400,\n  \"message\": \"Validation failed\",\n  \"errors\": {\n    \"departmentName\": \"Department name is required\",\n    \"departmentCode\": \"Department code is required\"\n  }\n}" },
+            { "name": "409 – Duplicate code", "status": "Conflict", "code": 409, "body": "{\n  \"status\": 409,\n  \"message\": \"Department with code CS already exists\"\n}" }
+          ]
+        },
+        {
+          "name": "Get All Departments",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/departments", "host": ["{{baseUrl}}"], "path": ["api","departments"] }
+          },
+          "response": [
+            { "name": "200 OK", "status": "OK", "code": 200, "body": "{\n  \"status\": 200,\n  \"message\": \"Departments fetched successfully\",\n  \"data\": [ { \"id\": 1, \"departmentName\": \"Computer Science\", \"departmentCode\": \"CS\", \"active\": true } ]\n}" }
+          ]
+        },
+        {
+          "name": "Get Department by ID",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/departments/1", "host": ["{{baseUrl}}"], "path": ["api","departments","1"] }
+          },
+          "response": [
+            { "name": "200 OK", "status": "OK", "code": 200, "body": "{\n  \"status\": 200,\n  \"data\": { \"id\": 1, \"departmentName\": \"Computer Science\", \"departmentCode\": \"CS\" }\n}" },
+            { "name": "404 – Not found", "status": "Not Found", "code": 404, "body": "{\n  \"status\": 404,\n  \"message\": \"Department not found with id: 1\"\n}" }
+          ]
+        },
+        {
+          "name": "Get Department by Code",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/departments/code/CS", "host": ["{{baseUrl}}"], "path": ["api","departments","code","CS"] }
+          },
+          "response": [
+            { "name": "200 OK", "status": "OK", "code": 200, "body": "{\n  \"status\": 200,\n  \"data\": { \"id\": 1, \"departmentName\": \"Computer Science\", \"departmentCode\": \"CS\" }\n}" },
+            { "name": "404 – Code not found", "status": "Not Found", "code": 404, "body": "{\n  \"status\": 404,\n  \"message\": \"Department not found with code: CS\"\n}" }
+          ]
+        },
+        {
+          "name": "Update Department",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"departmentName\": \"Computer Science & Engineering\",\n  \"departmentCode\": \"CSE\",\n  \"hodId\": \"FAC-2024-002\",\n  \"hodName\": \"Dr. Johnson\",\n  \"description\": \"Updated description\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/departments/1", "host": ["{{baseUrl}}"], "path": ["api","departments","1"] }
+          },
+          "response": [
+            { "name": "200 OK", "status": "OK", "code": 200, "body": "{\n  \"status\": 200,\n  \"message\": \"Department updated successfully\",\n  \"data\": { ... }\n}" }
+          ]
+        },
+        {
+          "name": "Delete Department",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/departments/1", "host": ["{{baseUrl}}"], "path": ["api","departments","1"] }
+          },
+          "response": [
+            { "name": "200 OK", "status": "OK", "code": 200, "body": "{\n  \"status\": 200,\n  \"message\": \"Department deleted successfully\"\n}" }
+          ]
+        },
+        {
+          "name": "Get Total Departments Count",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/departments/count/total", "host": ["{{baseUrl}}"], "path": ["api","departments","count","total"] }
+          },
+          "response": [
+            { "name": "200 OK", "status": "OK", "code": 200, "body": "{\n  \"status\": 200,\n  \"message\": \"Total count fetched\",\n  \"data\": { \"totalDepartments\": 8 }\n}" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "📚 Subject Service",
+      "item": [
+        {
+          "name": "Create Subject",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"subjectCode\": \"CS301\",\n  \"subjectName\": \"Data Structures\",\n  \"courseId\": \"1\",\n  \"courseCode\": \"BCS\",\n  \"departmentId\": \"1\",\n  \"departmentCode\": \"CS\",\n  \"credits\": 4,\n  \"semester\": 3,\n  \"description\": \"Fundamental data structures and algorithms\",\n  \"courseObjectives\": \"Understand arrays, linked lists, trees\",\n  \"outcomes\": \"Ability to implement efficient data structures\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/subjects", "host": ["{{baseUrl}}"], "path": ["api","subjects"] }
+          },
+          "response": [
+            { "name": "201 Created", "status": "Created", "code": 201, "body": "{\n  \"status\": 201,\n  \"message\": \"Subject created successfully\",\n  \"data\": { \"id\": 1, \"subjectCode\": \"CS301\", \"subjectName\": \"Data Structures\", \"credits\": 4, \"semester\": 3 }\n}" },
+            { "name": "400 – Validation failed", "status": "Bad Request", "code": 400, "body": "{\n  \"status\": 400,\n  \"errors\": {\n    \"subjectCode\": \"Subject code is required\",\n    \"credits\": \"Credits must be at least 1\",\n    \"semester\": \"Semester must be at least 1\"\n  }\n}" },
+            { "name": "409 – Subject code exists", "status": "Conflict", "code": 409, "body": "{\n  \"status\": 409,\n  \"message\": \"Subject with code CS301 already exists\"\n}" }
+          ]
+        },
+        {
+          "name": "Get All Subjects",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/subjects", "host": ["{{baseUrl}}"], "path": ["api","subjects"] }
+          },
+          "response": [
+            { "name": "200 OK", "status": "OK", "code": 200, "body": "{\n  \"status\": 200,\n  \"data\": [ { \"id\": 1, \"subjectCode\": \"CS301\", \"subjectName\": \"Data Structures\", \"credits\": 4 } ]\n}" }
+          ]
+        },
+        {
+          "name": "Get Subject by ID",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/subjects/1", "host": ["{{baseUrl}}"], "path": ["api","subjects","1"] }
+          }
+        },
+        {
+          "name": "Get Subject by Code",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/subjects/code/CS301", "host": ["{{baseUrl}}"], "path": ["api","subjects","code","CS301"] }
+          }
+        },
+        {
+          "name": "Get Subjects by Course",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/subjects/course/BCS", "host": ["{{baseUrl}}"], "path": ["api","subjects","course","BCS"] }
+          }
+        },
+        {
+          "name": "Get Subjects by Department",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/subjects/department/CS", "host": ["{{baseUrl}}"], "path": ["api","subjects","department","CS"] }
+          }
+        },
+        {
+          "name": "Get Subjects by Semester",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/subjects/semester/3", "host": ["{{baseUrl}}"], "path": ["api","subjects","semester","3"] }
+          }
+        },
+        {
+          "name": "Get Subjects by Faculty",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/subjects/faculty/{{facultyId}}", "host": ["{{baseUrl}}"], "path": ["api","subjects","faculty","{{facultyId}}"] }
+          }
+        },
+        {
+          "name": "Get Subjects by Student",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/subjects/student/{{universityId}}", "host": ["{{baseUrl}}"], "path": ["api","subjects","student","{{universityId}}"] }
+          }
+        },
+        {
+          "name": "Assign Faculty to Subject",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "PUT",
+            "url": { "raw": "{{baseUrl}}/api/subjects/CS301/assign-faculty/{{facultyId}}?facultyName=Dr.+Smith", "host": ["{{baseUrl}}"], "path": ["api","subjects","CS301","assign-faculty","{{facultyId}}"], "query": [{ "key": "facultyName", "value": "Dr. Smith" }] }
+          },
+          "response": [
+            { "name": "200 OK", "status": "OK", "code": 200, "body": "{\n  \"status\": 200,\n  \"message\": \"Faculty assigned successfully\",\n  \"data\": null\n}" },
+            { "name": "404 – Subject or faculty not found", "status": "Not Found", "code": 404, "body": "{\n  \"status\": 404,\n  \"message\": \"Subject not found with code: CS301\"\n}" }
+          ]
+        },
+        {
+          "name": "Update Subject",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"subjectCode\": \"CS301\",\n  \"subjectName\": \"Advanced Data Structures\",\n  \"courseId\": \"1\",\n  \"courseCode\": \"BCS\",\n  \"departmentId\": \"1\",\n  \"departmentCode\": \"CS\",\n  \"credits\": 4,\n  \"semester\": 3\n}" },
+            "url": { "raw": "{{baseUrl}}/api/subjects/CS301", "host": ["{{baseUrl}}"], "path": ["api","subjects","CS301"] }
+          }
+        },
+        {
+          "name": "Delete Subject",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/subjects/CS301", "host": ["{{baseUrl}}"], "path": ["api","subjects","CS301"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🎓 Student Service",
+      "item": [
+        {
+          "name": "Create Student",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "X-User-Name", "value": "admin" }, { "key": "X-User-Role", "value": "ADMIN" }],
+            "body": { "mode": "raw", "raw": "{\n  \"universityId\": \"STU-2024-001\",\n  \"studentName\": \"John Doe\",\n  \"studentEmail\": \"john@college.edu\",\n  \"studentPhoneNumber\": \"9876543210\",\n  \"semester\": \"3\",\n  \"batch\": \"2022-2026\",\n  \"department\": \"Computer Science\",\n  \"course\": \"Bachelor of Computer Science\",\n  \"courseCode\": \"BCS\",\n  \"facultyUniversityId\": \"FAC-2024-001\",\n  \"password\": \"Pass@1234\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/students", "host": ["{{baseUrl}}"], "path": ["api","students"] }
+          },
+          "response": [
+            { "name": "201 Created", "status": "Created", "code": 201, "body": "{\n  \"status\": 201,\n  \"message\": \"Student created successfully\",\n  \"data\": {\n    \"universityId\": \"STU-2024-001\",\n    \"studentName\": \"John Doe\",\n    \"semester\": \"3\",\n    \"active\": true\n  }\n}" },
+            { "name": "409 – Duplicate universityId", "status": "Conflict", "code": 409, "body": "{\n  \"status\": 409,\n  \"message\": \"Student with universityId STU-2024-001 already exists\"\n}" }
+          ]
+        },
+        {
+          "name": "Get All Students",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "header": [{ "key": "X-User-Role", "value": "ADMIN" }],
+            "url": { "raw": "{{baseUrl}}/api/students?courseCode=BCS&semester=3&department=CS", "host": ["{{baseUrl}}"], "path": ["api","students"], "query": [{ "key": "courseCode", "value": "BCS" }, { "key": "semester", "value": "3" }, { "key": "department", "value": "CS" }] }
+          }
+        },
+        {
+          "name": "Get Student by University ID",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/students/university-id/{{universityId}}", "host": ["{{baseUrl}}"], "path": ["api","students","university-id","{{universityId}}"] }
+          }
+        },
+        {
+          "name": "Update Student",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "X-User-Name", "value": "admin" }, { "key": "X-User-Role", "value": "ADMIN" }],
+            "body": { "mode": "raw", "raw": "{\n  \"studentName\": \"John Updated\",\n  \"studentPhoneNumber\": \"9999999999\",\n  \"semester\": \"4\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/students/{{universityId}}", "host": ["{{baseUrl}}"], "path": ["api","students","{{universityId}}"] }
+          }
+        },
+        {
+          "name": "Update Student Semester",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "PUT",
+            "header": [{ "key": "X-User-Role", "value": "ADMIN" }],
+            "url": { "raw": "{{baseUrl}}/api/students/{{universityId}}/semester?semester=4", "host": ["{{baseUrl}}"], "path": ["api","students","{{universityId}}","semester"], "query": [{ "key": "semester", "value": "4" }] }
+          }
+        },
+        {
+          "name": "Update Student Subjects",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "X-User-Role", "value": "ADMIN" }],
+            "body": { "mode": "raw", "raw": "[\"CS301\", \"CS302\", \"CS303\"]" },
+            "url": { "raw": "{{baseUrl}}/api/students/{{universityId}}/subjects", "host": ["{{baseUrl}}"], "path": ["api","students","{{universityId}}","subjects"] }
+          }
+        },
+        {
+          "name": "Mark Student Attendance",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/api/students/attendance?universityId=STU-2024-001&status=PRESENT&facultyId=1&courseCode=BCS", "host": ["{{baseUrl}}"], "path": ["api","students","attendance"], "query": [{ "key": "universityId", "value": "STU-2024-001" }, { "key": "status", "value": "PRESENT", "description": "PRESENT, ABSENT, LATE" }, { "key": "facultyId", "value": "1" }, { "key": "courseCode", "value": "BCS" }] }
+          }
+        },
+        {
+          "name": "Get Student Dashboard",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/students/{{universityId}}/dashboard", "host": ["{{baseUrl}}"], "path": ["api","students","{{universityId}}","dashboard"] }
+          }
+        },
+        {
+          "name": "Get Student Attendance Calendar",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/students/{{universityId}}/attendance", "host": ["{{baseUrl}}"], "path": ["api","students","{{universityId}}","attendance"] }
+          }
+        },
+        {
+          "name": "Get Student Books Status",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/students/{{universityId}}/books-status", "host": ["{{baseUrl}}"], "path": ["api","students","{{universityId}}","books-status"] }
+          }
+        },
+        {
+          "name": "Get Students by Course",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/students/filter/by-course/BCS", "host": ["{{baseUrl}}"], "path": ["api","students","filter","by-course","BCS"] }
+          }
+        },
+        {
+          "name": "Get Students by Department",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/students/filter/by-department/CS", "host": ["{{baseUrl}}"], "path": ["api","students","filter","by-department","CS"] }
+          }
+        },
+        {
+          "name": "Get Total Students Count",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/students/count", "host": ["{{baseUrl}}"], "path": ["api","students","count"] }
+          }
+        },
+        {
+          "name": "Delete Student",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "DELETE",
+            "header": [{ "key": "X-User-Name", "value": "admin" }, { "key": "X-User-Role", "value": "ADMIN" }],
+            "url": { "raw": "{{baseUrl}}/api/students/{{universityId}}", "host": ["{{baseUrl}}"], "path": ["api","students","{{universityId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "👨‍🏫 Faculty Service",
+      "item": [
+        {
+          "name": "Create Faculty",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"facultyUniversityId\": \"FAC-2024-001\",\n  \"facultyName\": \"Dr. Smith\",\n  \"facultyEmail\": \"smith@college.edu\",\n  \"facultyPhoneNumber\": \"9876543210\",\n  \"department\": \"Computer Science\",\n  \"subRole\": \"PROFESSOR\",\n  \"courseCode\": [\"BCS\", \"MCS\"]\n}" },
+            "url": { "raw": "{{baseUrl}}/api/faculty", "host": ["{{baseUrl}}"], "path": ["api","faculty"] },
+            "description": "subRole values: HOD, PROFESSOR, ASSISTANT_PROFESSOR, TRAINEE"
+          },
+          "response": [
+            { "name": "201 Created", "status": "Created", "code": 201, "body": "{\n  \"status\": 201,\n  \"message\": \"Faculty created successfully\",\n  \"data\": { \"facultyUniversityId\": \"FAC-2024-001\", \"facultyName\": \"Dr. Smith\", \"subRole\": \"PROFESSOR\" }\n}" }
+          ]
+        },
+        {
+          "name": "Get Faculty by University ID",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/faculty/{{facultyId}}", "host": ["{{baseUrl}}"], "path": ["api","faculty","{{facultyId}}"] }
+          }
+        },
+        {
+          "name": "Get All Faculty",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/faculty?department=CS&subRole=PROFESSOR", "host": ["{{baseUrl}}"], "path": ["api","faculty"], "query": [{ "key": "department", "value": "CS" }, { "key": "subRole", "value": "PROFESSOR" }] }
+          }
+        },
+        {
+          "name": "Update Faculty",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"facultyName\": \"Dr. Smith Updated\",\n  \"facultyPhoneNumber\": \"9999999999\",\n  \"subRole\": \"HOD\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/faculty/{{facultyId}}", "host": ["{{baseUrl}}"], "path": ["api","faculty","{{facultyId}}"] }
+          }
+        },
+        {
+          "name": "Delete Faculty",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/faculty/{{facultyId}}", "host": ["{{baseUrl}}"], "path": ["api","faculty","{{facultyId}}"] }
+          }
+        },
+        {
+          "name": "Assign Courses to Faculty",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "[\"BCS\", \"MCS\", \"BCA\"]" },
+            "url": { "raw": "{{baseUrl}}/api/faculty/{{facultyId}}/assign-course", "host": ["{{baseUrl}}"], "path": ["api","faculty","{{facultyId}}","assign-course"] }
+          }
+        },
+        {
+          "name": "Get Faculty Courses",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/faculty/{{facultyId}}/courses", "host": ["{{baseUrl}}"], "path": ["api","faculty","{{facultyId}}","courses"] }
+          }
+        },
+        {
+          "name": "Get Faculty Students",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/faculty/{{facultyId}}/students", "host": ["{{baseUrl}}"], "path": ["api","faculty","{{facultyId}}","students"] }
+          }
+        },
+        {
+          "name": "Get Faculty Dashboard",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/faculty/{{facultyId}}/dashboard", "host": ["{{baseUrl}}"], "path": ["api","faculty","{{facultyId}}","dashboard"] }
+          }
+        },
+        {
+          "name": "Get Faculty Schedule",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/faculty/{{facultyId}}/schedule", "host": ["{{baseUrl}}"], "path": ["api","faculty","{{facultyId}}","schedule"] }
+          }
+        },
+        {
+          "name": "Assign Schedule to Faculty",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"monday\": [\"CS301 9AM\", \"CS302 11AM\"],\n  \"tuesday\": [\"CS303 10AM\"],\n  \"wednesday\": [],\n  \"thursday\": [\"CS301 9AM\"],\n  \"friday\": [\"CS302 2PM\"]\n}" },
+            "url": { "raw": "{{baseUrl}}/api/faculty/{{facultyId}}/assign-schedule", "host": ["{{baseUrl}}"], "path": ["api","faculty","{{facultyId}}","assign-schedule"] }
+          }
+        },
+        {
+          "name": "Mark Faculty Attendance",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/api/faculty/attendance/mark?facultyUniversityId={{facultyId}}&status=PRESENT&facultyId=1&courseCode=BCS", "host": ["{{baseUrl}}"], "path": ["api","faculty","attendance","mark"], "query": [{ "key": "facultyUniversityId", "value": "{{facultyId}}" }, { "key": "status", "value": "PRESENT" }, { "key": "facultyId", "value": "1" }, { "key": "courseCode", "value": "BCS" }] }
+          }
+        },
+        {
+          "name": "Mark Faculty Self Attendance",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/api/faculty/attendance/self?facultyUniversityId={{facultyId}}&facultyId=1", "host": ["{{baseUrl}}"], "path": ["api","faculty","attendance","self"], "query": [{ "key": "facultyUniversityId", "value": "{{facultyId}}" }, { "key": "facultyId", "value": "1" }] }
+          }
+        },
+        {
+          "name": "Get Faculty Attendance Calendar",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/faculty/{{facultyId}}/attendance-calendar", "host": ["{{baseUrl}}"], "path": ["api","faculty","{{facultyId}}","attendance-calendar"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📋 Attendance Service",
+      "item": [
+        {
+          "name": "Mark Attendance",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"studentId\": \"STU-2024-001\",\n  \"courseId\": \"1\",\n  \"courseCode\": \"BCS\",\n  \"attendanceDate\": \"2024-01-15\",\n  \"status\": \"PRESENT\",\n  \"facultyId\": \"FAC-2024-001\",\n  \"remarks\": \"On time\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/attendance", "host": ["{{baseUrl}}"], "path": ["api","attendance"] },
+            "description": "status values: PRESENT, ABSENT, LATE"
+          },
+          "response": [
+            { "name": "201 Created", "status": "Created", "code": 201, "body": "{\n  \"id\": 1,\n  \"studentId\": \"STU-2024-001\",\n  \"courseCode\": \"BCS\",\n  \"attendanceDate\": \"2024-01-15\",\n  \"status\": \"PRESENT\",\n  \"facultyId\": \"FAC-2024-001\",\n  \"createdAt\": \"2024-01-15T09:00:00\"\n}" },
+            { "name": "400 – Validation failed", "status": "Bad Request", "code": 400, "body": "{\n  \"errors\": {\n    \"studentId\": \"Student ID is required\",\n    \"attendanceDate\": \"Attendance date is required\",\n    \"status\": \"Attendance status is required\"\n  }\n}" },
+            { "name": "409 – Already marked", "status": "Conflict", "code": 409, "body": "{\n  \"status\": 409,\n  \"message\": \"Attendance already marked for this student on this date\"\n}" }
+          ]
+        },
+        {
+          "name": "Get Attendance by ID",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/attendance/1", "host": ["{{baseUrl}}"], "path": ["api","attendance","1"] }
+          }
+        },
+        {
+          "name": "Get Student Attendance",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/attendance/student/{{universityId}}", "host": ["{{baseUrl}}"], "path": ["api","attendance","student","{{universityId}}"] }
+          }
+        },
+        {
+          "name": "Get Course Attendance for Date",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/attendance/course/BCS/date/2024-01-15", "host": ["{{baseUrl}}"], "path": ["api","attendance","course","BCS","date","2024-01-15"] }
+          }
+        },
+        {
+          "name": "Get Faculty Attendance Records (Date Range)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/attendance/faculty/{{facultyId}}/range?startDate=2024-01-01&endDate=2024-01-31", "host": ["{{baseUrl}}"], "path": ["api","attendance","faculty","{{facultyId}}","range"], "query": [{ "key": "startDate", "value": "2024-01-01" }, { "key": "endDate", "value": "2024-01-31" }] }
+          }
+        },
+        {
+          "name": "Get Attendance Percentage",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/attendance/percentage/{{universityId}}/range?startDate=2024-01-01&endDate=2024-01-31", "host": ["{{baseUrl}}"], "path": ["api","attendance","percentage","{{universityId}}","range"], "query": [{ "key": "startDate", "value": "2024-01-01" }, { "key": "endDate", "value": "2024-01-31" }] },
+            "description": "Returns attendance percentage for a student between two dates."
+          },
+          "response": [
+            { "name": "200 OK", "status": "OK", "code": 200, "body": "{\n  \"attendancePercentage\": 85.5\n}" }
+          ]
+        },
+        {
+          "name": "Update Attendance",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"studentId\": \"STU-2024-001\",\n  \"courseId\": \"1\",\n  \"attendanceDate\": \"2024-01-15\",\n  \"status\": \"ABSENT\",\n  \"facultyId\": \"FAC-2024-001\",\n  \"remarks\": \"Corrected\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/attendance/1", "host": ["{{baseUrl}}"], "path": ["api","attendance","1"] }
+          }
+        },
+        {
+          "name": "Delete Attendance",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/attendance/1", "host": ["{{baseUrl}}"], "path": ["api","attendance","1"] }
+          },
+          "response": [
+            { "name": "200 OK", "status": "OK", "code": 200, "body": "{\n  \"message\": \"Attendance record deleted successfully\"\n}" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "📖 Course Service",
+      "item": [
+        {
+          "name": "Create Course",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Bachelor of Computer Science\",\n  \"courseCode\": \"BCS\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/courses", "host": ["{{baseUrl}}"], "path": ["api","courses"] }
+          },
+          "response": [
+            { "name": "201 Created", "status": "Created", "code": 201, "body": "{\n  \"status\": 201,\n  \"message\": \"Course created\",\n  \"data\": { \"id\": 1, \"name\": \"Bachelor of Computer Science\", \"courseCode\": \"BCS\" }\n}" },
+            { "name": "400 – Missing name or courseCode", "status": "Bad Request", "code": 400, "body": "{\n  \"errors\": {\n    \"name\": \"Course name is required\",\n    \"courseCode\": \"CourseCode is required\"\n  }\n}" }
+          ]
+        },
+        {
+          "name": "Get All Courses",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/courses", "host": ["{{baseUrl}}"], "path": ["api","courses"] }
+          }
+        },
+        {
+          "name": "Get Course by ID",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/courses/1", "host": ["{{baseUrl}}"], "path": ["api","courses","1"] }
+          }
+        },
+        {
+          "name": "Get Total Courses Count",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/courses/count", "host": ["{{baseUrl}}"], "path": ["api","courses","count"] }
+          }
+        },
+        {
+          "name": "Get Courses by Faculty",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/courses/faculty/{{facultyId}}", "host": ["{{baseUrl}}"], "path": ["api","courses","faculty","{{facultyId}}"] }
+          }
+        },
+        {
+          "name": "Assign Courses to Faculty",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "[\"BCS\", \"MCS\"]" },
+            "url": { "raw": "{{baseUrl}}/api/courses/assign/faculty/{{facultyId}}", "host": ["{{baseUrl}}"], "path": ["api","courses","assign","faculty","{{facultyId}}"] }
+          }
+        },
+        {
+          "name": "Update Course",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Bachelor of CS (Updated)\",\n  \"courseCode\": \"BCS\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/courses/BCS", "host": ["{{baseUrl}}"], "path": ["api","courses","BCS"] }
+          }
+        },
+        {
+          "name": "Delete Course",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/courses/BCS", "host": ["{{baseUrl}}"], "path": ["api","courses","BCS"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📚 Library Service",
+      "item": [
+        {
+          "name": "Create Librarian",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"universityId\": \"LIB-2024-001\",\n  \"librarianName\": \"Mary Johnson\",\n  \"librarianEmail\": \"mary@college.edu\",\n  \"librarianPhoneNumber\": \"9876543210\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/library/librarian", "host": ["{{baseUrl}}"], "path": ["api","library","librarian"] }
+          }
+        },
+        {
+          "name": "Get Librarian",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/library/librarian/1", "host": ["{{baseUrl}}"], "path": ["api","library","librarian","1"] }
+          }
+        },
+        {
+          "name": "Add Book",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"bookId\": \"BK-001\",\n  \"bookName\": \"Introduction to Algorithms\",\n  \"author\": \"Thomas H. Cormen\",\n  \"publication\": \"MIT Press\",\n  \"totalCount\": 5,\n  \"description\": \"Classic algorithms textbook\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/library/books", "host": ["{{baseUrl}}"], "path": ["api","library","books"] }
+          },
+          "response": [
+            { "name": "201 Created", "status": "Created", "code": 201, "body": "{\n  \"status\": 201,\n  \"message\": \"Book added successfully\",\n  \"data\": { \"bookId\": \"BK-001\", \"bookName\": \"Introduction to Algorithms\", \"totalCount\": 5, \"availableCount\": 5 }\n}" }
+          ]
+        },
+        {
+          "name": "Get All Books",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/library/books?searchTerm=algorithms&availableOnly=true", "host": ["{{baseUrl}}"], "path": ["api","library","books"], "query": [{ "key": "searchTerm", "value": "algorithms" }, { "key": "availableOnly", "value": "true" }] }
+          }
+        },
+        {
+          "name": "Get Book by ID",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/library/books/BK-001", "host": ["{{baseUrl}}"], "path": ["api","library","books","BK-001"] }
+          }
+        },
+        {
+          "name": "Issue Book",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"bookId\": \"BK-001\",\n  \"userId\": \"STU-2024-001\",\n  \"userRole\": \"STUDENT\",\n  \"issueDate\": \"2024-01-15\",\n  \"returnableDate\": \"2024-01-29\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/library/issue", "host": ["{{baseUrl}}"], "path": ["api","library","issue"] },
+            "description": "Issues a book to a user. userRole: STUDENT, FACULTY, LIBRARIAN"
+          },
+          "response": [
+            { "name": "201 Created", "status": "Created", "code": 201, "body": "{\n  \"status\": 201,\n  \"message\": \"Book issued successfully\",\n  \"data\": { \"id\": 1, \"bookId\": \"BK-001\", \"userId\": \"STU-2024-001\", \"status\": \"ISSUED\", \"returnableDate\": \"2024-01-29\" }\n}" },
+            { "name": "400 – No copies available", "status": "Bad Request", "code": 400, "body": "{\n  \"status\": 400,\n  \"message\": \"No copies available for this book\"\n}" }
+          ]
+        },
+        {
+          "name": "Return Book",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/api/library/return/1", "host": ["{{baseUrl}}"], "path": ["api","library","return","1"] },
+            "description": "Returns a book using the issue record ID."
+          }
+        },
+        {
+          "name": "Get Issue Records",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/library/issue-records?userRole=STUDENT&userId=STU-2024-001", "host": ["{{baseUrl}}"], "path": ["api","library","issue-records"], "query": [{ "key": "userRole", "value": "STUDENT" }, { "key": "userId", "value": "STU-2024-001" }] }
+          }
+        },
+        {
+          "name": "Get All Issue Records",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/library/issue-records/all", "host": ["{{baseUrl}}"], "path": ["api","library","issue-records","all"] }
+          }
+        },
+        {
+          "name": "Get Overdue Books",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/library/overdue-books", "host": ["{{baseUrl}}"], "path": ["api","library","overdue-books"] }
+          }
+        },
+        {
+          "name": "Get Library Dashboard",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/library/dashboard", "host": ["{{baseUrl}}"], "path": ["api","library","dashboard"] }
+          }
+        },
+        {
+          "name": "Get Total Books Count",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/library/total-books", "host": ["{{baseUrl}}"], "path": ["api","library","total-books"] }
+          }
+        },
+        {
+          "name": "Get Available Books Count",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/library/available-books", "host": ["{{baseUrl}}"], "path": ["api","library","available-books"] }
+          }
+        },
+        {
+          "name": "Get Library Members",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/library/members", "host": ["{{baseUrl}}"], "path": ["api","library","members"] }
+          }
+        },
+        {
+          "name": "Get User Books",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/library/user/{{universityId}}/books", "host": ["{{baseUrl}}"], "path": ["api","library","user","{{universityId}}","books"] }
+          }
+        },
+        {
+          "name": "Update Book Quantity",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "PUT",
+            "url": { "raw": "{{baseUrl}}/api/library/books/BK-001/quantity?quantityToAdd=3", "host": ["{{baseUrl}}"], "path": ["api","library","books","BK-001","quantity"], "query": [{ "key": "quantityToAdd", "value": "3" }] }
+          }
+        },
+        {
+          "name": "Delete Book",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/library/books/BK-001", "host": ["{{baseUrl}}"], "path": ["api","library","books","BK-001"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📊 Dashboard Service",
+      "item": [
+        {
+          "name": "Admin Dashboard",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/dashboard/admin", "host": ["{{baseUrl}}"], "path": ["api","dashboard","admin"] },
+            "description": "Returns system-wide stats: total students, faculty, departments, courses, library stats."
+          }
+        },
+        {
+          "name": "Student Dashboard",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/dashboard/student/{{universityId}}", "host": ["{{baseUrl}}"], "path": ["api","dashboard","student","{{universityId}}"] }
+          }
+        },
+        {
+          "name": "Faculty Dashboard",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/dashboard/faculty/{{facultyId}}", "host": ["{{baseUrl}}"], "path": ["api","dashboard","faculty","{{facultyId}}"] }
+          }
+        },
+        {
+          "name": "Librarian Dashboard",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/dashboard/librarian", "host": ["{{baseUrl}}"], "path": ["api","dashboard","librarian"] }
+          }
+        },
+        {
+          "name": "Get My Profile",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}" }] },
+            "method": "GET",
+            "header": [
+              { "key": "X-User-Name", "value": "johndoe" },
+              { "key": "X-User-Role", "value": "STUDENT" },
+              { "key": "universityId", "value": "{{universityId}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/profile/me", "host": ["{{baseUrl}}"], "path": ["api","profile","me"] },
+            "description": "Returns the profile of the currently logged-in user based on X-User-Name, X-User-Role, and universityId headers."
+          }
+        }
+      ]
+    }
+  ]
+}

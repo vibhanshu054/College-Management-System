@@ -467,3 +467,20 @@ This generated password is for development use only. Your security configuration
 2026-04-23T13:47:32.225+05:30  INFO 8832 --- [Dashboard-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
 2026-04-23T13:52:32.229+05:30  INFO 8832 --- [Dashboard-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
 2026-04-23T13:57:32.234+05:30  INFO 8832 --- [Dashboard-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T14:01:00.189+05:30  INFO 8832 --- [Dashboard-Service] [http-nio-8085-exec-4] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-04-23T14:01:00.190+05:30  INFO 8832 --- [Dashboard-Service] [http-nio-8085-exec-4] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-04-23T14:01:00.208+05:30  INFO 8832 --- [Dashboard-Service] [http-nio-8085-exec-4] o.s.web.servlet.DispatcherServlet        : Completed initialization in 18 ms
+2026-04-23T14:01:00.335+05:30  INFO 8832 --- [Dashboard-Service] [http-nio-8085-exec-4] c.d.controller.DashboardController       : Librarian dashboard requested by: ANONYMOUS
+2026-04-23T14:02:32.246+05:30  INFO 8832 --- [Dashboard-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T14:07:32.254+05:30  INFO 8832 --- [Dashboard-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T14:12:32.257+05:30  INFO 8832 --- [Dashboard-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T14:17:32.266+05:30  INFO 8832 --- [Dashboard-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T14:22:32.275+05:30  INFO 8832 --- [Dashboard-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T14:27:32.279+05:30  INFO 8832 --- [Dashboard-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T14:32:32.285+05:30  INFO 8832 --- [Dashboard-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T14:37:32.299+05:30  INFO 8832 --- [Dashboard-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T14:41:44.733+05:30  INFO 8832 --- [Dashboard-Service] [http-nio-8085-exec-1] c.d.controller.DashboardController       : Librarian dashboard requested by: ANONYMOUS
+2026-04-23T14:42:32.302+05:30  INFO 8832 --- [Dashboard-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T14:43:23.514+05:30  INFO 8832 --- [Dashboard-Service] [http-nio-8085-exec-8] c.d.controller.DashboardController       : Librarian dashboard requested by: ANONYMOUS
+2026-04-23T14:44:15.492+05:30  INFO 8832 --- [Dashboard-Service] [http-nio-8085-exec-9] c.d.controller.DashboardController       : Librarian dashboard requested by: ANONYMOUS
+2026-04-23T14:44:25.270+05:30  INFO 8832 --- [Dashboard-Service] [http-nio-8085-exec-6] c.d.controller.DashboardController       : Librarian dashboard requested by: ANONYMOUS

@@ -443,3 +443,14 @@ This generated password is for development use only. Your security configuration
 2026-04-23T13:45:21.654+05:30  INFO 19608 --- [User-Service] [http-nio-8081-exec-3] c.userService.controller.UserController  : GET USER | id=2 | requestedBy=SYSTEM
 2026-04-23T13:49:57.803+05:30  INFO 19608 --- [User-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
 2026-04-23T13:54:57.818+05:30  INFO 19608 --- [User-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T13:59:57.829+05:30  INFO 19608 --- [User-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T14:04:57.845+05:30  INFO 19608 --- [User-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T14:09:57.854+05:30  INFO 19608 --- [User-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T14:14:57.860+05:30  INFO 19608 --- [User-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T14:19:57.869+05:30  INFO 19608 --- [User-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T14:24:57.877+05:30  INFO 19608 --- [User-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T14:29:57.880+05:30  INFO 19608 --- [User-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T14:34:57.890+05:30  INFO 19608 --- [User-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T14:39:57.902+05:30  INFO 19608 --- [User-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T14:41:44.294+05:30  INFO 19608 --- [User-Service] [http-nio-8081-exec-5] c.userService.controller.UserController  : VERIFY USER | email=library@gmail.com
+2026-04-23T14:44:57.904+05:30  INFO 19608 --- [User-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
