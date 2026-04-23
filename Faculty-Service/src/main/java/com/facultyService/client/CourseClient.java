@@ -23,7 +23,7 @@ public interface CourseClient {
     void removeFacultyCourses(@PathVariable String universityId);
 
     @PostMapping("/api/courses/assign/faculty/{facultyUniversityId}")
-    public ResponseEntity<ApiResponse> assignCoursesToFacultyByCode(
+    ResponseEntity<ApiResponse> assignCoursesToFacultyByCode(
             @PathVariable String facultyUniversityId,
             @RequestBody List<String> courseCodes);
 }

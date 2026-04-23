@@ -4060,3 +4060,8 @@ This generated password is for development use only. Your security configuration
 2026-04-23T18:33:35.004+05:30  INFO 3956 --- [Auth-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
 2026-04-23T18:35:27.598+05:30  INFO 3956 --- [Auth-Service] [http-nio-8083-exec-1] c.a.services.impl.AuthServiceImpl        : Validating token
 2026-04-23T18:38:35.006+05:30  INFO 3956 --- [Auth-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T18:43:10.012+05:30  INFO 3956 --- [Auth-Service] [http-nio-8083-exec-2] c.authService.controller.AuthController  : Logout API called for admin
+2026-04-23T18:43:10.012+05:30  WARN 3956 --- [Auth-Service] [http-nio-8083-exec-2] c.a.services.impl.AuthServiceImpl        : BLACKLISTING TOKEN: eyJhbGciOiJIUzI1NiJ9.eyJ1bml2ZXJzaXR5SWQiOiJBRE0wMDAwMDEiLCJyb2xlIjoiQURNSU4iLCJkZXBhcnRtZW50IjoiQWRtaW5pc3RyYXRpb24iLCJpYXQiOjE3NzY5NDkzOTYsImV4cCI6MTc3Njk1Mjk5Nn0.-6t-iE4CxgZ-sBEZtdiA6kL7XmkunfmWzbYSgefd7CU
+2026-04-23T18:43:35.018+05:30  INFO 3956 --- [Auth-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T18:48:35.021+05:30  INFO 3956 --- [Auth-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T18:53:35.028+05:30  INFO 3956 --- [Auth-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration

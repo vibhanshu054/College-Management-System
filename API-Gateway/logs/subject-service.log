@@ -447,3 +447,6 @@ This generated password is for development use only. Your security configuration
 2026-04-23T18:28:42.541+05:30  INFO 17052 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
 2026-04-23T18:33:42.555+05:30  INFO 17052 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
 2026-04-23T18:38:42.563+05:30  INFO 17052 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T18:43:42.568+05:30  INFO 17052 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T18:48:42.579+05:30  INFO 17052 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T18:53:42.583+05:30  INFO 17052 --- [Subject-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration

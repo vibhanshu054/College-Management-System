@@ -560,3 +560,6 @@ This generated password is for development use only. Your security configuration
 2026-04-23T18:32:32.743+05:30  INFO 8832 --- [Dashboard-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
 2026-04-23T18:35:27.617+05:30  INFO 8832 --- [Dashboard-Service] [http-nio-8085-exec-3] c.d.controller.DashboardController       : Admin dashboard requested by: ANONYMOUS
 2026-04-23T18:37:32.744+05:30  INFO 8832 --- [Dashboard-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T18:42:32.747+05:30  INFO 8832 --- [Dashboard-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T18:47:32.758+05:30  INFO 8832 --- [Dashboard-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-23T18:52:32.773+05:30  INFO 8832 --- [Dashboard-Service] [AsyncResolver-bootstrap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
