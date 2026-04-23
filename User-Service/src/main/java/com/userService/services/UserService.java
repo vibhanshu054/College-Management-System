@@ -38,4 +38,6 @@ public interface UserService {
     UserDto updateUserByUniversityId(String universityId, UserDto dto, String username);
 
     void updatePasswordByUniversityId(String universityId, String oldPassword, String newPassword, String username);
+
+    void resetPasswordByEmail(String email, String newPassword);
 }

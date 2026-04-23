@@ -13,4 +13,5 @@ public class ApiResponse {
     private String username;
     private String reason;
     private LocalDateTime expiryTime;
+    private Object data;
 }

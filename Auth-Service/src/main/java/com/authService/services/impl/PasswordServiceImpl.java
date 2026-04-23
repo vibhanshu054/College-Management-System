@@ -7,6 +7,7 @@ import com.authService.exception.*;
 import com.authService.repository.OtpRepository;
 import com.authService.repository.PasswordTokenRepository;
 import com.authService.services.PasswordService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
@@ -225,33 +225,26 @@ public class PasswordServiceImpl implements PasswordService {
             throw new PasswordMismatchException("Passwords do not match");
         }
 
-        UserDTO user = restTemplate.getForObject(
+        ApiResponse response = restTemplate.getForObject(
                 "http://USER-SERVICE/api/users/internal/by-email?email=" + token.getEmail(),
-                UserDTO.class
+                ApiResponse.class
         );
+        UserDTO user = new ObjectMapper().convertValue(response.getData(), UserDTO.class);
 
-        if (user == null) {
-            throw new UserNotFoundException("User not found");
-        }
-
-        if (user.getId() == null) {
-            throw new UserNotFoundException("User id not found");
-        }
 
         if (user.getPassword() != null && passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
             throw new SamePasswordException("New password cannot be same as old password");
         }
 
         UpdatePasswordDto dto = new UpdatePasswordDto();
-        dto.setUsername(user.getUsername());
+        dto.setEmail(user.getEmail());
         dto.setNewPassword(request.getNewPassword());
-        try{
-        log.info(" Calling User-Service to reset password for: {}", user.getUsername());
+        try {
+            log.info(" Calling User-Service to reset password for: {}", user.getUsername());
             restTemplate.put(
                     "http://USER-SERVICE/api/users/internal/reset-password",
-                dto,
-                String.class
-        );} catch (Exception e) {
+                    dto);
+        } catch (Exception e) {
             log.error(" Failed to reset password in User-Service: {}", e.getMessage());
             throw new RuntimeException("Failed to update password: " + e.getMessage());
         }

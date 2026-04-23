@@ -1,5 +1,6 @@
 package com.userService.client;
 
+import com.userService.dto.ApiResponse;
 import com.userService.dto.StudentDTO;
 import com.userService.exception.ServiceUnavailableException;
 import lombok.extern.slf4j.Slf4j;
@@ -30,5 +31,12 @@ public class StudentServiceClientFallback implements StudentServiceClient {
         String errorMsg = "Student-Service is unavailable for update.";
         log.error("Feign Fallback (UPDATE): {} for ID: {}", errorMsg, universityId);
         throw new ServiceUnavailableException(errorMsg + " [UPDATE_STUDENT]");
+    }
+
+    @Override
+    public ResponseEntity<ApiResponse> getStudentByUniversityId(String universityId) {
+        String errorMsg = "Student-Service is unavailable for Get.";
+        log.error("Feign Fallback (GET): {} for ID: {}", errorMsg, universityId);
+        throw new ServiceUnavailableException(errorMsg + " [GET_STUDENT]");
     }
 }

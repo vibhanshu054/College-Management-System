@@ -345,18 +345,17 @@ public class UserController {
     }
     @PutMapping("/internal/reset-password")
     public ResponseEntity<ApiResponse> resetPasswordFromForgotFlow(
-            @RequestBody UpdatePasswordDto dto  //
+            @RequestBody UpdatePasswordDto dto
     ) {
-        log.info("RESET PASSWORD FROM FORGOT FLOW | username={}", dto.getUsername());
+        log.info("RESET PASSWORD | email={}", dto.getEmail());
 
-        userService.resetPasswordByUsername(dto.getUsername(), dto.getNewPassword());
+        userService.resetPasswordByEmail(dto.getEmail(), dto.getNewPassword());
 
         return ResponseEntity.ok(
                 ApiResponse.builder()
                         .timestamp(LocalDateTime.now())
                         .status(HttpStatus.OK.value())
                         .message("Password reset successfully")
-                        .username(dto.getUsername())
                         .build()
         );
     }
