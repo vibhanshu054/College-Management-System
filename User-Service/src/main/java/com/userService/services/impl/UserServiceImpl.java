@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
         user.setActive(true);
         UserEntity saved = userRepository.save(user);
 
-        // GENERATE UNIVERSITY ID
+        // GENERATE UNIVERSITY ID - UNIFIED APPROACH
         String prefix = switch (dto.getRole().toUpperCase()) {
             case "STUDENT" -> "STU";
             case "FACULTY" -> "FAC";
@@ -77,6 +77,7 @@ public class UserServiceImpl implements UserService {
 
         String universityId = prefix + String.format("%06d", saved.getId());
         saved.setUniversityId(universityId);
+        log.info("Generated University ID: {} for user: {}", universityId, dto.getEmail());
 
         userRepository.save(saved);
 

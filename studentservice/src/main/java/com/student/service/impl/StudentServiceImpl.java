@@ -131,12 +131,17 @@ public class StudentServiceImpl implements StudentService {
 
         // Check duplicate email
         if (studentRepository.findByStudentEmail(email).isPresent()) {
-            log.warn("Student already exists: {}", email);
+            log.warn("⚠ Student already exists: {}", email);
             throw new DuplicateStudentException("Student already exists with email: " + email);
         }
 
+        // IMPORTANT: If universityId is provided, use it (from cascade)
+        // Otherwise, generate new one
+        String universityId = dto.getUniversityId();
+        boolean isNewUniversityId = universityId == null || universityId.isBlank();
+
         // Step 1: Create Student Entity First
-        log.info("Step 1: Creating student in Student-Service database");
+        log.info(" Step 1: Creating student in Student-Service database");
 
         StudentEntity student = StudentEntity.builder()
                 .studentName(dto.getStudentName().trim())
@@ -162,27 +167,28 @@ public class StudentServiceImpl implements StudentService {
         StudentEntity saved = studentRepository.save(student);
         log.info(" Student saved to DB with id: {}", saved.getId());
 
-        // Step 2: Generate University ID
-        String universityId = "STU" + String.format("%06d", saved.getId());
+        // Step 2: Generate or Use Provided University ID
+        if (isNewUniversityId) {
+            universityId = "STU" + String.format("%06d", saved.getId());
+            log.info(" University ID generated: {}", universityId);
+        } else {
+            log.info(" Using provided University ID from cascade: {}", universityId);
+        }
+
         saved.setUniversityId(universityId);
         saved = studentRepository.save(saved);
-        log.info(" University ID generated: {}", universityId);
+        log.info(" University ID set: {}", universityId);
 
-        // Step 3: CASCADE TO USER-SERVICE (IMPORTANT - ONLY if NOT from cascade)
-        // Check if user already exists to avoid circular cascade
+        // Step 3: CASCADE TO USER-SERVICE (IMPORTANT)
+        log.info(" Step 3: Cascading to User-Service");
         try {
-            userServiceClient.getUserByUniversityId(universityId);
-            log.info(" User already exists in User-Service, skipping cascade");
+            cascadeToUserService(saved, createdBy);
+            log.info(" Cascade to User-Service completed successfully");
         } catch (Exception e) {
-            log.info("Step 2: Cascading to User-Service");
-            try {
-                cascadeToUserService(saved, createdBy);
-                log.info(" Cascade to User-Service completed successfully");
-            } catch (Exception cascadeEx) {
-                log.error("CASCADE FAILED - Rolling back student creation", cascadeEx);
-                studentRepository.deleteById(saved.getId());
-                throw new RuntimeException("Failed to create user account: " + cascadeEx.getMessage(), cascadeEx);
-            }
+            log.error(" CASCADE FAILED - Rolling back student creation", e);
+            // Delete student if cascade fails
+            studentRepository.deleteById(saved.getId());
+            throw new RuntimeException("Failed to create user account: " + e.getMessage(), e);
         }
 
         log.info(" CREATE STUDENT COMPLETED | universityId={}", universityId);

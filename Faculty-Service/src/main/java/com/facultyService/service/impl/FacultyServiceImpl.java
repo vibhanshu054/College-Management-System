@@ -44,8 +44,13 @@ public class FacultyServiceImpl implements FacultyService {
             throw new RuntimeException("Faculty University ID is required");
         }
 
+        // Check if already exists
+        if (facultyRepository.findByFacultyUniversityId(dto.getFacultyUniversityId()).isPresent()) {
+            throw new RuntimeException("Faculty already exists with this university ID");
+        }
+
         FacultyEntity entity = new FacultyEntity();
-        entity.setFacultyUniversityId(dto.getFacultyUniversityId());
+        entity.setFacultyUniversityId(dto.getFacultyUniversityId());  // Use provided ID from cascade
         entity.setFacultyName(dto.getFacultyName());
         entity.setFacultyEmail(dto.getFacultyEmail());
         entity.setFacultyPhoneNumber(dto.getFacultyPhoneNumber());
@@ -58,6 +63,8 @@ public class FacultyServiceImpl implements FacultyService {
         entity.setActive(true);
 
         facultyRepository.save(entity);
+
+        log.info(" Faculty created with University ID: {}", dto.getFacultyUniversityId());
 
         return new ApiResponse(
                 "Faculty created successfully",
